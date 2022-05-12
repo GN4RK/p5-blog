@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="../style/style.css"
         <title>My Webpage</title>
     </head>
     <body>
@@ -10,7 +11,53 @@
         {% endfor %}
         </ul>
 
-        <h1>My Webpage</h1>
-        {{ a_variable }}
+        <h1>Bienvenue sur le site de Yoann LÉONARD</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores at quas eligendi, corporis molestias quae reiciendis perferendis fugiat soluta ducimus, atque perspiciatis dicta, sapiente quis distinctio praesentium asperiores dolorum laudantium?</p>
+        <div>
+            <img class="photo" src="http://gn4rk.com/cv/photo.jpg">
+            <button>Télecharger le CV (PDF)</button>
+        </div>
+
+        <h2>Contact</h2>
+        <form>
+            <div>
+                <label for="name">
+                    Nom/Prénom
+                </label>
+                <input id="name" type="text">
+            </div>
+            
+            <div>
+                <label for="email">
+                    email
+                </label>
+                
+                <input id="email" type="email">
+            </div>
+            <div>
+                <label for="message">
+                    Message
+                </label>
+                <textarea id="message"></textarea>
+            </div>
+            <div>
+                <input type="submit">
+            </div>
+        </form>
+
+        <ul>
+            <li>
+                <a href="https://github.com/GN4RK">GitHub</a>
+            </li>
+            <li>
+                <a href="https://www.linkedin.com/in/yoann-l%C3%A9onard-8b5b89123/">linkedIn</a>
+            </li>
+            <li>
+                <a href="https://twitter.com/GN4RK">Twitter</a>
+            </li>
+        </ul>
+
+
+
     </body>
 </html>
