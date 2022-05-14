@@ -3,20 +3,27 @@ require_once("src/model/Manager.php");
 
 class CommentManager extends Manager
 {
-    public function getComments($postId)
+    public function getComments($idPost)
     {
         $db = $this->dbConnect();
-        $comments = $db->prepare('SELECT id, author, comment, DATE_FORMAT(comment_date, \'%d/%m/%Y à %Hh%imin%ss\') AS comment_date_fr FROM comments WHERE post_id = ? ORDER BY comment_date DESC');
-        $comments->execute(array($postId));
+        $comments = $db->prepare(
+            'SELECT id, id_user, content, DATE_FORMAT(date, \'%d/%m/%Y à %Hh%imin%ss\') AS date_fr 
+            FROM comment 
+            WHERE id_post = ? 
+            ORDER BY date DESC'
+        );
+        $comments->execute(array($idPost));
 
         return $comments;
     }
 
-    public function postComment($postId, $author, $comment)
+    public function postComment($idPost, $idUser, $comment)
     {
         $db = $this->dbConnect();
-        $comments = $db->prepare('INSERT INTO comments(post_id, author, comment, comment_date) VALUES(?, ?, ?, NOW())');
-        $affectedLines = $comments->execute(array($postId, $author, $comment));
+        $comments = $db->prepare(
+            'INSERT INTO comment(id_post, id_user, content, date) VALUES(?, ?, ?, NOW())'
+        );
+        $affectedLines = $comments->execute(array($idPost, $idUser, $comment));
 
         return $affectedLines;
     }

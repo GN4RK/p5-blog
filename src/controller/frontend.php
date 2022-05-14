@@ -23,16 +23,16 @@ function post()
     require('src/view/postView.php');
 }
 
-function addComment($postId, $author, $comment)
+function addComment($idPost, $idUser, $comment)
 {
     $commentManager = new CommentManager();
 
-    $affectedLines = $commentManager->postComment($postId, $author, $comment);
+    $affectedLines = $commentManager->postComment($idPost, $idUser, $comment);
 
     if ($affectedLines === false) {
         throw new Exception('Impossible d\'ajouter le commentaire !');
     }
     else {
-        header('Location: index.php?action=post&id=' . $postId);
+        header('Location: index.php?action=post&id=' . $idPost);
     }
 }
