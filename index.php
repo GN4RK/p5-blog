@@ -21,6 +21,7 @@
 // ]);
 
 require('src/controller/frontend.php');
+require_once 'vendor/autoload.php'; // Twig
 
 try {
     if (isset($_GET['action'])) {
@@ -50,7 +51,7 @@ try {
         }
     }
     else {
-        listPosts();
+        home();
     }
 }
 catch(Exception $e) {
