@@ -5,7 +5,7 @@ require_once('src/model/PostManager.php');
 require_once('src/model/CommentManager.php');
 
 function home() {
-    $loader = new \Twig\Loader\FilesystemLoader('templates');
+    $loader = new \Twig\Loader\FilesystemLoader('src/view');
     $twig = new \Twig\Environment($loader);
 
     $navigation = array(
