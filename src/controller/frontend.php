@@ -9,9 +9,9 @@ function home() {
     $twig = new \Twig\Environment($loader);
 
     $navigation = array(
-        array ('href' => "index.php", 'caption' => 'home'),
-        array ('href' => "index.php", 'caption' => 'blog'),
-        array ('href' => "index.php", 'caption' => 'register'),
+        array ('href' => "index.php", 'caption' => 'accueil'),
+        array ('href' => "index.php?p=blog", 'caption' => 'blog'),
+        array ('href' => "index.php?p=register", 'caption' => "s'identifier / s'enregistrer"),
     );
 
     $template = $twig->load('home.twig');
