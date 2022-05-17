@@ -7,7 +7,7 @@
 <div class="news">
     <h3>
         <?= htmlspecialchars($post['title']) ?>
-        <em>le <?= $post['creation_date_fr'] ?></em>
+        <em>le <?= $post['last_update_fr'] ?></em>
     </h3>
     
     <p>

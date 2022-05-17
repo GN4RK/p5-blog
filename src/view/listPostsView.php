@@ -12,7 +12,7 @@ while ($data = $posts->fetch())
     <div class="news">
         <h3>
             <?= htmlspecialchars($data['title']) ?>
-            <em>le <?= $data['creation_date_fr'] ?></em>
+            <em>le <?= $data['last_update_fr'] ?></em>
         </h3>
         
         <p>

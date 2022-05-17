@@ -21,7 +21,7 @@ class PostManager extends Manager
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT id, title, content, DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr 
-            FROM posts 
+            FROM post
             WHERE id = ?'
         );
         $req->execute(array($postId));

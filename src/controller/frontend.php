@@ -9,9 +9,9 @@ function home() {
     $twig = new \Twig\Environment($loader);
 
     $navigation = array(
-        array ('href' => "index.php", 'caption' => 'accueil'),
-        array ('href' => "index.php?p=blog", 'caption' => 'blog'),
-        array ('href' => "index.php?p=register", 'caption' => "s'identifier / s'enregistrer"),
+        array ('href' => "", 'caption' => 'accueil'),
+        array ('href' => "./blog", 'caption' => 'blog'),
+        array ('href' => "./enregistrement", 'caption' => "s'identifier / s'enregistrer"),
     );
 
     $template = $twig->load('home.twig');
@@ -19,6 +19,13 @@ function home() {
         'navigation' => $navigation,
         'a_variable' => 5
     ]);
+}
+
+function blog($id = null) {
+    if ($id != null) {
+        post($id);
+    }
+    listPosts();
 }
 
 function listPosts()
@@ -29,13 +36,13 @@ function listPosts()
     require('src/view/listPostsView.php');
 }
 
-function post()
+function post($id)
 {
     $postManager = new PostManager();
     $commentManager = new CommentManager();
 
-    $post = $postManager->getPost($_GET['id']);
-    $comments = $commentManager->getComments($_GET['id']);
+    $post = $postManager->getPost($id);
+    $comments = $commentManager->getComments($id);
 
     require('src/view/postView.php');
 }
