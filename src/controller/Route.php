@@ -1,5 +1,4 @@
 <?php
-// https://github.com/steampixel/simplePHPRouter/blob/master/src/Steampixel/Route.php
 
 class Route {
 
@@ -22,7 +21,7 @@ class Route {
     ));
   }
 
-  public static function getAll(){
+  public static function getAll() {
     return self::$routes;
   }
 
@@ -130,7 +129,6 @@ class Route {
           call_user_func_array(self::$pathNotFound, Array($path));
         }
       }
-
     }
   }
 

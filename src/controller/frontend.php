@@ -28,27 +28,51 @@ function blog($id = null) {
     listPosts();
 }
 
-function listPosts()
-{
+function listPosts() {
     $postManager = new PostManager();
     $posts = $postManager->getPosts();
 
-    require('src/view/listPostsView.php');
+    $loader = new \Twig\Loader\FilesystemLoader('src/view');
+    $twig = new \Twig\Environment($loader);
+
+    $navigation = array(
+        array ('href' => ".", 'caption' => 'accueil'),
+        array ('href' => "./blog", 'caption' => 'blog'),
+        array ('href' => "./enregistrement", 'caption' => "s'identifier / s'enregistrer"),
+    );
+
+    $template = $twig->load('listPostsView.twig');
+    echo $template->render([
+        'navigation' => $navigation,
+        'posts' => $posts
+    ]);
 }
 
-function post($id)
-{
+function post($id) {
     $postManager = new PostManager();
     $commentManager = new CommentManager();
+
+    $loader = new \Twig\Loader\FilesystemLoader('src/view');
+    $twig = new \Twig\Environment($loader);
 
     $post = $postManager->getPost($id);
     $comments = $commentManager->getComments($id);
 
-    require('src/view/postView.php');
+    $navigation = array(
+        array ('href' => ".", 'caption' => 'accueil'),
+        array ('href' => "./blog", 'caption' => 'blog'),
+        array ('href' => "./enregistrement", 'caption' => "s'identifier / s'enregistrer"),
+    );
+
+    $template = $twig->load('postView.twig');
+    echo $template->render([
+        'navigation' => $navigation,
+        'post' => $post,
+        'comments' => $comments
+    ]);
 }
 
-function addComment($idPost, $idUser, $comment)
-{
+function addComment($idPost, $idUser, $comment) {
     $commentManager = new CommentManager();
 
     $affectedLines = $commentManager->postComment($idPost, $idUser, $comment);
@@ -59,4 +83,8 @@ function addComment($idPost, $idUser, $comment)
     else {
         header('Location: index.php?action=post&id=' . $idPost);
     }
+}
+
+function register() {
+    
 }

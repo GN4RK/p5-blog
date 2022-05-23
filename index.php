@@ -14,9 +14,14 @@ Route::add('/blog',function(){
     blog();
 });
 
-// Displaying one particular blog post
+// One particular blog post
 Route::add('/blog/([0-9]*)',function($id){
     blog($id);
+});
+
+// Register page
+Route::add('/enregistrement',function(){
+    register();
 });
 
 
