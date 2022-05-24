@@ -1,6 +1,6 @@
 <?php
 
-require('src/controller/frontend.php');
+require('src/controller/FrontendController.php');
 require_once 'vendor/autoload.php'; // Twig
 require_once('src/controller/Route.php'); // Include router class
 
@@ -13,22 +13,22 @@ define("BASEFOLDER", "/".$config["baseFolder"]."/");
 
 // Home Page
 Route::add('/', function(){
-    home();
+    FrontendController::home();
 });
 
 // Blog page
 Route::add('/blog',function(){
-    blog();
+    FrontendController::blog();
 });
 
 // One particular blog post
 Route::add('/blog/([0-9]*)',function($id){
-    blog($id);
+    FrontendController::blog($id);
 });
 
 // Register page
 Route::add('/enregistrement',function(){
-    register();
+    FrontendController::register();
 });
 
 
@@ -46,6 +46,10 @@ Route::add('/contact-form',function(){
 // Accept only numbers as parameter. Other characters will result in a 404 error
 Route::add('/foo/([0-9]*)/bar',function($var1){
     echo $var1.' is a great number!';
+});
+
+Route::pathNotFound(function(){
+    FrontendController::error404();
 });
 
 Route::run(BASEFOLDER);
