@@ -4,16 +4,14 @@
 <p>Derniers billets du blog :</p>
 
 {% for item in posts %}
-    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{{ item.href }}">{{ item.caption }}</a></li>
-
     <div class="news">
         <h3>
             {{ item.title }}
-            <em>le {{ item.date }}</em>
+            <em>le {{ item.last_update_fr }}</em>
         </h3>
         
         <p>
-            {{ item.content }}
+            {{ item.header }}
             <br />
             <em><a href="./blog/{{ item.id }}">Commentaires</a></em>
         </p>
