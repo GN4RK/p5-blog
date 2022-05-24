@@ -1,25 +1,29 @@
 {% include 'header.twig' %}
 
-<section class="page-section" id="contact">
+<header class="masthead" id="list">
 
-    <h1>Mon super blog !</h1>
-    <p>Derniers billets du blog :</p>
+    <div class="container">
 
-    {% for item in posts %}
-        <div class="news">
-            <h3>
-                {{ item.title }}
-                <em>le {{ item.last_update_fr }}</em>
-            </h3>
-            
-            <p>
-                {{ item.header }}
-                <br />
-                <em><a href="./blog/{{ item.id }}">Commentaires</a></em>
-            </p>
-        </div>
-    {% endfor %}
+        <h1>Mon super blog !</h1>
+        <p>Derniers billets du blog :</p>
+
+        {% for item in posts %}
+            <div class="news">
+                <h3>
+                    {{ item.title }}
+                    <em>le {{ item.last_update_fr }}</em>
+                </h3>
+                
+                <p>
+                    {{ item.header }}
+                    <br />
+                    <em><a href="./blog/{{ item.id }}">Commentaires</a></em>
+                </p>
+            </div>
+        {% endfor %}
+
+    </div>
     
-</section>
+</header>
         
 {% include 'footer.twig' %}
