@@ -15,7 +15,7 @@
         <p>
             {{ item.content }}
             <br />
-            <em><a href="index.php?action=post&amp;id=<?= $data['id'] ?>">Commentaires</a></em>
+            <em><a href="./blog/{{ item.id }}">Commentaires</a></em>
         </p>
     </div>
 {% endfor %}

@@ -4,6 +4,13 @@ require('src/controller/frontend.php');
 require_once 'vendor/autoload.php'; // Twig
 require_once('src/controller/Route.php'); // Include router class
 
+// loading config from JSON file 
+$strJsonFileContents = file_get_contents("config.json");
+$config = json_decode($strJsonFileContents, true);
+
+// constants
+define("BASEFOLDER", "/".$config["baseFolder"]."/");
+
 // Home Page
 Route::add('/', function(){
     home();
@@ -41,5 +48,5 @@ Route::add('/foo/([0-9]*)/bar',function($var1){
     echo $var1.' is a great number!';
 });
 
-Route::run('/P5-blog');
+Route::run(BASEFOLDER);
 

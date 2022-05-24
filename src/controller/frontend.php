@@ -1,6 +1,6 @@
 <?php
 
-// Chargement des classes
+// loading classes
 require_once('src/model/PostManager.php');
 require_once('src/model/CommentManager.php');
 
@@ -16,6 +16,7 @@ function home() {
 
     $template = $twig->load('home.twig');
     echo $template->render([
+        'baseFolder' => BASEFOLDER,
         'navigation' => $navigation,
         'a_variable' => 5
     ]);
@@ -24,8 +25,9 @@ function home() {
 function blog($id = null) {
     if ($id != null) {
         post($id);
+    } else {
+        listPosts();
     }
-    listPosts();
 }
 
 function listPosts() {
@@ -43,6 +45,7 @@ function listPosts() {
 
     $template = $twig->load('listPostsView.twig');
     echo $template->render([
+        'baseFolder' => BASEFOLDER,
         'navigation' => $navigation,
         'posts' => $posts
     ]);
@@ -66,6 +69,7 @@ function post($id) {
 
     $template = $twig->load('postView.twig');
     echo $template->render([
+        'baseFolder' => BASEFOLDER,
         'navigation' => $navigation,
         'post' => $post,
         'comments' => $comments
