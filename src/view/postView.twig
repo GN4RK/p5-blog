@@ -1,39 +1,43 @@
 {% include 'header.twig' %}
 
-<h1>Mon super blog !</h1>
-<p><a href="index.php">Retour à la liste des billets</a></p>
+<section class="page-section" id="post">
 
-<div class="news">
-    <h3>
-        {{ post.title }}
-        <em>le {{ post.last_update_fr }}</em>
-    </h3>
-    
-    <p>
-        {{ post.content }}
-    </p>
-</div>
 
-<h2>Commentaires</h2>
+    <h1>Mon super blog !</h1>
 
-<form action="index.php?action=addComment&amp;id=<?= $post['id'] ?>" method="post">
-    <div>
-        <label for="author">Auteur</label><br />
-        <input type="text" id="author" name="author" />
+    <div class="news">
+        <h3>
+            {{ post.title }}
+            <em>le {{ post.last_update_fr }}</em>
+        </h3>
+        
+        <p>
+            {{ post.content }}
+        </p>
     </div>
-    <div>
-        <label for="comment">Commentaire</label><br />
-        <textarea id="comment" name="comment"></textarea>
-    </div>
-    <div>
-        <input type="submit" />
-    </div>
-</form>
 
-{% for item in comments %}
-    <p><strong> {{ item.author }} </strong> le {{ item.comment_date_fr }} </p>
-    <p> {{ item.comment }} </p>
-{% endfor %}
+    <h2>Commentaires</h2>
+
+    <form action="index.php?action=addComment&amp;id=<?= $post['id'] ?>" method="post">
+        <div>
+            <label for="author">Auteur</label><br />
+            <input type="text" id="author" name="author" />
+        </div>
+        <div>
+            <label for="comment">Commentaire</label><br />
+            <textarea id="comment" name="comment"></textarea>
+        </div>
+        <div>
+            <input type="submit" />
+        </div>
+    </form>
+
+    {% for item in comments %}
+        <p><strong> {{ item.author }} </strong> le {{ item.comment_date_fr }} </p>
+        <p> {{ item.comment }} </p>
+    {% endfor %}
+
+</section>
 
 {% include 'footer.twig' %}
 
