@@ -31,8 +31,6 @@
 </form>
 
 {% for item in comments %}
-<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{{ item.href }}">{{ item.caption }}</a></li>
-
     <p><strong> {{ item.author }} </strong> le {{ item.comment_date_fr }} </p>
     <p> {{ item.comment }} </p>
 {% endfor %}
