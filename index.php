@@ -31,6 +31,11 @@ Route::add('/enregistrement',function(){
     FrontendController::register();
 });
 
+// Legal page
+Route::add('/mentions-legales',function(){
+    FrontendController::legal();
+});
+
 
 // Post route example
 Route::add('/contact-form',function(){
