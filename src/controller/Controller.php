@@ -3,8 +3,8 @@
 class Controller 
 {
     const NAV = array(
-        array ('href' => "", 'caption' => 'accueil'),
-        array ('href' => "./blog", 'caption' => 'blog'),
-        array ('href' => "./enregistrement", 'caption' => "s'identifier / s'enregistrer"),
+        array ('href' => BASEFOLDER, 'caption' => 'accueil'),
+        array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
+        array ('href' => BASEFOLDER. "enregistrement", 'caption' => "se connecter / s'enregistrer"),
     );
 }
