@@ -50,10 +50,10 @@ class FrontendController extends Controller
         $post = $postManager->getPost($id);
         $comments = $commentManager->getComments($id);
     
-        //TODO if id not found, display error
+        // if id not found, display error
         if (!$post) {
             self::error404();
-        } else {    
+        } else {
             $template = $twig->load('postView.twig');
             echo $template->render([
                 'baseFolder' => BASEFOLDER,
@@ -65,7 +65,23 @@ class FrontendController extends Controller
     }
 
     static function register() {
-    
+        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $twig = new \Twig\Environment($loader);
+        $template = $twig->load('register.twig');
+        echo $template->render([
+            'baseFolder' => BASEFOLDER,
+            'navigation' => self::NAV
+        ]);    
+    }
+
+    static function legal() {
+        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $twig = new \Twig\Environment($loader);
+        $template = $twig->load('legal.twig');
+        echo $template->render([
+            'baseFolder' => BASEFOLDER,
+            'navigation' => self::NAV
+        ]);    
     }
 
     static function error404() {
