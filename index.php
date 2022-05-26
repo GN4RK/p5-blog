@@ -1,6 +1,7 @@
 <?php
 
 require('src/controller/FrontendController.php');
+require('src/controller/BackendController.php');
 require_once 'vendor/autoload.php'; // Twig
 require_once('src/controller/Route.php'); // Include router class
 
@@ -10,6 +11,10 @@ $config = json_decode($strJsonFileContents, true);
 
 // constants
 define("BASEFOLDER", "/".$config["baseFolder"]."/");
+
+// ***************************
+// * Loading Frontend routes *
+// ***************************
 
 // Home Page
 Route::add('/', function(){
@@ -36,6 +41,47 @@ Route::add('/mentions-legales',function(){
     FrontendController::legal();
 });
 
+// login page
+Route::add('/login',function(){
+    FrontendController::login();
+});
+
+Route::pathNotFound(function(){
+    FrontendController::error404();
+});
+
+
+
+// **************************
+// * Loading Backend routes *
+// ***************************
+
+// admin page
+Route::add('/admin',function(){
+    BackendController::admin();
+});
+
+// new post page
+Route::add('/admin/new',function(){
+    BackendController::adminNew();
+}, 'get');
+Route::add('/admin/new',function(){
+    BackendController::adminNew();
+    var_dump($_POST);
+}, 'post');
+
+// posts moderation page
+Route::add('/admin/post',function(){
+    BackendController::adminPost();
+});
+
+// comment moderation page
+Route::add('/admin/comment',function(){
+    BackendController::adminComment();
+});
+
+
+
 
 // Post route example
 Route::add('/contact-form',function(){
@@ -51,10 +97,6 @@ Route::add('/contact-form',function(){
 // Accept only numbers as parameter. Other characters will result in a 404 error
 Route::add('/foo/([0-9]*)/bar',function($var1){
     echo $var1.' is a great number!';
-});
-
-Route::pathNotFound(function(){
-    FrontendController::error404();
 });
 
 Route::run(BASEFOLDER);

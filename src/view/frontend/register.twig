@@ -4,7 +4,7 @@
 <header class="masthead text-center">
     <div class="container">
         <!-- Contact Section Heading-->
-        <h1 class="page-section-heading text-center text-uppercase text-secondary mb-0">Se connecter</h1>
+        <h1 class="page-section-heading text-center text-uppercase text-secondary mb-0">S'enregistrer</h1>
         <!-- Icon Divider-->
         <div class="divider-custom">
             <div class="divider-custom-line"></div>
@@ -25,33 +25,17 @@
                         <input class="form-control" id="pass" type="password" placeholder="*********" required />
                         <label for="pass">Mot de passe</label>
                     </div>
+                    <!-- Password input 2-->
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="pass2" type="password" placeholder="*********" required />
+                        <label for="pass">Confirmation du mot de passe</label>
+                    </div>
                     <!-- Submit Button-->
-                    <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Envoyer</button>
+                    <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Connexion</button>
                 </form>
             </div>
         </div>
     </div>
 </header>
-
-
-<section id="register" class="page-section bg-primary text-white mb-0">
-
-    <div class="container">
-        <h2 class="page-section-heading text-center text-uppercase text-white">S'enregistrer</h2>
-
-        <div class="divider-custom divider-light">
-            <div class="divider-custom-line"></div>
-            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-            <div class="divider-custom-line"></div>
-        </div>
-        
-        <div class="text-center mt-4">
-            <a class="btn btn-xl btn-outline-light" href="#">
-                <i class="fa-solid fa-address-card me-2"></i>
-                Créer un nouveau compte maintenant</a>
-        </div>
-    </div>
-
-</section>
         
 {% include 'footer.twig' %}

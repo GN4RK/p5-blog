@@ -7,7 +7,7 @@ require_once('src/model/CommentManager.php');
 class FrontendController extends Controller
 {
     static function home() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
         $twig = new \Twig\Environment($loader);
     
         $template = $twig->load('home.twig');
@@ -29,7 +29,7 @@ class FrontendController extends Controller
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
 
-        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
         $twig = new \Twig\Environment($loader);
         
         $template = $twig->load('listPostsView.twig');
@@ -44,7 +44,7 @@ class FrontendController extends Controller
         $postManager = new PostManager();
         $commentManager = new CommentManager();
     
-        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
         $twig = new \Twig\Environment($loader);
     
         $post = $postManager->getPost($id);
@@ -65,7 +65,7 @@ class FrontendController extends Controller
     }
 
     static function register() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
         $twig = new \Twig\Environment($loader);
         $template = $twig->load('register.twig');
         echo $template->render([
@@ -74,8 +74,18 @@ class FrontendController extends Controller
         ]);    
     }
 
+    static function login() {
+        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
+        $twig = new \Twig\Environment($loader);
+        $template = $twig->load('login.twig');
+        echo $template->render([
+            'baseFolder' => BASEFOLDER,
+            'navigation' => self::NAV
+        ]);    
+    }
+
     static function legal() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
         $twig = new \Twig\Environment($loader);
         $template = $twig->load('legal.twig');
         echo $template->render([
@@ -85,7 +95,7 @@ class FrontendController extends Controller
     }
 
     static function error404() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view');
+        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
         $twig = new \Twig\Environment($loader);
         $template = $twig->load('error404.twig');
         echo $template->render([
