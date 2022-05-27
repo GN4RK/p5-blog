@@ -3,46 +3,24 @@ require_once("src/controller/Controller.php");
 // loading classes
 require_once('src/model/PostManager.php');
 require_once('src/model/CommentManager.php');
+require_once('src/model/UserManager.php');
+require_once('src/model/View.php');
 
 class BackendController extends Controller
 {
     static function admin() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/backend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('admin.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);    
+        View::renderBack('admin.twig');
     }
 
     static function adminNew() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/backend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('new.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);    
+        View::renderBack('new.twig');
     }
 
     static function adminPost() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/backend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('post.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);    
+        View::renderBack('post.twig');
     }
 
     static function adminComment() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/backend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('comment.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);    
+        View::renderBack('comment.twig');
     }
 }

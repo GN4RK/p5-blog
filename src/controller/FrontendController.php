@@ -3,18 +3,13 @@ require_once("src/controller/Controller.php");
 // loading classes
 require_once('src/model/PostManager.php');
 require_once('src/model/CommentManager.php');
+require_once('src/model/UserManager.php');
+require_once('src/model/View.php');
 
 class FrontendController extends Controller
 {
-    static function home() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
-        $twig = new \Twig\Environment($loader);
-    
-        $template = $twig->load('home.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV,
-        ]);
+    static function home() {        
+        View::renderFront('home.twig');        
     }
 
     static function blog($id = null) {
@@ -28,25 +23,12 @@ class FrontendController extends Controller
     static function listPosts() {
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
-
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
-        $twig = new \Twig\Environment($loader);
-        
-        $template = $twig->load('listPostsView.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV,
-            'posts' => $posts
-        ]);
+        View::renderFront('listPostsView.twig', ['posts' => $posts]);
     }
     
     static function post($id) {
         $postManager = new PostManager();
         $commentManager = new CommentManager();
-    
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
-        $twig = new \Twig\Environment($loader);
-    
         $post = $postManager->getPost($id);
         $comments = $commentManager->getComments($id);
     
@@ -54,53 +36,43 @@ class FrontendController extends Controller
         if (!$post) {
             self::error404();
         } else {
-            $template = $twig->load('postView.twig');
-            echo $template->render([
-                'baseFolder' => BASEFOLDER,
-                'navigation' => self::NAV,
-                'post' => $post,
+            View::renderFront('postView.twig', [
+                'post' => $post, 
                 'comments' => $comments
             ]);
         }
     }
 
     static function register() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('register.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);    
+        View::renderFront('register.twig');
     }
 
     static function login() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('login.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);    
+        View::renderFront('login.twig');
+    }
+
+    static function loginCheck() {
+        $userManager = new UserManager();
+
+        $user = $userManager->checkUser($_POST['email'], $_POST['pass']);
+        if ($user) {
+            echo "OK";
+            $_SESSION['user'] = $user;
+        } else {
+            $_SESSION['user'] = null;
+        }
+   
+    }
+
+    static function disconnection() {
+        $_SESSION['user'] = null;
     }
 
     static function legal() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('legal.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);    
+        View::renderFront('legal.twig');
     }
 
     static function error404() {
-        $loader = new \Twig\Loader\FilesystemLoader('src/view/frontend');
-        $twig = new \Twig\Environment($loader);
-        $template = $twig->load('error404.twig');
-        echo $template->render([
-            'baseFolder' => BASEFOLDER,
-            'navigation' => self::NAV
-        ]);
+        View::renderFront('error404.twig');
     }
 }
