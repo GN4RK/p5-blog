@@ -25,7 +25,9 @@
                 <div class="row">
                     <ul>
                         <li><a href="{{ baseFolder }}mentions-legales">Mention légales</a></li>
-                        <li><a href="{{ baseFolder }}admin">Administration</a></li>
+                        {% if role == "admin" %}
+                            <li><a href="{{ baseFolder }}admin">Administration</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="row">
