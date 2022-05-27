@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require('src/controller/FrontendController.php');
 require('src/controller/BackendController.php');
@@ -44,8 +45,19 @@ Route::add('/mentions-legales',function(){
 // login page
 Route::add('/login',function(){
     FrontendController::login();
+}, 'get');
+Route::add('/login',function(){
+    FrontendController::loginCheck();
+    FrontendController::home();
+}, 'post');
+
+// disconnection page
+Route::add('/disconnection',function(){
+    FrontendController::disconnection();
+    FrontendController::home();
 });
 
+// 404
 Route::pathNotFound(function(){
     FrontendController::error404();
 });
@@ -67,10 +79,9 @@ Route::add('/admin/new',function(){
 }, 'get');
 Route::add('/admin/new',function(){
     BackendController::adminNew();
-    var_dump($_POST);
 }, 'post');
 
-// posts moderation page
+// blog posts moderation page
 Route::add('/admin/post',function(){
     BackendController::adminPost();
 });
@@ -100,4 +111,17 @@ Route::add('/foo/([0-9]*)/bar',function($var1){
 });
 
 Route::run(BASEFOLDER);
+
+echo "<pre>";
+echo "********* \n";
+echo "* DEBUG * \n";
+echo "********* \n";
+echo '$_SESSION';
+var_dump($_SESSION);
+echo '$_POST';
+var_dump($_POST);
+echo '$_GET';
+var_dump($_GET);
+echo "</pre>";
+
 
