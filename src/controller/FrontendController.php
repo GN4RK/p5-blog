@@ -8,8 +8,8 @@ require_once('src/model/View.php');
 
 class FrontendController extends Controller
 {
-    static function home() {        
-        View::renderFront('home.twig');        
+    static function home($mailStatus = null) {        
+        View::renderFront('home.twig', ['mailStatus' => $mailStatus]);        
     }
 
     static function blog($id = null) {
@@ -48,7 +48,13 @@ class FrontendController extends Controller
     }
 
     static function login() {
-        View::renderFront('login.twig');
+        if (isset($_POST['email']) || isset($_POST['pass'])) {
+            View::renderFront('login.twig', [
+                'loginFailed' => true
+            ]);
+        } else {
+            View::renderFront('login.twig');
+        }
     }
 
     static function loginCheck() {
@@ -56,10 +62,11 @@ class FrontendController extends Controller
 
         $user = $userManager->checkUser($_POST['email'], $_POST['pass']);
         if ($user) {
-            echo "OK";
             $_SESSION['user'] = $user;
+            return true;
         } else {
             $_SESSION['user'] = null;
+            return false;
         }
    
     }
@@ -74,5 +81,10 @@ class FrontendController extends Controller
 
     static function error404() {
         View::renderFront('error404.twig');
+    }
+
+    static function sendMail() {
+        // return mail("yoann.leonard@gmail.com", "contact", "message");
+        return true;
     }
 }
