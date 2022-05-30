@@ -20,39 +20,50 @@ define("BASEFOLDER", "/".$config["baseFolder"]."/");
 // Home Page
 Route::add('/', function(){
     FrontendController::home();
-});
+}, 'get');
+Route::add('/', function(){
+    if (FrontendController::sendMail()) {
+
+        FrontendController::home("ok");
+    } else {
+        FrontendController::home("error");
+    }
+}, 'post');
 
 // Blog page
-Route::add('/blog',function(){
+Route::add('/blog', function(){
     FrontendController::blog();
 });
 
 // One particular blog post
-Route::add('/blog/([0-9]*)',function($id){
+Route::add('/blog/([0-9]*)', function($id){
     FrontendController::blog($id);
 });
 
 // Register page
-Route::add('/enregistrement',function(){
+Route::add('/enregistrement', function(){
     FrontendController::register();
 });
 
 // Legal page
-Route::add('/mentions-legales',function(){
+Route::add('/mentions-legales', function(){
     FrontendController::legal();
 });
 
 // login page
-Route::add('/login',function(){
+Route::add('/login', function(){
     FrontendController::login();
 }, 'get');
-Route::add('/login',function(){
-    FrontendController::loginCheck();
-    FrontendController::home();
+Route::add('/login', function(){
+    if (FrontendController::loginCheck()) {
+        FrontendController::home();
+    } else {
+        FrontendController::login();
+    }
 }, 'post');
 
 // disconnection page
-Route::add('/disconnection',function(){
+Route::add('/disconnection', function(){
     FrontendController::disconnection();
     FrontendController::home();
 });
@@ -69,25 +80,25 @@ Route::pathNotFound(function(){
 // ***************************
 
 // admin page
-Route::add('/admin',function(){
+Route::add('/admin', function(){
     BackendController::admin();
 });
 
 // new post page
-Route::add('/admin/new',function(){
+Route::add('/admin/new', function(){
     BackendController::adminNew();
 }, 'get');
-Route::add('/admin/new',function(){
+Route::add('/admin/new', function(){
     BackendController::adminNew();
 }, 'post');
 
 // blog posts moderation page
-Route::add('/admin/post',function(){
+Route::add('/admin/post', function(){
     BackendController::adminPost();
 });
 
 // comment moderation page
-Route::add('/admin/comment',function(){
+Route::add('/admin/comment', function(){
     BackendController::adminComment();
 });
 
@@ -95,18 +106,18 @@ Route::add('/admin/comment',function(){
 
 
 // Post route example
-Route::add('/contact-form',function(){
+Route::add('/contact-form', function(){
     echo '<form method="post"><input type="text" name="test" /><input type="submit" value="send" /></form>';
 },'get');
 
 // Post route example
-Route::add('/contact-form',function(){
+Route::add('/contact-form', function(){
     echo 'Hey! The form has been sent:<br/>';
     print_r($_POST);
 },'post');
 
 // Accept only numbers as parameter. Other characters will result in a 404 error
-Route::add('/foo/([0-9]*)/bar',function($var1){
+Route::add('/foo/([0-9]*)/bar', function($var1){
     echo $var1.' is a great number!';
 });
 
