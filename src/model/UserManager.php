@@ -4,17 +4,14 @@ require_once("src/model/Manager.php");
 class UserManager extends Manager {
 
     public function checkUser($email, $password) {
-        $db = $this->dbConnect();
-        $req = $db->prepare(
-            'SELECT * 
-            FROM user 
-            WHERE email = ? 
-            AND password = ?'
-        );
-        $req->execute(array($email, $password));
-        $req = $req->fetch();
-
-        return $req;
+        $user = $this->getUserByEmail($email);
+        if ($user) {
+            if (password_verify($password, $user["password"])) {
+                return $user;
+            }
+        }
+        return false;
+       
     }
 
     public function addUser($name, $firstName, $role, $email, $status) {
@@ -37,15 +34,27 @@ class UserManager extends Manager {
         return $affectedLines;
     }
 
-    public function getUser($id) {
+    public function getUserById($id) {
         $db = $this->dbConnect();
-        $user = $db->prepare(
+        $req = $db->prepare(
             'SELECT * 
             FROM user 
             WHERE id = ?'
         );
-        $user->execute(array($id));
+        $req->execute(array($id));
+        $user = $req->fetch();
+        return $user;
+    }
 
+    public function getUserByEmail($email) {
+        $db = $this->dbConnect();
+        $req = $db->prepare(
+            'SELECT * 
+            FROM user 
+            WHERE email = ?'
+        );
+        $req->execute(array($email));
+        $user = $req->fetch();
         return $user;
     }
     
