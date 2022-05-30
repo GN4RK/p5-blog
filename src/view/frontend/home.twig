@@ -38,20 +38,31 @@
         <!-- Contact Section Form-->
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
-                <form id="contactForm">
+                <!-- Feedback message for contact form-->
+                {% if mailStatus == "ok" %}
+                    <div class="alert alert-success" role="alert">
+                        Message envoyé avec succès !
+                    </div>
+                {% elseif mailStatus == "error" %}
+                    <div class="alert alert-danger" role="alert">
+                        Erreur dans l'envoi du message.
+                    </div>
+                {% endif %}
+                <!-- Form-->
+                <form id="contactForm" method="post">
                     <!-- Name input-->
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="name" type="text" placeholder="Enter your name..." required />
+                        <input class="form-control" id="name" name="name" type="text" placeholder="Enter your name..." required />
                         <label for="name">Nom / Prénom</label>
                     </div>
                     <!-- Email address input-->
                     <div class="form-floating mb-3">
-                        <input class="form-control" id="email" type="email" placeholder="name@example.com" required />
+                        <input class="form-control" id="email" name="email" type="email" placeholder="name@example.com" required />
                         <label for="email">Email</label>
                     </div>
                     <!-- Message input-->
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" id="message" type="text" placeholder="Enter your message here..." style="height: 10rem"></textarea>
+                        <textarea class="form-control" id="message" name="message" type="text" placeholder="Enter your message here..." style="height: 10rem"></textarea>
                         <label for="message">Message</label>
                     </div>
                     <!-- Submit Button-->

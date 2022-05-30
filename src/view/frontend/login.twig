@@ -11,10 +11,19 @@
             <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
             <div class="divider-custom-line"></div>
         </div>
-        <!-- Contact Section Form-->
+        {% if loginFailed %}
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-7">
+                    <div class="alert alert-danger" role="alert">
+                        Erreur dans l'email ou le mot de passe.
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <!-- Login Section Form-->
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
-                <form method="post" id="contactForm">
+                <form method="post" id="loginForm">
                     <!-- Email address input-->
                     <div class="form-floating mb-3">
                         <input class="form-control" id="email" name="email" type="email" placeholder="name@example.com" required />
