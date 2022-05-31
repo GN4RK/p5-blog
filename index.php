@@ -12,6 +12,7 @@ $config = json_decode($strJsonFileContents, true);
 
 // constants
 define("BASEFOLDER", "/".$config["baseFolder"]."/");
+define("BASEURL", $config["baseURL"].BASEFOLDER);
 
 // ***************************
 // * Loading Frontend routes *
@@ -43,7 +44,14 @@ Route::add('/blog/([0-9]*)', function($id){
 // Register page
 Route::add('/enregistrement', function(){
     FrontendController::register();
-});
+}, 'get');
+Route::add('/enregistrement', function(){
+    $registerCheck = FrontendController::registerCheck();
+    if ($registerCheck == "user created") {
+        FrontendController::sendVerificationMail($_POST['email']);
+    }
+    FrontendController::register($registerCheck);
+}, 'post');
 
 // Legal page
 Route::add('/mentions-legales', function(){
@@ -71,6 +79,11 @@ Route::add('/disconnection', function(){
 // 404
 Route::pathNotFound(function(){
     FrontendController::error404();
+});
+
+// email validation page
+Route::add('/validation', function(){
+    FrontendController::validation();
 });
 
 
