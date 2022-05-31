@@ -4,7 +4,7 @@ require_once("src/model/Manager.php");
 class UserManager extends Manager {
 
     public function checkUser($email, $password) {
-        $user = $this->getUserByEmail($email);
+        $user = $this->getUserByEmail($email, true);
         if ($user) {
             if (password_verify($password, $user["password"])) {
                 return $user;
@@ -14,12 +14,12 @@ class UserManager extends Manager {
        
     }
 
-    public function addUser($name, $firstName, $role, $email, $status) {
+    public function addUser($name, $firstName, $role, $email, $status, $password) {
         $db = $this->dbConnect();
         $user = $db->prepare(
-            'INSERT INTO user(name, fistr_name, role, email, status) VALUES(?, ?, ?, ?, ?)'
+            'INSERT INTO user(name, first_name, role, email, status, password) VALUES(?, ?, ?, ?, ?, ?)'
         );
-        $affectedLines = $user->execute(array($name, $firstName, $role, $email, $status));
+        $affectedLines = $user->execute(array($name, $firstName, $role, $email, $status, $password));
 
         return $affectedLines;
     }
@@ -46,16 +46,33 @@ class UserManager extends Manager {
         return $user;
     }
 
-    public function getUserByEmail($email) {
+    public function getUserByEmail($email, $validated = false) {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
             FROM user 
-            WHERE email = ?'
+            WHERE email = ?' . 
+            ($validated ? ' AND status = "validated"' : '')
         );
         $req->execute(array($email));
         $user = $req->fetch();
         return $user;
+    }
+
+    public function emailAvailable($email) {
+        return !$this->getUserByEmail($email);
+    }
+
+    public function accountValidation($email) {
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE user
+            SET status = "validated"
+            WHERE email = ?'
+        );
+        $affectedLines = $user->execute(array($email));
+
+        return $affectedLines;
     }
     
 }
