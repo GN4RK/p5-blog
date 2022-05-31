@@ -1,3 +1,4 @@
 {
-    "baseFolder": "P5-blog"
+    "baseFolder": "P5-blog",
+    "baseURL": "http://localhost"
 }
