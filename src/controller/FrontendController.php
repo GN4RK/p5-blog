@@ -44,7 +44,7 @@ class FrontendController extends Controller
     }
 
     static function register($feedback = null) {
-        View::renderFront('register.twig', ["feedback" => $feedback]);
+        View::renderFront('register.twig', ["feedback" => $feedback, 'post' => $_POST]);
     }
 
     static function registerCheck() {
@@ -57,6 +57,7 @@ class FrontendController extends Controller
 
         if (!$userManager->emailAvailable($_POST['email'])) return "email already used";
         if ($_POST['pass'] != $_POST['pass2']) return "password verification failed";
+        if (strlen($_POST['pass']) < 6) return "password too short";
 
         $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
         $key = FrontendController::generateRandomString();
@@ -120,13 +121,23 @@ class FrontendController extends Controller
     }
 
     static function validation() {
+        $feedback = "";
         $key = $_GET["key"];
         $email = $_GET["email"];
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
-        if ($user['status'] == $key) {
-            $userManager->accountValidation($email);
+        if ($user) {
+            if ($user['status'] == $key) {
+                $userManager->accountValidation($email);
+                $feedback = "account validated";
+            } else {
+                $feedback = "account already validated";
+            }
+        } else {
+            $feedback = "user not found";
         }
+        
+        View::renderFront('validation.twig', ["feedback" => $feedback]);
     }
 
     static function generateRandomString($length = 10) {
