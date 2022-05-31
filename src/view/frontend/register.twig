@@ -32,32 +32,46 @@
                         Erreur dans la vérification du mot de passe.
                     </div>
                 {% endif %}
+
+                {% if feedback == "password too short" %}
+                    <div class="alert alert-danger" role="alert">
+                        Mot de passe trop court, au moins 6 caractères demandé.
+                    </div>
+                {% endif %}
                 
                 {% if feedback == "user created" %}
                     <div class="alert alert-success" role="alert">
                         Utilisateur créé. Vérifiez vos mail pour valider l'inscription.
                     </div>
-                {% endif %}
 
-                <form method="post" id="registerForm">
-                    <!-- Email address input-->
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="email" name="email" type="email" placeholder="name@example.com" required />
-                        <label for="email">Email</label>
-                    </div>
-                    <!-- Password input-->
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="pass" name="pass" type="password" placeholder="*********" required />
-                        <label for="pass">Mot de passe</label>
-                    </div>
-                    <!-- Password input 2-->
-                    <div class="form-floating mb-3">
-                        <input class="form-control" id="pass2" name="pass2" type="password" placeholder="*********" required />
-                        <label for="pass">Confirmation du mot de passe</label>
-                    </div>
-                    <!-- Submit Button-->
-                    <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Connexion</button>
-                </form>
+                {% else %}
+                    <form method="post" id="registerForm">
+                        <!-- Email address input-->
+                        <div class="form-floating mb-3">
+                            <input 
+                                class="form-control" 
+                                id="email" 
+                                name="email" 
+                                type="email" 
+                                placeholder="nom@exemple.com"
+                                {% if post.email is defined %} value="{{ post.email }}" {% endif %}
+                                required />
+                            <label for="email">Email</label>
+                        </div>
+                        <!-- Password input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="pass" name="pass" type="password" placeholder="*********" required />
+                            <label for="pass">Mot de passe</label>
+                        </div>
+                        <!-- Password input 2-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="pass2" name="pass2" type="password" placeholder="*********" required />
+                            <label for="pass">Confirmation du mot de passe</label>
+                        </div>
+                        <!-- Submit Button-->
+                        <button class="btn btn-primary btn-xl" id="submitButton" type="submit">S'enregistrer</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>
