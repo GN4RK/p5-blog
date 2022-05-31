@@ -1,0 +1,42 @@
+{% include 'header.twig' %}
+
+<!-- Masthead-->
+<header class="masthead text-center">
+    <div class="container">
+    {% if feedback == "account validated" %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="alert alert-success" role="alert">
+                    Compte validé, vous pouvez vous connecter.
+                </div>
+            </div>
+        </div>
+    {% elseif feedback == "account already validated" %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="alert alert-danger" role="alert">
+                    Erreur, compte déjà validé.
+                </div>
+            </div>
+        </div>
+    {% elseif feedback == "user not found" %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="alert alert-danger" role="alert">
+                    Erreur, compte introuvable dans la base. 
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="alert alert-danger" role="alert">
+                    Erreur, {{ feedback }}.
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+</header>
+        
+{% include 'footer.twig' %}
