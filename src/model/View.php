@@ -10,7 +10,7 @@ class View {
             $nav = array(
                 array ('href' => BASEFOLDER, 'caption' => 'accueil'),
                 array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
-                array ('href' => BASEFOLDER. "disconnection", 'caption' => "se déconnecter"),
+                array ('href' => BASEFOLDER. "deconnexion", 'caption' => "se déconnecter"),
             );
         } else {
             $nav = array(
