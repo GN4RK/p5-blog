@@ -43,8 +43,39 @@ class FrontendController extends Controller
         }
     }
 
-    static function register() {
-        View::renderFront('register.twig');
+    static function register($feedback = null) {
+        View::renderFront('register.twig', ["feedback" => $feedback]);
+    }
+
+    static function registerCheck() {
+
+        $userManager = new UserManager();
+
+        if (!isset($_POST['email']) || !isset($_POST['pass']) || !isset($_POST['pass2'])) {
+            return "missing information";
+        }
+
+        if (!$userManager->emailAvailable($_POST['email'])) return "email already used";
+        if ($_POST['pass'] != $_POST['pass2']) return "password verification failed";
+
+        $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
+        $key = FrontendController::generateRandomString();
+        $userManager->addUser("", "", "", $_POST['email'], "pending@$key", $hash);
+        return "user created";
+
+    }
+
+    static function sendVerificationMail($email) {
+        $userManager = new UserManager();
+        $user = $userManager->getUserByEmail($email);
+        $key = $user['status'];
+        $url = BASEURL. "validation?key=" .$key. "&email=$email";
+
+        $headers[] = 'MIME-Version: 1.0';
+        $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+        $subject = "Validation de l'adresse mail";
+        $message = "Cliquez sur le lien pour valider l'inscription : <a href=\"$url\">Lien</a>";
+        return mail($email, $subject, $message, implode("\r\n", $headers));
     }
 
     static function login() {
@@ -86,5 +117,25 @@ class FrontendController extends Controller
     static function sendMail() {
         // return mail("yoann.leonard@gmail.com", "contact", "message");
         return true;
+    }
+
+    static function validation() {
+        $key = $_GET["key"];
+        $email = $_GET["email"];
+        $userManager = new UserManager();
+        $user = $userManager->getUserByEmail($email);
+        if ($user['status'] == $key) {
+            $userManager->accountValidation($email);
+        }
+    }
+
+    static function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }
