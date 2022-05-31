@@ -64,16 +64,16 @@ Route::add('/login', function(){
 }, 'get');
 Route::add('/login', function(){
     if (FrontendController::loginCheck()) {
-        FrontendController::home();
+        header('Location: '. BASEURL);
     } else {
         FrontendController::login();
     }
 }, 'post');
 
 // disconnection page
-Route::add('/disconnection', function(){
+Route::add('/deconnexion', function(){
     FrontendController::disconnection();
-    FrontendController::home();
+    header('Location: '. BASEURL);
 });
 
 // 404
