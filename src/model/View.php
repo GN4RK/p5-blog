@@ -6,20 +6,7 @@ class View {
         $loader = new \Twig\Loader\FilesystemLoader("src/view/$env");
         $twig = new \Twig\Environment($loader);
 
-        if (isset($_SESSION['user'])) {
-            $nav = array(
-                array ('href' => BASEFOLDER, 'caption' => 'accueil'),
-                array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
-                array ('href' => BASEFOLDER. "deconnexion", 'caption' => "se déconnecter"),
-            );
-        } else {
-            $nav = array(
-                array ('href' => BASEFOLDER, 'caption' => 'accueil'),
-                array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
-                array ('href' => BASEFOLDER. "login", 'caption' => "se connecter / s'enregistrer"),
-            );
-        }
-        
+        $nav = View::getNav();        
         $name = (isset($_SESSION['user']['first_name'])) ? ($_SESSION['user']['first_name']) : "visiteur";
         $role = (isset($_SESSION['user']['role'])) ? ($_SESSION['user']['role']) : "visiteur";
 
@@ -47,5 +34,21 @@ class View {
         View::render("backend", $twigFile, $args);
     }
 
+    public static function getNav() {
+        if (isset($_SESSION['user'])) {
+            $nav = array(
+                array ('href' => BASEFOLDER, 'caption' => 'accueil'),
+                array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
+                array ('href' => BASEFOLDER. "profil", 'caption' => "profil"),
+            );
+        } else {
+            $nav = array(
+                array ('href' => BASEFOLDER, 'caption' => 'accueil'),
+                array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
+                array ('href' => BASEFOLDER. "login", 'caption' => "se connecter / s'enregistrer"),
+            );
+        }
+        return $nav;
+    }
 
 }
