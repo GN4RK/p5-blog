@@ -70,9 +70,9 @@ Route::add('/login', function(){
     }
 }, 'post');
 
-// disconnection page
+// logout page
 Route::add('/deconnexion', function(){
-    FrontendController::disconnection();
+    FrontendController::logout();
     header('Location: '. BASEURL);
 });
 
@@ -85,6 +85,15 @@ Route::pathNotFound(function(){
 Route::add('/validation', function(){
     FrontendController::validation();
 });
+
+// profile page
+Route::add('/profil', function(){
+    FrontendController::profile();
+}, 'get');
+// profile page
+Route::add('/profil', function(){
+    FrontendController::profile();
+}, 'post');
 
 
 
