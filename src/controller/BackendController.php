@@ -13,7 +13,18 @@ class BackendController extends Controller
     }
 
     static function adminNew() {
-        View::renderBack('new.twig');
+
+        $postStatus = "";
+        if (isset($_POST['title']) && isset($_POST['content']) && isset($_POST['status'])) {
+            if (!empty($_POST['title']) && !empty($_POST['content']) && !empty($_POST['status'])) {
+                $postManager = new PostManager();
+                $postManager->addPost($_POST['title'], $_POST['content'], $_POST['status']);
+                $postStatus = "post added";
+            }
+        }
+
+        View::renderBack('new.twig', ["postStatus" => $postStatus]);
+
     }
 
     static function adminPost() {
