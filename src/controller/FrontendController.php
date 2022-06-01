@@ -103,7 +103,7 @@ class FrontendController extends Controller
    
     }
 
-    static function disconnection() {
+    static function logout() {
         $_SESSION['user'] = null;
     }
 
@@ -138,6 +138,65 @@ class FrontendController extends Controller
         }
         
         View::renderFront('validation.twig', ["feedback" => $feedback]);
+    }
+
+    static function profile() {
+
+        $feedback = array();
+
+        if (isset($_SESSION['user']) && isset($_POST)) {
+
+            $userManager = new UserManager();
+
+            if (isset($_POST['name'])) {
+
+                if (!empty($_POST['name'])) {
+                    if ($_POST['name'] != $_SESSION['user']['name']) {
+                        $userManager->setName($_SESSION['user']['id'], $_POST['name']);
+                        $feedback[] = "name edited";
+                    }
+                }
+
+                if (!empty($_POST['first_name'])) {
+                    if ($_POST['first_name'] != $_SESSION['user']['first_name']) {
+                        $userManager->setFirstName($_SESSION['user']['id'], $_POST['first_name']);
+                        $feedback[] = "first_name edited";
+                    }
+                }
+
+                if (!empty($_POST['email'])) {
+                    if ($_POST['email'] != $_SESSION['user']['email']) {
+                        if ($userManager->emailAvailable($_POST['email'])) {
+                            $userManager->setEmail($_SESSION['user']['id'], $_POST['email']);
+                            $feedback[] = "email edited";
+                        } else {
+                            $feedback[] = "email already registered";
+                        }
+                    }
+                }
+
+                if (!empty($_POST['pass']) && !empty($_POST['pass2'])) {
+                    if ($_POST['pass'] == $_POST['pass2']) {
+                        if (strlen($_POST['pass']) > 5) {
+                            $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
+                            $userManager->setPassword($_SESSION['user']['id'], $hash);
+                            $feedback[] = "password edited";
+                        } else {
+                            $feedback[] = "password too short";
+                        }
+                    } else {
+                        $feedback[] = "pass and pass2 are different";
+                    }
+                }
+            }
+        }
+
+        if (!empty($feedback)) {
+            $userManager->loadInfo($_SESSION['user']['id']);
+        }
+
+        View::renderFront('profile.twig', ["session" => $_SESSION, "feedback" => $feedback]);
+
     }
 
     static function generateRandomString($length = 10) {
