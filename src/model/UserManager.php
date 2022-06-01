@@ -74,5 +74,58 @@ class UserManager extends Manager {
 
         return $affectedLines;
     }
+
+    public function loadInfo($id) {
+        $user = $this->getUserById($id);
+        $_SESSION['user'] = $user;
+    }
+
+    public function setName($id, $name) {
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE user
+            SET name = ?
+            WHERE id = ?'
+        );
+        $affectedLines = $user->execute(array($name, $id));
+
+        return $affectedLines;
+    }
+
+    public function setFirstName($id, $firstName) {
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE user
+            SET first_name = ?
+            WHERE id = ?'
+        );
+        $affectedLines = $user->execute(array($firstName, $id));
+
+        return $affectedLines;
+    }
+
+    public function setEmail($id, $email) {
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE user
+            SET email = ?
+            WHERE id = ?'
+        );
+        $affectedLines = $user->execute(array($email, $id));
+
+        return $affectedLines;
+    }
+
+    public function setPassword($id, $hash) {
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE user
+            SET password = ?
+            WHERE id = ?'
+        );
+        $affectedLines = $user->execute(array($hash, $id));
+
+        return $affectedLines;
+    }
     
 }
