@@ -11,29 +11,47 @@
 
         {% endif %}
 
-        <div class="news">
+        <div class="blogpost">
             <h1>{{ post.title }}</h1>
             <p><em>le {{ post.last_update_fr }}</em></p>
             <p>{{ post.content }}</p>
         </div>
 
-        {% if user != "visiteur" %}
-            
-            <h2>Commentaires</h2>
+        {% if role == "admin" %}
+            <a class="btn btn-secondary mb-3" href="{{ baseFolder }}admin/post/{{ post.id }}"><i class="fas fa-edit me-2"></i>Modifier</a>
+        {% endif %}
+
+        <h2>Commentaires</h2>
+
+        {% if user != "visiteur" %}            
             <form method="post" class="mb-3">
                 <div class="mb-3">
                     <label for="comment" class="form-label">Ajouter un commentaire</label><br />
                     <textarea id="comment" name="comment" class="form-control"></textarea>
                 </div>
                 <div>
-                    <button class="btn btn-primary">Ajouter</button>
+                    <button class="btn btn-primary"><i class="fas fa-comment me-2"></i>Ajouter</button>
                 </div>
             </form>
         {% endif %}
 
         {% for item in comments %}
-            <div><strong> {{ item.first_name }} </strong> <em>le {{ item.date_fr }} </em></div>
-            <div class="ms-3 mb-4"> {{ item.content }} </div>
+            {% if item.status == "public" or role == "admin" %}
+                <div>
+                    {% if role == "admin" %} 
+                        {% if item.status == "public" %} 
+                            <i class="fa-solid fa-check me-2"></i>
+                        {% else %}
+                            <i class="fa-solid fa-xmark me-2"></i>
+                        {% endif %}
+                    {% endif %}
+                    <i class="fas fa-comment-alt me-2"></i>
+                    <strong> {{ item.first_name }} </strong>
+                    <em>le {{ item.date_fr }} </em>
+                    
+                </div>
+                <div class="ms-3 mb-4"> {{ item.content }} </div>
+            {% endif %}
         {% endfor %}
 
     </div>
