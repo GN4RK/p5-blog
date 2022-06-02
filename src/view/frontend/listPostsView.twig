@@ -7,19 +7,21 @@
     </div>
 </header>
 
-<section class="page-section pt-0" id="contact">
+<section class="page-section" id="contact">
     {% for item in posts %}
-        <!-- Icon Divider-->
-        <div class="divider-custom">
-            <div class="divider-custom-line"></div>
-            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-            <div class="divider-custom-line"></div>
-        </div>
+        {% if not loop.first %}
+            <!-- Icon Divider-->
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+        {% endif %}
 
-        <div class="container">
+        <div class="container" role="button" onclick="window.location.href='./blog/{{ item.id }}'">
             <h3> {{ item.title }} </h3>
             <p><em>le {{ item.last_update_fr }}</em></p>
-            <p> {{ item.header }} </p>
+            <p> {{ item.header }}... </p>
             <p><em><a href="./blog/{{ item.id }}">Commentaires</a></em></p>
         </div>
     {% endfor %}
