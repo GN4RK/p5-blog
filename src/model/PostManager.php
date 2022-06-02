@@ -18,7 +18,7 @@ class PostManager extends Manager
     public function getPost($postId) {
         $db = $this->dbConnect();
         $req = $db->prepare(
-            'SELECT id, title, content, DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr 
+            'SELECT id, title, content, DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr, status 
             FROM post
             WHERE id = ?'
         );
@@ -35,6 +35,23 @@ class PostManager extends Manager
             'INSERT INTO post(title, header, content, status) VALUES(?, ?, ?, ?)'
         );
         $affectedLines = $user->execute(array($title, $header, $content, $status));
+
+        return $affectedLines;
+    }
+
+    public function editPost($id, $title, $content, $status) {
+        $header = substr($content, 0, 50);
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE post 
+            SET title = ?,
+            header = ?,
+            content = ?,
+            last_update = CURRENT_TIMESTAMP,
+            status = ?
+            WHERE id = ?'
+        );
+        $affectedLines = $user->execute(array($title, $header, $content, $status, $id));
 
         return $affectedLines;
     }
