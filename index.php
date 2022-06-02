@@ -39,7 +39,10 @@ Route::add('/blog', function(){
 // One particular blog post
 Route::add('/blog/([0-9]*)', function($id){
     FrontendController::blog($id);
-});
+}, 'get');
+Route::add('/blog/([0-9]*)', function($id){
+    FrontendController::blog($id);
+}, 'post');
 
 // Register page
 Route::add('/enregistrement', function(){
