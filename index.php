@@ -122,6 +122,14 @@ Route::add('/admin/post', function(){
     BackendController::adminPost();
 });
 
+// edit one blog post
+Route::add('/admin/post/([0-9]*)', function($id){
+    BackendController::editPost($id);
+}, 'get');
+Route::add('/admin/post/([0-9]*)', function($id){
+    BackendController::editPost($id);
+}, 'post');
+
 // comment moderation page
 Route::add('/admin/comment', function(){
     BackendController::adminComment();
