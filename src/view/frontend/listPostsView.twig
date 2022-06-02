@@ -1,0 +1,28 @@
+{% include 'header.twig' %}
+
+<header class="masthead bg-primary text-white text-center">
+    <div class="container d-flex align-items-center flex-column">
+        <h1>Blog</h1>
+        <h2>Derniers billets du blog :</h2>
+    </div>
+</header>
+
+<section class="page-section pt-0" id="contact">
+    {% for item in posts %}
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+
+        <div class="container">
+            <h3> {{ item.title }} </h3>
+            <p><em>le {{ item.last_update_fr }}</em></p>
+            <p> {{ item.header }} </p>
+            <p><em><a href="./blog/{{ item.id }}">Commentaires</a></em></p>
+        </div>
+    {% endfor %}
+</section>
+        
+{% include 'footer.twig' %}

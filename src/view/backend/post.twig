@@ -1,0 +1,22 @@
+{% include 'header.twig' %}
+
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container d-flex align-items-center flex-column">
+        <h1 class="masthead-heading text-uppercase mb-5">Modération des billets</h1>
+
+        <div class="list-group">
+            <a href="{{ BASEFOLDER }}admin/new" class="list-group-item list-group-item-action">
+                Ajouter un nouveau billet
+            </a>
+            <a href="{{ BASEFOLDER }}admin/post" class="list-group-item list-group-item-action">
+                Modération des billets
+            </a>
+            <a href="{{ BASEFOLDER }}admin/comment" class="list-group-item list-group-item-action">
+                Modération des commentaires
+            </a>
+        </div>
+    </div>
+</header>
+
+{% include 'footer.twig' %}

@@ -1,0 +1,105 @@
+{% include 'header.twig' %}
+
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container">
+        {% if feedback %}
+            {% for message in feedback %}
+                {% if message == "name edited" %}
+                
+                    <div class="alert alert-success" role="alert">
+                        Nom modifié avec succès.
+                    </div>
+
+                {% elseif message == "first_name edited" %}
+
+                    <div class="alert alert-success" role="alert">
+                        Prénom modifié avec succès.
+                    </div>
+
+                {% elseif message == "email edited" %}
+
+                    <div class="alert alert-success" role="alert">
+                        Email modifié avec succès.
+                    </div>
+
+                {% elseif message == "password edited" %}
+
+                    <div class="alert alert-success" role="alert">
+                        Mot de passe modifié avec succès.
+                    </div>
+
+                {% elseif message == "pass and pass2 are different" %}
+
+                    <div class="alert alert-danger" role="alert">
+                        Erreur : Les mots de passes sont différents.
+                    </div>
+
+                {% elseif message == "email already registered" %}
+
+                    <div class="alert alert-danger" role="alert">
+                        Erreur : Email déjà enregistré dans la base.
+                    </div>
+
+                {% elseif message == "password too short" %}
+
+                    <div class="alert alert-danger" role="alert">
+                        Erreur : Nouveau mot de passe trop court.
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if session.user %}
+
+            <!-- Contact Section Heading-->
+            <h1 class="text-uppercase mb-5">Profil</h1>
+            <form method="post" class="mb-3">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="{{session.user.name}}">
+                </div>
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Prénom</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Prénom" value="{{session.user.first_name}}">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{session.user.email}}">
+                </div>
+                <div class="mb-3">
+                    <label for="pass" class="form-label">Nouveau mot de passe</label>
+                    <input type="password" class="form-control" id="pass" name="pass">
+                </div>
+                <div class="mb-3">
+                    <label for="pass2" class="form-label">Vérification du mot de passe</label>
+                    <input type="password" class="form-control" id="pass2" name="pass2">
+                </div>
+            
+                <button type="submit" class="btn btn-primary"><i class="fas fa-edit me-2"></i>Modifier</button>
+
+            </form> 
+            <div class="mb-3">
+                <a href="{{ baseFolder }}deconnexion" class="btn btn-secondary"><i class="fas fa-sign-out me-2"></i> Se déconnecter</a>
+            </div>
+                
+        {% else %}
+            
+            <div class="container">
+                <!-- Contact Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Vous devez être connecté pour accéder à cette page.</h2>
+            </div>
+
+        {% endif %}
+
+    </div>
+</header>
+        
+{% include 'footer.twig' %}

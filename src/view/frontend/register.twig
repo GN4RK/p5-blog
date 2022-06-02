@@ -1,0 +1,80 @@
+{% include 'header.twig' %}
+
+<!-- Masthead-->
+<header class="masthead text-center">
+    <div class="container">
+        <!-- Register Section Heading-->
+        <h1 class="page-section-heading text-center text-uppercase text-secondary mb-0">S'enregistrer</h1>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Register Section Form-->
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+
+                {% if feedback == "missing information" %}
+                    <div class="alert alert-danger" role="alert">
+                        Information manquante.
+                    </div>
+                {% endif %}
+
+                {% if feedback == "email already used" %}
+                    <div class="alert alert-danger" role="alert">
+                        Email déjà utilisé.
+                    </div>
+                {% endif %}
+
+                {% if feedback == "password verification failed" %}
+                    <div class="alert alert-danger" role="alert">
+                        Erreur dans la vérification du mot de passe.
+                    </div>
+                {% endif %}
+
+                {% if feedback == "password too short" %}
+                    <div class="alert alert-danger" role="alert">
+                        Mot de passe trop court, au moins 6 caractères demandé.
+                    </div>
+                {% endif %}
+                
+                {% if feedback == "user created" %}
+                    <div class="alert alert-success" role="alert">
+                        Utilisateur créé. Vérifiez vos mail pour valider l'inscription.
+                    </div>
+
+                {% else %}
+                    <form method="post" id="registerForm">
+                        <!-- Email address input-->
+                        <div class="form-floating mb-3">
+                            <input 
+                                class="form-control" 
+                                id="email" 
+                                name="email" 
+                                type="email" 
+                                placeholder="nom@exemple.com"
+                                {% if post.email is defined %} value="{{ post.email }}" {% endif %}
+                                required />
+                            <label for="email">Email</label>
+                        </div>
+                        <!-- Password input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="pass" name="pass" type="password" placeholder="*********" required />
+                            <label for="pass">Mot de passe</label>
+                        </div>
+                        <!-- Password input 2-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="pass2" name="pass2" type="password" placeholder="*********" required />
+                            <label for="pass">Confirmation du mot de passe</label>
+                        </div>
+                        <!-- Submit Button-->
+                        <button class="btn btn-primary btn-xl" id="submitButton" type="submit">S'enregistrer</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+        
+{% include 'footer.twig' %}

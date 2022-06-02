@@ -1,0 +1,36 @@
+{% include 'header.twig' %}
+
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container">
+        {% if postStatus == "post added" %}
+            <div class="alert alert-success" role="alert">
+                Post ajouté.
+            </div>
+        {% endif %}
+        <h1 class="text-uppercase mb-5">Nouveau billet</h1>
+        <form method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">Titre du billet</label>
+                <input type="text" class="form-control col-xs-2" id="title" name="title" placeholder="Titre du billet">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Contenu</label>
+                <textarea class="form-control" id="content" name="content"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="input-group-text" for="status">Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option selected>...</option>
+                    <option value="pending">En attente</option>
+                    <option value="public">Publié</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+
+        </form> 
+          
+    </div>
+</header>
+
+{% include 'footer.twig' %}
