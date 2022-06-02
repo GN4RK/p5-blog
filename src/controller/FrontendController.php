@@ -30,15 +30,27 @@ class FrontendController extends Controller
         $postManager = new PostManager();
         $commentManager = new CommentManager();
         $post = $postManager->getPost($id);
-        $comments = $commentManager->getComments($id);
     
         // if id not found, display error
         if (!$post) {
             self::error404();
         } else {
+
+            $feedback = "";
+
+            if (isset($_POST['comment'])) {
+                if (!empty($_POST['comment'])) {
+                    $commentManager->postComment($id, $_SESSION['user']['id'], $_POST['comment']);
+                    $feedback = "comment added";
+                }
+            }
+
+            $comments = $commentManager->getComments($id);
+
             View::renderFront('postView.twig', [
                 'post' => $post, 
-                'comments' => $comments
+                'comments' => $comments,
+                'feedback' => $feedback
             ]);
         }
     }
