@@ -6,7 +6,7 @@ class CommentManager extends Manager
     public function getComments($idPost) {
         $db = $this->dbConnect();
         $comments = $db->query(
-            'SELECT comment.id_user, comment.content, DATE_FORMAT(comment.date, \'%d/%m/%Y à %Hh%imin%ss\') AS date_fr, user.first_name
+            'SELECT comment.id_user, comment.content, DATE_FORMAT(comment.date, \'%d/%m/%Y à %Hh%imin%ss\') AS date_fr, comment.status, user.first_name
             FROM comment 
             INNER JOIN user ON comment.id_user = user.id
             WHERE id_post = '. $idPost .'
