@@ -19,7 +19,7 @@ class CommentManager extends Manager
     public function postComment($idPost, $idUser, $comment) {
         $db = $this->dbConnect();
         $comments = $db->prepare(
-            'INSERT INTO comment(id_post, id_user, content, date) VALUES(?, ?, ?, NOW())'
+            'INSERT INTO comment(id_post, id_user, content, date, status) VALUES(?, ?, ?, NOW(), "pending")'
         );
         $affectedLines = $comments->execute(array($idPost, $idUser, $comment));
 
