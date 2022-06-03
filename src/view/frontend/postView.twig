@@ -23,7 +23,11 @@
 
         <h2>Commentaires</h2>
 
-        {% if user != "visiteur" %}            
+        {% if user == "visiteur" %}         
+        <div class="alert alert-warning" role="alert">
+            Vous devez être connecté pour poster un commentaire.
+        </div>
+        {% else %}         
             <form method="post" class="mb-3">
                 <div class="mb-3">
                     <label for="comment" class="form-label">Ajouter un commentaire</label><br />
