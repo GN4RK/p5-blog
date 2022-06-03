@@ -8,11 +8,11 @@ require_once('src/model/View.php');
 
 class FrontendController extends Controller
 {
-    static function home($mailStatus = null) {        
+    public static function home($mailStatus = null) {        
         View::renderFront('home.twig', ['mailStatus' => $mailStatus]);        
     }
 
-    static function blog($id = null) {
+    public static function blog($id = null) {
         if ($id != null) {
             self::post($id);
         } else {
@@ -20,13 +20,13 @@ class FrontendController extends Controller
         }
     }
     
-    static function listPosts() {
+    public static function listPosts() {
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
         View::renderFront('listPostsView.twig', ['posts' => $posts]);
     }
     
-    static function post($id) {
+    public static function post($id) {
         $postManager = new PostManager();
         $commentManager = new CommentManager();
         $post = $postManager->getPost($id);
@@ -55,11 +55,11 @@ class FrontendController extends Controller
         }
     }
 
-    static function register($feedback = null) {
+    public static function register($feedback = null) {
         View::renderFront('register.twig', ["feedback" => $feedback, 'post' => $_POST]);
     }
 
-    static function registerCheck() {
+    public static function registerCheck() {
 
         $userManager = new UserManager();
 
@@ -78,7 +78,7 @@ class FrontendController extends Controller
 
     }
 
-    static function sendVerificationMail($email) {
+    public static function sendVerificationMail($email) {
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         $key = $user['status'];
@@ -91,7 +91,7 @@ class FrontendController extends Controller
         return mail($email, $subject, $message, implode("\r\n", $headers));
     }
 
-    static function login() {
+    public static function login() {
         if (isset($_POST['email']) || isset($_POST['pass'])) {
             View::renderFront('login.twig', [
                 'loginFailed' => true
@@ -101,7 +101,7 @@ class FrontendController extends Controller
         }
     }
 
-    static function loginCheck() {
+    public static function loginCheck() {
         $userManager = new UserManager();
 
         $user = $userManager->checkUser($_POST['email'], $_POST['pass']);
@@ -115,24 +115,24 @@ class FrontendController extends Controller
    
     }
 
-    static function logout() {
+    public static function logout() {
         $_SESSION['user'] = null;
     }
 
-    static function legal() {
+    public static function legal() {
         View::renderFront('legal.twig');
     }
 
-    static function error404() {
+    public static function error404() {
         View::renderFront('error404.twig');
     }
 
-    static function sendMail() {
+    public static function sendMail() {
         // return mail("yoann.leonard@gmail.com", "contact", "message");
         return true;
     }
 
-    static function validation() {
+    public static function validation() {
         $feedback = "";
         $key = $_GET["key"];
         $email = $_GET["email"];
@@ -152,7 +152,7 @@ class FrontendController extends Controller
         View::renderFront('validation.twig', ["feedback" => $feedback]);
     }
 
-    static function profile() {
+    public static function profile() {
 
         $feedback = array();
 
@@ -211,7 +211,7 @@ class FrontendController extends Controller
 
     }
 
-    static function generateRandomString($length = 10) {
+    private static function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
