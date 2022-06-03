@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 class Route {
 
@@ -13,7 +14,7 @@ class Route {
     * @param string|array $method  Either a string of allowed method or an array with string values
     *
     */
-  public static function add($expression, $function, $method = 'get'){
+  public static function add(string $expression, callable $function, $method = 'get'): void {
     array_push(self::$routes, Array(
       'expression' => $expression,
       'function' => $function,
@@ -21,19 +22,19 @@ class Route {
     ));
   }
 
-  public static function getAll() {
+  public static function getAll(): array {
     return self::$routes;
   }
 
-  public static function pathNotFound($function) {
+  public static function pathNotFound(callable $function): void {
     self::$pathNotFound = $function;
   }
 
-  public static function methodNotAllowed($function) {
+  public static function methodNotAllowed(callable $function): void {
     self::$methodNotAllowed = $function;
   }
 
-  public static function run($basepath = '', $case_matters = false, $trailing_slash_matters = false, $multimatch = false) {
+  public static function run(string $basepath = '', bool $case_matters = false, bool $trailing_slash_matters = false, bool $multimatch = false): void {
 
     // The basepath never needs a trailing slash
     // Because the trailing slash will be added using the route expressions

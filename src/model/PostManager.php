@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 require_once("src/model/Manager.php");
 
 class PostManager extends Manager
 {
-    public function getPosts() {
+    public function getPosts(): PDOStatement {
         $db = $this->dbConnect();
         $req = $db->query(
             'SELECT id, title, header, content, DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr 
@@ -15,20 +16,20 @@ class PostManager extends Manager
         return $req;
     }
 
-    public function getPost($postId) {
+    public function getPost(int $idPost): array {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT id, title, content, DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr, status 
             FROM post
             WHERE id = ?'
         );
-        $req->execute(array($postId));
+        $req->execute(array($idPost));
         $post = $req->fetch();
 
         return $post;
     }
 
-    public function addPost($title, $content, $status) {
+    public function addPost(string $title, string $content, string $status): bool {
         $header = substr($content, 0, 50);
         $db = $this->dbConnect();
         $user = $db->prepare(
@@ -39,7 +40,7 @@ class PostManager extends Manager
         return $affectedLines;
     }
 
-    public function editPost($id, $title, $content, $status) {
+    public function editPost(int $idPost, string $title, string $content, string $status): bool {
         $header = substr($content, 0, 50);
         $db = $this->dbConnect();
         $user = $db->prepare(
@@ -51,7 +52,7 @@ class PostManager extends Manager
             status = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($title, $header, $content, $status, $id));
+        $affectedLines = $user->execute(array($title, $header, $content, $status, $idPost));
 
         return $affectedLines;
     }

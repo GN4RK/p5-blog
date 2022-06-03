@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once("src/controller/Controller.php");
 // loading classes
 require_once('src/model/PostManager.php');
@@ -8,11 +9,11 @@ require_once('src/model/View.php');
 
 class FrontendController extends Controller
 {
-    public static function home($mailStatus = null) {        
+    public static function home(string $mailStatus = null): void {        
         View::renderFront('home.twig', ['mailStatus' => $mailStatus]);        
     }
 
-    public static function blog($id = null) {
+    public static function blog(int $id = null): void {
         if ($id != null) {
             self::post($id);
         } else {
@@ -20,13 +21,13 @@ class FrontendController extends Controller
         }
     }
     
-    public static function listPosts() {
+    public static function listPosts(): void {
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
         View::renderFront('listPostsView.twig', ['posts' => $posts]);
     }
     
-    public static function post($id) {
+    public static function post(int $id): void {
         $postManager = new PostManager();
         $commentManager = new CommentManager();
         $post = $postManager->getPost($id);
@@ -55,11 +56,11 @@ class FrontendController extends Controller
         }
     }
 
-    public static function register($feedback = null) {
+    public static function register(string $feedback = null): void {
         View::renderFront('register.twig', ["feedback" => $feedback, 'post' => $_POST]);
     }
 
-    public static function registerCheck() {
+    public static function registerCheck(): string {
 
         $userManager = new UserManager();
 
@@ -78,7 +79,7 @@ class FrontendController extends Controller
 
     }
 
-    public static function sendVerificationMail($email) {
+    public static function sendVerificationMail(string $email): bool {
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         $key = $user['status'];
@@ -91,7 +92,7 @@ class FrontendController extends Controller
         return mail($email, $subject, $message, implode("\r\n", $headers));
     }
 
-    public static function login() {
+    public static function login(): void {
         if (isset($_POST['email']) || isset($_POST['pass'])) {
             View::renderFront('login.twig', [
                 'loginFailed' => true
@@ -101,7 +102,7 @@ class FrontendController extends Controller
         }
     }
 
-    public static function loginCheck() {
+    public static function loginCheck(): bool {
         $userManager = new UserManager();
 
         $user = $userManager->checkUser($_POST['email'], $_POST['pass']);
@@ -115,24 +116,25 @@ class FrontendController extends Controller
    
     }
 
-    public static function logout() {
+    public static function logout(): void {
         $_SESSION['user'] = null;
     }
 
-    public static function legal() {
+    public static function legal(): void {
         View::renderFront('legal.twig');
     }
 
-    public static function error404() {
+    public static function error404(): void {
         View::renderFront('error404.twig');
     }
 
-    public static function sendMail() {
+    public static function sendMail(): bool {
         // return mail("yoann.leonard@gmail.com", "contact", "message");
+        // TODO send mail with proper info
         return true;
     }
 
-    public static function validation() {
+    public static function validation(): void {
         $feedback = "";
         $key = $_GET["key"];
         $email = $_GET["email"];
@@ -152,7 +154,7 @@ class FrontendController extends Controller
         View::renderFront('validation.twig', ["feedback" => $feedback]);
     }
 
-    public static function profile() {
+    public static function profile(): void {
 
         $feedback = array();
 
@@ -211,7 +213,7 @@ class FrontendController extends Controller
 
     }
 
-    private static function generateRandomString($length = 10) {
+    private static function generateRandomString(int $length = 10): string {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';

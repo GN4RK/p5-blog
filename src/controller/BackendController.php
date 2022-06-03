@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once("src/controller/Controller.php");
 // loading classes
 require_once('src/model/PostManager.php');
@@ -8,11 +9,11 @@ require_once('src/model/View.php');
 
 class BackendController extends Controller
 {
-    static function admin() {
+    static function admin(): void {
         View::renderBack('admin.twig');
     }
 
-    static function adminNew() {
+    static function adminNew(): void {
 
         $postStatus = "";
         if (isset($_POST['title']) && isset($_POST['content']) && isset($_POST['status'])) {
@@ -27,15 +28,15 @@ class BackendController extends Controller
 
     }
 
-    static function adminPost() {
+    static function adminPost(): void {
         View::renderBack('post.twig');
     }
 
-    static function adminComment() {
+    static function adminComment(): void {
         View::renderBack('comment.twig');
     }
 
-    static function editPost($id) {
+    static function editPost(int $id) {
 
         $postManager = new PostManager();
         $post = $postManager->getPost($id);

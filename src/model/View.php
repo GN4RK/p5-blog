@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 class View {
 
-    public static function render($env, $twigFile, $args = array()) {
+    public static function render(string $env, string $twigFile, array $args = array()): void {
 
         $loader = new \Twig\Loader\FilesystemLoader("src/view/$env");
         $twig = new \Twig\Environment($loader);
@@ -26,15 +28,15 @@ class View {
 
     }
 
-    public static function renderFront($twigFile, $args = array()) {
+    public static function renderFront(string $twigFile, array $args = array()): void {
        View::render("frontend", $twigFile, $args);
     }
 
-    public static function renderBack($twigFile, $args = array()) {
+    public static function renderBack(string $twigFile, array $args = array()): void {
         View::render("backend", $twigFile, $args);
     }
 
-    public static function getNav() {
+    public static function getNav(): array {
         if (isset($_SESSION['user'])) {
             $nav = array(
                 array ('href' => BASEFOLDER, 'caption' => 'accueil'),
