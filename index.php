@@ -130,6 +130,11 @@ Route::add('/admin/post/([0-9]*)', function($id){
     BackendController::editPost($id);
 }, 'post');
 
+// delete one blog post
+Route::add('/admin/post/([0-9]*)/delete', function($id){
+    BackendController::deletePost($id);
+});
+
 // comment moderation page
 Route::add('/admin/comment', function(){
     BackendController::adminComment();
