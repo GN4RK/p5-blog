@@ -9,7 +9,7 @@ require_once('src/model/View.php');
 
 class FrontendController extends Controller
 {
-    public static function home(string $mailStatus = null): void {        
+    public static function home(string $mailStatus = null): void {
         View::renderFront('home.twig', ['mailStatus' => $mailStatus]);        
     }
 
@@ -41,7 +41,7 @@ class FrontendController extends Controller
 
             if (isset($_POST['comment'])) {
                 if (!empty($_POST['comment'])) {
-                    $commentManager->postComment($id, $_SESSION['user']['id'], $_POST['comment']);
+                    $commentManager->postComment($id, (int)$_SESSION['user']['id'], $_POST['comment']);
                     $feedback = "comment added";
                 }
             }
@@ -166,14 +166,14 @@ class FrontendController extends Controller
 
                 if (!empty($_POST['name'])) {
                     if ($_POST['name'] != $_SESSION['user']['name']) {
-                        $userManager->setName($_SESSION['user']['id'], $_POST['name']);
+                        $userManager->setName((int)$_SESSION['user']['id'], $_POST['name']);
                         $feedback[] = "name edited";
                     }
                 }
 
                 if (!empty($_POST['first_name'])) {
                     if ($_POST['first_name'] != $_SESSION['user']['first_name']) {
-                        $userManager->setFirstName($_SESSION['user']['id'], $_POST['first_name']);
+                        $userManager->setFirstName((int)$_SESSION['user']['id'], $_POST['first_name']);
                         $feedback[] = "first_name edited";
                     }
                 }
@@ -181,7 +181,7 @@ class FrontendController extends Controller
                 if (!empty($_POST['email'])) {
                     if ($_POST['email'] != $_SESSION['user']['email']) {
                         if ($userManager->emailAvailable($_POST['email'])) {
-                            $userManager->setEmail($_SESSION['user']['id'], $_POST['email']);
+                            $userManager->setEmail((int)$_SESSION['user']['id'], $_POST['email']);
                             $feedback[] = "email edited";
                         } else {
                             $feedback[] = "email already registered";
@@ -193,7 +193,7 @@ class FrontendController extends Controller
                     if ($_POST['pass'] == $_POST['pass2']) {
                         if (strlen($_POST['pass']) > 5) {
                             $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
-                            $userManager->setPassword($_SESSION['user']['id'], $hash);
+                            $userManager->setPassword((int)$_SESSION['user']['id'], $hash);
                             $feedback[] = "password edited";
                         } else {
                             $feedback[] = "password too short";
@@ -206,7 +206,7 @@ class FrontendController extends Controller
         }
 
         if (!empty($feedback)) {
-            $userManager->loadInfo($_SESSION['user']['id']);
+            $userManager->loadInfo((int)$_SESSION['user']['id']);
         }
 
         View::renderFront('profile.twig', ["session" => $_SESSION, "feedback" => $feedback]);
