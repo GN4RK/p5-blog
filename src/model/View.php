@@ -5,7 +5,7 @@ class View {
 
     public static function render(string $env, string $twigFile, array $args = array()): void {
 
-        $loader = new \Twig\Loader\FilesystemLoader("src/view/$env");
+        $loader = new \Twig\Loader\FilesystemLoader("src/view/");
         $twig = new \Twig\Environment($loader);
 
         $nav = View::getNav();        
@@ -14,6 +14,7 @@ class View {
 
         $prepare = array(
             'baseFolder' => BASEFOLDER,
+            'body'       => $env. "/" .$twigFile,
             'navigation' => $nav,
             'user'       => $name,
             'role'       => $role
@@ -23,7 +24,7 @@ class View {
             $prepare[$k] = $v;
         }
     
-        $template = $twig->load($twigFile);
+        $template = $twig->load("template.twig");
         echo $template->render($prepare);
 
     }
