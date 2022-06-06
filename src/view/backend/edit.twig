@@ -1,5 +1,3 @@
-{% include 'header.twig' %}
-
 <!-- Masthead-->
 <header class="masthead">
     <div class="container">
@@ -7,30 +5,42 @@
             <div class="alert alert-success" role="alert">
                 Post modifié.
             </div>
+        {% elseif postStatus == "post not found" %}
+            <div class="alert alert-danger" role="alert">
+                Billet non trouvé.
+            </div>
         {% endif %}
-        <h1 class="text-uppercase mb-5">Modification d'un billet</h1>
-        <form method="post">
-            <div class="mb-3">
-                <label for="title" class="form-label">Titre du billet</label>
-                <input type="text" class="form-control col-xs-2" id="title" name="title" placeholder="Titre du billet" value="{{ post.title }}">
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">Contenu</label>
-                <textarea class="form-control" id="content" name="content">{{ post.content }}</textarea>
-            </div>
-            <div class="mb-3">
-                <label class="input-group-text" for="status">Status</label>
-                <select class="form-select" id="status" name="status">
-                    <option selected>...</option>
-                    <option value="pending" {% if post.status == "pending" %} selected {% endif %} >En attente</option>
-                    <option value="public" {% if post.status == "public" %} selected {% endif %}>Publié</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Envoyer</button>
 
-        </form> 
+        {% if postStatus != "post not found" %}
+            <h1 class="text-uppercase mb-5">Modification d'un billet</h1>
+            <form class="mb-3" method="post">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Titre du billet</label>
+                    <input type="text" class="form-control col-xs-2" id="title" name="title" placeholder="Titre du billet" value="{{ post.title }}">
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Contenu</label>
+                    <textarea class="form-control" id="content" name="content">{{ post.content }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="input-group-text" for="status">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option selected>...</option>
+                        <option value="pending" {% if post.status == "pending" %} selected {% endif %} >En attente</option>
+                        <option value="public" {% if post.status == "public" %} selected {% endif %}>Publié</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+
+            </form>
+            <div class="mb-3">
+                <a href="admin/post/{{ post.id }}/delete" type="button" class="btn btn-danger">Supprimer le billet</a>
+            </div>
+            <div class="mb-3">
+                <a href="blog/{{ post.id }}" type="button" class="btn btn-secondary">Voir le post</a>
+            </div>
+                
+        {% endif %}
           
     </div>
 </header>
-
-{% include 'footer.twig' %}
