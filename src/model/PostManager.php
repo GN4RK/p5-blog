@@ -17,7 +17,7 @@ class PostManager extends Manager
         return $req;
     }
 
-    public function getPost(int $idPost): array {
+    public function getPost(int $idPost) {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT id, title, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%imin%ss\') AS publication_date_fr, 
@@ -34,10 +34,10 @@ class PostManager extends Manager
     public function addPost(string $title, string $content, string $status): bool {
         $header = substr($content, 0, 50);
         $db = $this->dbConnect();
-        $user = $db->prepare(
+        $post = $db->prepare(
             'INSERT INTO post(title, header, content, status) VALUES(?, ?, ?, ?)'
         );
-        $affectedLines = $user->execute(array($title, $header, $content, $status));
+        $affectedLines = $post->execute(array($title, $header, $content, $status));
 
         return $affectedLines;
     }
@@ -45,7 +45,7 @@ class PostManager extends Manager
     public function editPost(int $idPost, string $title, string $content, string $status): bool {
         $header = substr($content, 0, 50);
         $db = $this->dbConnect();
-        $user = $db->prepare(
+        $post = $db->prepare(
             'UPDATE post 
             SET title = ?,
             header = ?,
@@ -54,9 +54,21 @@ class PostManager extends Manager
             status = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($title, $header, $content, $status, $idPost));
+        $affectedLines = $post->execute(array($title, $header, $content, $status, $idPost));
 
         return $affectedLines;
+    }
+
+    public function deletePost(int $idPost) {
+
+        $db = $this->dbConnect();
+        $post = $db->prepare(
+            'DELETE FROM post WHERE id = ?'
+        );
+        $affectedLines = $post->execute(array($idPost));
+
+        return $affectedLines;
+
     }
 
 }
