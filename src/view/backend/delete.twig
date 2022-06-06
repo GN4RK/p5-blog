@@ -1,0 +1,14 @@
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container">
+        {% if postStatus == "post deleted" %}
+            <div class="alert alert-success" role="alert">
+                Billet supprimé avec succès.
+            </div>
+        {% elseif postStatus == "post not found" %}
+            <div class="alert alert-danger" role="alert">
+                Billet non trouvé.
+            </div>
+        {% endif %}
+    </div>
+</header>
