@@ -13,7 +13,12 @@
 
         <div class="blogpost">
             <h1>{{ post.title }}</h1>
-            <p><em>le {{ post.last_update_fr }}</em></p>
+            {% if post.publication_date_fr == post.last_update_fr %}
+                <p><em>le {{ post.last_update_fr }}</em></p>
+            {% else %}
+                <p><em>le {{ post.publication_date_fr }}</em> - <em>mis à jour le {{ post.last_update_fr }}</em></p>
+            {% endif %}
+
             <p>{{ post.content }}</p>
         </div>
 

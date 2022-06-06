@@ -7,7 +7,8 @@ class PostManager extends Manager
     public function getPosts(): PDOStatement {
         $db = $this->dbConnect();
         $req = $db->query(
-            'SELECT id, title, header, content, DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr 
+            'SELECT id, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%imin%ss\') AS publication_date_fr,
+            DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr 
             FROM post 
             ORDER BY last_update 
             DESC LIMIT 0, 5'
@@ -19,7 +20,8 @@ class PostManager extends Manager
     public function getPost(int $idPost): array {
         $db = $this->dbConnect();
         $req = $db->prepare(
-            'SELECT id, title, content, DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr, status 
+            'SELECT id, title, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%imin%ss\') AS publication_date_fr, 
+            DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr, status 
             FROM post
             WHERE id = ?'
         );
