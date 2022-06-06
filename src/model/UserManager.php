@@ -4,7 +4,7 @@ require_once("src/model/Manager.php");
 
 class UserManager extends Manager {
 
-    public function checkUser(string $email, string $password): bool {
+    public function checkUser(string $email, string $password) {
         $user = $this->getUserByEmail($email, true);
         if ($user) {
             if (password_verify($password, $user["password"])) {
@@ -35,7 +35,7 @@ class UserManager extends Manager {
         return $affectedLines;
     }
 
-    public function getUserById($idUser): bool {
+    public function getUserById(int $idUser) {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
@@ -47,7 +47,7 @@ class UserManager extends Manager {
         return $user;
     }
 
-    public function getUserByEmail(string $email, bool $validated = false): array {
+    public function getUserByEmail(string $email, bool $validated = false) {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
