@@ -49,15 +49,24 @@ class BackendController extends Controller
 
         $postStatus = "";
 
+        $isSet = isset($_POST['title']) && isset($_POST['header']) && isset($_POST['content']) && isset($_POST['status']);
+
         if ($post) {
-            if (isset($_POST['title']) && isset($_POST['content']) && isset($_POST['status'])) {
-                if (!empty($_POST['title']) && !empty($_POST['content']) && !empty($_POST['status'])) {
-                    if (($_POST['title'] != $post['title']) || ($_POST['content'] != $post['content']) || ($_POST['status'] != $post['status'])) {
-    
-                        $postManager->editPost($id, $_POST['title'], $_POST['content'], $_POST['status']);
+            if ($isSet) {
+
+                $notEmpty = !empty($_POST['title']) && !empty($_POST['header']) && !empty($_POST['content']) && !empty($_POST['status']);
+                if ($notEmpty) {
+
+                    $modified = 
+                        ($_POST['title'] != $post['title']) || 
+                        ($_POST['header'] != $post['header']) || 
+                        ($_POST['content'] != $post['content']) || 
+                        ($_POST['status'] != $post['status']);
+
+                    if ($modified) {
+                        $postManager->editPost($id, $_POST['title'], $_POST['header'], $_POST['content'], $_POST['status']);
                         $postStatus = "post edited";
                         $post = $postManager->getPost($id);
-    
                     }
                 }
             }
