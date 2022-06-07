@@ -128,5 +128,25 @@ class UserManager extends Manager {
 
         return $affectedLines;
     }
+
+    public function setRole(int $idUser, string $role): bool {
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE user
+            SET role = ?
+            WHERE id = ?'
+        );
+        $affectedLines = $user->execute(array($role, $idUser));
+
+        return $affectedLines;
+    }
+
+    public function getUsers(): array {
+        $db = $this->dbConnect();
+        $req = $db->prepare('SELECT * FROM user');
+        $req->execute();
+        $users = $req->fetchAll();
+        return $users;
+    }
     
 }
