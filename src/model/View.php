@@ -14,7 +14,7 @@ class View {
 
         $prepare = array(
             'baseFolder' => BASEFOLDER,
-            'body'       => $env. "/" .$twigFile,
+            'content'       => $env. "/" .$twigFile,
             'navigation' => $nav,
             'user'       => $name,
             'role'       => $role
