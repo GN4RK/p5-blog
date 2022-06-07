@@ -28,6 +28,23 @@ class BackendController extends Controller
 
     }
 
+    static function adminUser(): void {
+        $userManager = new UserManager();
+        $users = $userManager->getUsers();
+
+        if (!empty($_POST)) {
+            foreach($_POST as $k => $v) {
+                $idUser = (int)substr($k, 5);
+                $userManager->setRole($idUser, $v);
+            }
+
+            $users = $userManager->getUsers();
+
+        }
+
+        View::renderBack('users.twig', ["title" => "Administration - Utilisateurs", "users" => $users]);
+    }
+
     static function adminPost(): void {
         View::renderBack('post.twig', ["title" => "Administration - Billets"]);
     }
