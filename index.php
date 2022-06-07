@@ -117,6 +117,14 @@ Route::add('/admin/new', function(){
     BackendController::adminNew();
 }, 'post');
 
+// users moderation page
+Route::add('/admin/user', function(){
+    BackendController::adminUser();
+}, 'get');
+Route::add('/admin/user', function(){
+    BackendController::adminUser();
+}, 'post');
+
 // blog posts moderation page
 Route::add('/admin/post', function(){
     BackendController::adminPost();
