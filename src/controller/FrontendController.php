@@ -30,7 +30,11 @@ class FrontendController extends Controller
     public static function post(int $id): void {
         $postManager = new PostManager();
         $commentManager = new CommentManager();
+        $userManager = new UserManager();
+
         $post = $postManager->getPost($id);
+        $author = $userManager->getUserById((int)$post['id_user']);
+
     
         // if id not found, display error
         if (!$post) {
@@ -50,6 +54,7 @@ class FrontendController extends Controller
 
             View::renderFront('postView.twig', [
                 'title' => 'Blog - '. $post['title'], 
+                'author' => $author, 
                 'post' => $post, 
                 'comments' => $comments,
                 'feedback' => $feedback
