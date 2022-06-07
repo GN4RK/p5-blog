@@ -10,7 +10,7 @@ require_once('src/model/View.php');
 class FrontendController extends Controller
 {
     public static function home(string $mailStatus = null): void {
-        View::renderFront('home.twig', ['mailStatus' => $mailStatus]);        
+        View::renderFront('home.twig', ['title' => 'Accueil', 'mailStatus' => $mailStatus]);        
     }
 
     public static function blog(int $id = null): void {
@@ -24,7 +24,7 @@ class FrontendController extends Controller
     public static function listPosts(): void {
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
-        View::renderFront('listPostsView.twig', ['posts' => $posts]);
+        View::renderFront('listPostsView.twig', ['title' => 'Blog', 'posts' => $posts]);
     }
     
     public static function post(int $id): void {
@@ -49,6 +49,7 @@ class FrontendController extends Controller
             $comments = $commentManager->getComments($id);
 
             View::renderFront('postView.twig', [
+                'title' => 'Blog - '. $post['title'], 
                 'post' => $post, 
                 'comments' => $comments,
                 'feedback' => $feedback
@@ -57,7 +58,7 @@ class FrontendController extends Controller
     }
 
     public static function register(string $feedback = null): void {
-        View::renderFront('register.twig', ["feedback" => $feedback, 'post' => $_POST]);
+        View::renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => $_POST]);
     }
 
     public static function registerCheck(): string {
@@ -95,10 +96,11 @@ class FrontendController extends Controller
     public static function login(): void {
         if (isset($_POST['email']) || isset($_POST['pass'])) {
             View::renderFront('login.twig', [
+                'title' => 'Connexion / Enregistrement',
                 'loginFailed' => true
             ]);
         } else {
-            View::renderFront('login.twig');
+            View::renderFront('login.twig', ['title' => 'Connexion / Enregistrement']);
         }
     }
 
@@ -121,11 +123,11 @@ class FrontendController extends Controller
     }
 
     public static function legal(): void {
-        View::renderFront('legal.twig');
+        View::renderFront('legal.twig', ['title' => 'Mention légales']);
     }
 
     public static function error404(): void {
-        View::renderFront('error404.twig');
+        View::renderFront('error404.twig', ['title' => 'Erreur 404']);
     }
 
     public static function sendMail(): bool {
@@ -151,7 +153,7 @@ class FrontendController extends Controller
             $feedback = "user not found";
         }
         
-        View::renderFront('validation.twig', ["feedback" => $feedback]);
+        View::renderFront('validation.twig', ['title' => 'Validation', "feedback" => $feedback]);
     }
 
     public static function profile(): void {
@@ -209,7 +211,7 @@ class FrontendController extends Controller
             $userManager->loadInfo((int)$_SESSION['user']['id']);
         }
 
-        View::renderFront('profile.twig', ["session" => $_SESSION, "feedback" => $feedback]);
+        View::renderFront('profile.twig', ["title" => "Profil", "session" => $_SESSION, "feedback" => $feedback]);
 
     }
 

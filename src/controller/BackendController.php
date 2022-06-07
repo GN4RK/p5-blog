@@ -10,7 +10,7 @@ require_once('src/model/View.php');
 class BackendController extends Controller
 {
     static function admin(): void {
-        View::renderBack('admin.twig');
+        View::renderBack('admin.twig', ["title" => "Administration"]);
     }
 
     static function adminNew(): void {
@@ -24,16 +24,16 @@ class BackendController extends Controller
             }
         }
 
-        View::renderBack('new.twig', ["postStatus" => $postStatus]);
+        View::renderBack('new.twig', ["title" => "Administration - Nouveau billet", "postStatus" => $postStatus]);
 
     }
 
     static function adminPost(): void {
-        View::renderBack('post.twig');
+        View::renderBack('post.twig', ["title" => "Administration - Billets"]);
     }
 
     static function adminComment(): void {
-        View::renderBack('comment.twig');
+        View::renderBack('comment.twig', ["title" => "Administration - Commentaires"]);
     }
 
     static function validateComment(int $idComment): int {
@@ -66,7 +66,7 @@ class BackendController extends Controller
         }
         
         
-        View::renderBack('edit.twig', ["post" => $post, "postStatus" => $postStatus]);
+        View::renderBack('edit.twig', ["title" => "Administration - Modification de billet", "post" => $post, "postStatus" => $postStatus]);
 
     }
 
@@ -84,7 +84,7 @@ class BackendController extends Controller
             $postStatus = "post not found";
         }
         
-        View::renderBack('delete.twig', ["postStatus" => $postStatus]);
+        View::renderBack('delete.twig', ["title" => "Administration - Suppression de billet", "postStatus" => $postStatus]);
 
     }
 }
