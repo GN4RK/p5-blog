@@ -36,6 +36,12 @@ class BackendController extends Controller
         View::renderBack('comment.twig');
     }
 
+    static function validateComment(int $idComment): int {
+        $commentManager = new CommentManager();
+        $commentManager->validateComment($idComment);
+        return $commentManager->getIdPost($idComment);
+    }
+
     static function editPost(int $id) {
 
         $postManager = new PostManager();

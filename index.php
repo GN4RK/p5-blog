@@ -140,6 +140,11 @@ Route::add('/admin/comment', function(){
     BackendController::adminComment();
 });
 
+// comment validation page
+Route::add('/admin/comment/validate/([0-9]*)', function($idComment){
+    FrontendController::blog(BackendController::validateComment($idComment));
+});
+
 
 
 
