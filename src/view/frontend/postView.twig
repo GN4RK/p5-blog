@@ -11,11 +11,15 @@
 
         <div class="blogpost">
             <h1>{{ post.title }}</h1>
-            {% if post.publication_date_fr == post.last_update_fr %}
-                <p><em>le {{ post.last_update_fr }}</em></p>
-            {% else %}
-                <p><em>le {{ post.publication_date_fr }}</em> - <em>mis à jour le {{ post.last_update_fr }}</em></p>
-            {% endif %}
+            <p>Écrit par <strong>{{ author.first_name }} {{ author.name }} </strong>
+                {% if post.publication_date_fr == post.last_update_fr %}
+                    <em>le {{ post.last_update_fr }}</em>
+                {% else %}
+                    <em>le {{ post.publication_date_fr }}</em> - <em>mis à jour le {{ post.last_update_fr }}</em><
+                {% endif %}
+            </p>
+
+            <p><em>{{ post.header }}</em></p>
 
             <p>{{ post.content }}</p>
         </div>
