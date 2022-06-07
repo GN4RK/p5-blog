@@ -11,12 +11,14 @@ class View {
         $nav = View::getNav();        
         $name = (isset($_SESSION['user']['first_name'])) ? ($_SESSION['user']['first_name']) : "visiteur";
         $role = (isset($_SESSION['user']['role'])) ? ($_SESSION['user']['role']) : "visiteur";
+        $idUser = (isset($_SESSION['user']['id'])) ? ((int)$_SESSION['user']['id']) : 0;
 
         $prepare = array(
             'baseFolder' => BASEFOLDER,
             'content'       => $env. "/" .$twigFile,
             'navigation' => $nav,
             'user'       => $name,
+            'id_user'       => $idUser,
             'role'       => $role
         );
 

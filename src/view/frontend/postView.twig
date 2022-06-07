@@ -3,8 +3,8 @@
     <div class="container col-sm-7 col-md-7 col-lg-6 col-xl-5">
         {% if feedback == "comment added" %}
                 
-            <div class="alert alert-success" role="alert">
-                Commentaire ajouté avec succès.
+            <div class="alert alert-warning" role="alert">
+                Commentaire en attente de validation par un administrateur.
             </div>
 
         {% endif %}
@@ -43,7 +43,7 @@
         {% endif %}
 
         {% for item in comments %}
-            {% if item.status == "public" or role == "admin" %}
+            {% if item.status == "public" or role == "admin" or item.id_user == id_user %}
                 <div>
                     {% if role == "admin" %} 
                         {% if item.status == "public" %} 
@@ -53,9 +53,22 @@
                         {% endif %}
                     {% endif %}
                     <i class="fas fa-comment-alt me-2"></i>
-                    <strong> {{ item.first_name }} </strong>
-                    <em>le {{ item.date_fr }} </em>
                     
+
+                    <strong class="{% if item.id_user == id_user %}text-danger{% endif %}"> {{ item.first_name }} </strong>
+                    <em>le {{ item.date_fr }} </em>
+                    {% if role == "admin" and item.status != "public" %} 
+                        <span class="badge badge-secondary">
+                            <a href="admin/comment/validate/{{ item.id }}"><i class="fa-solid fa-check ms-2 me-2"></i> valider</a>
+                        </span>
+                    {% endif %}
+
+                    {% if role != "admin" and item.id_user == id_user and item.status != "public" %} 
+                        <span class="text-info">
+                            - en attente de validation
+                        </span>
+                    {% endif %}
+
                 </div>
                 <div class="ms-3 mb-4"> {{ item.content }} </div>
             {% endif %}
