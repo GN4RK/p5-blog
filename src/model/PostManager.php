@@ -8,7 +8,7 @@ class PostManager extends Manager
         $db = $this->dbConnect();
         $req = $db->query(
             'SELECT id, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr,
-            DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr 
+            DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr, status 
             FROM post 
             ORDER BY last_update 
             DESC LIMIT 0, 5'
