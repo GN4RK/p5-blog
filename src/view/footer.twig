@@ -22,13 +22,11 @@
         <!-- Copyright Section-->
         <div class="copyright py-4 text-center text-white">
             <div class="container">
-                <div class="row">
-                    <ul>
-                        <li><a href="{{ baseFolder }}mentions-legales">Mention légales</a></li>
+                <div class="row mb-3">
+                        <a href="{{ baseFolder }}mentions-legales">Mention légales</a>
                         {% if role == "admin" %}
-                            <li><a href="{{ baseFolder }}admin">Administration</a></li>
+                            <a href="{{ baseFolder }}admin">Administration</a>
                         {% endif %}
-                    </ul>
                 </div>
                 <div class="row">
                     <small>
