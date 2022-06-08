@@ -3,7 +3,7 @@ session_start();
 
 require('src/controller/FrontendController.php');
 require('src/controller/BackendController.php');
-require_once 'vendor/autoload.php'; // Twig
+require_once('vendor/autoload.php'); // Twig
 require_once('src/controller/Route.php'); // Include router class
 
 // loading config from JSON file 
@@ -150,7 +150,14 @@ Route::add('/admin/comment', function(){
 
 // comment validation page
 Route::add('/admin/comment/validate/([0-9]*)', function($idComment){
-    FrontendController::blog(BackendController::validateComment($idComment));
+    $idPost = BackendController::validateComment($idComment);
+    header('Location: '. BASEURL ."blog/$idPost");
+});
+
+// comment hiding page
+Route::add('/admin/comment/hide/([0-9]*)', function($idComment){
+    $idPost = BackendController::hideComment($idComment);
+    header('Location: '. BASEURL ."blog/$idPost");
 });
 
 

@@ -52,7 +52,7 @@
         {% endif %}
 
         {% for item in comments %}
-            {% if item.status == "public" or role == "admin" or item.id_user == id_user %}
+            {% if (item.status == "public") or (role == "admin") or (item.id_user == id_user) %}
                 <div>
                     {% if role == "admin" %} 
                         {% if item.status == "public" %} 
@@ -66,9 +66,16 @@
 
                     <strong class="{% if item.id_user == id_user %}text-danger{% endif %}"> {{ item.first_name }} </strong>
                     <em>le {{ item.date_fr }} </em>
+
                     {% if role == "admin" and item.status != "public" %} 
                         <span class="badge badge-secondary">
                             <a href="admin/comment/validate/{{ item.id }}"><i class="fa-solid fa-check ms-2 me-2"></i> valider</a>
+                        </span>
+                    {% endif %}
+
+                    {% if role == "admin" and item.status == "public" %} 
+                        <span class="badge badge-secondary">
+                            <a href="admin/comment/hide/{{ item.id }}"><i class="fa-solid fa-xmark ms-2 me-2"></i> cacher</a>
                         </span>
                     {% endif %}
 

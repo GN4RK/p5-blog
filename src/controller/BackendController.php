@@ -59,6 +59,12 @@ class BackendController extends Controller
         return $commentManager->getIdPost($idComment);
     }
 
+    static function hideComment(int $idComment): int {
+        $commentManager = new CommentManager();
+        $commentManager->unValidateComment($idComment);
+        return $commentManager->getIdPost($idComment);
+    }
+
     static function editPost(int $id) {
 
         $postManager = new PostManager();

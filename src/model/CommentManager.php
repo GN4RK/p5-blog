@@ -39,6 +39,18 @@ class CommentManager extends Manager
         return $affectedLines;
     }
 
+    public function unValidateComment(int $idComment): bool {
+        $db = $this->dbConnect();
+        $comments = $db->prepare(
+            'UPDATE comment
+            SET status = "pending"
+            WHERE id = ?'
+        );
+        $affectedLines = $comments->execute(array($idComment));
+
+        return $affectedLines;
+    }
+
     public function getIdPost(int $idComment): int {
         $db = $this->dbConnect();
         $req = $db->prepare(
