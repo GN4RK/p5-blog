@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
-require_once("src/controller/Controller.php");
+require_once 'src/controller/Controller.php';
 // loading classes
-require_once('src/model/PostManager.php');
-require_once('src/model/CommentManager.php');
-require_once('src/model/UserManager.php');
-require_once('src/model/View.php');
+require_once 'src/model/PostManager.php';
+require_once 'src/model/CommentManager.php';
+require_once 'src/model/UserManager.php';
+require_once 'src/model/View.php';
 
 class FrontendController extends Controller
 {
