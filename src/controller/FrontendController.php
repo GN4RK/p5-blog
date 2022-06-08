@@ -136,9 +136,8 @@ class FrontendController extends Controller
     }
 
     public static function sendMail(): bool {
-        // return mail("yoann.leonard@gmail.com", "contact", "message");
-        // TODO send mail with proper info
-        return true;
+        $message = "Message de ". $_POST["name"] ."\n". $_POST["email"]. "\n". $_POST["message"];
+        return mail("yoann.leonard@gmail.com", "contact", $message);
     }
 
     public static function validation(): void {
