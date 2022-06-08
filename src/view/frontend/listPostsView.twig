@@ -8,21 +8,27 @@
 <section class="page-section row justify-content-center" id="postsList">
     <div class="col-sm-7 col-md-7 col-lg-6 col-xl-5">
         {% for item in posts %}
-            {% if not loop.first %}
-                <!-- Icon Divider-->
-                <div class="divider-custom">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
+            {% if item.status == "public" or role == "admin" %}
+                {% if not loop.first %}
+                    <!-- Icon Divider-->
+                    <div class="divider-custom">
+                        <div class="divider-custom-line"></div>
+                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                        <div class="divider-custom-line"></div>
+                    </div>
+                {% endif %}
+                <div class="container border pt-4" role="button" onclick="window.location.href='./blog/{{ item.id }}'">
+                    <h3 class="text-center"> 
+                        {% if item.status != "public" %}
+                            <i class="fa-solid fa-eye-slash"></i>
+                        {% endif %}
+                        {{ item.title }} 
+                    </h3>
+                    <p><em>le {{ item.publication_date_fr }}</em></p>
+                    <p> {{ item.header }}... </p>
+                    <p><em><a href="./blog/{{ item.id }}">Commentaires</a></em></p>
                 </div>
             {% endif %}
-
-            <div class="container border pt-4" role="button" onclick="window.location.href='./blog/{{ item.id }}'">
-                <h3 class="text-center"> {{ item.title }} </h3>
-                <p><em>le {{ item.publication_date_fr }}</em></p>
-                <p> {{ item.header }}... </p>
-                <p><em><a href="./blog/{{ item.id }}">Commentaires</a></em></p>
-            </div>
         {% endfor %}
     </div>
 </section>
