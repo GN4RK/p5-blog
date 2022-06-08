@@ -6,6 +6,7 @@ require_once 'src/model/PostManager.php';
 require_once 'src/model/CommentManager.php';
 require_once 'src/model/UserManager.php';
 require_once 'src/model/View.php';
+require_once 'src/model/Session.php';
 
 class FrontendController extends Controller
 {
@@ -80,7 +81,7 @@ class FrontendController extends Controller
 
         $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
         $key = FrontendController::generateRandomString();
-        $userManager->addUser("", "", "", $_POST['email'], "pending@$key", $hash);
+        $userManager->addUser("", "", "", stripslashes($_POST['email']), "pending@$key", $hash);
         return "user created";
 
     }
@@ -114,10 +115,10 @@ class FrontendController extends Controller
 
         $user = $userManager->checkUser($_POST['email'], $_POST['pass']);
         if ($user) {
-            $_SESSION['user'] = $user;
+            Session::set('user', $user);
             return true;
         } else {
-            $_SESSION['user'] = null;
+            Session::forget('user');
             return false;
         }
    
@@ -142,8 +143,8 @@ class FrontendController extends Controller
 
     public static function validation(): void {
         $feedback = "";
-        $key = $_GET["key"];
-        $email = $_GET["email"];
+        $key = isset($_GET["key"]) ? $_GET["key"] : 0;
+        $email = isset($_GET["email"]) ? $_GET["email"] : 0;
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         if ($user) {
