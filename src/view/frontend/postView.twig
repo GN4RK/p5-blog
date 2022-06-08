@@ -10,12 +10,17 @@
         {% endif %}
 
         <div class="blogpost">
-            <h1>{{ post.title }}</h1>
+            <h1>
+                {% if post.status != "public" %}
+                    <i class="fa-solid fa-eye-slash"></i>
+                {% endif %}
+                {{ post.title }}
+            </h1>
             <p>Écrit par <strong>{{ author.first_name }} {{ author.name }} </strong>
                 {% if post.publication_date_fr == post.last_update_fr %}
                     <em>le {{ post.last_update_fr }}</em>
                 {% else %}
-                    <em>le {{ post.publication_date_fr }}</em> - <em>mis à jour le {{ post.last_update_fr }}</em><
+                    <em>le {{ post.publication_date_fr }}</em> - <em>mis à jour le {{ post.last_update_fr }}</em>
                 {% endif %}
             </p>
 
