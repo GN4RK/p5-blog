@@ -1,18 +1,20 @@
 <?php
-require_once("src/controller/Controller.php");
+declare(strict_types=1);
+require_once 'src/controller/Controller.php';
 // loading classes
-require_once('src/model/PostManager.php');
-require_once('src/model/CommentManager.php');
-require_once('src/model/UserManager.php');
-require_once('src/model/View.php');
+require_once 'src/model/PostManager.php';
+require_once 'src/model/CommentManager.php';
+require_once 'src/model/UserManager.php';
+require_once 'src/model/View.php';
+require_once 'src/model/Session.php';
 
 class FrontendController extends Controller
 {
-    static function home($mailStatus = null) {        
-        View::renderFront('home.twig', ['mailStatus' => $mailStatus]);        
+    public static function home(string $mailStatus = null): void {
+        View::renderFront('home.twig', ['title' => 'Accueil', 'mailStatus' => $mailStatus]);        
     }
 
-    static function blog($id = null) {
+    public static function blog(int $id = null): void {
         if ($id != null) {
             self::post($id);
         } else {
@@ -20,34 +22,52 @@ class FrontendController extends Controller
         }
     }
     
-    static function listPosts() {
+    public static function listPosts(): void {
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
-        View::renderFront('listPostsView.twig', ['posts' => $posts]);
+        View::renderFront('listPostsView.twig', ['title' => 'Blog', 'posts' => $posts]);
     }
     
-    static function post($id) {
+    public static function post(int $id): void {
         $postManager = new PostManager();
         $commentManager = new CommentManager();
+        $userManager = new UserManager();
+
         $post = $postManager->getPost($id);
-        $comments = $commentManager->getComments($id);
+        $author = $userManager->getUserById((int)$post['id_user']);
+
     
         // if id not found, display error
         if (!$post) {
             self::error404();
         } else {
+
+            $feedback = "";
+
+            if (isset($_POST['comment'])) {
+                if (!empty($_POST['comment'])) {
+                    $commentManager->postComment($id, (int)$_SESSION['user']['id'], $_POST['comment']);
+                    $feedback = "comment added";
+                }
+            }
+
+            $comments = $commentManager->getComments($id);
+
             View::renderFront('postView.twig', [
+                'title' => 'Blog - '. $post['title'], 
+                'author' => $author, 
                 'post' => $post, 
-                'comments' => $comments
+                'comments' => $comments,
+                'feedback' => $feedback
             ]);
         }
     }
 
-    static function register($feedback = null) {
-        View::renderFront('register.twig', ["feedback" => $feedback, 'post' => $_POST]);
+    public static function register(string $feedback = null): void {
+        View::renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => $_POST]);
     }
 
-    static function registerCheck() {
+    public static function registerCheck(): string {
 
         $userManager = new UserManager();
 
@@ -61,12 +81,12 @@ class FrontendController extends Controller
 
         $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
         $key = FrontendController::generateRandomString();
-        $userManager->addUser("", "", "", $_POST['email'], "pending@$key", $hash);
+        $userManager->addUser("", "", "", stripslashes($_POST['email']), "pending@$key", $hash);
         return "user created";
 
     }
 
-    static function sendVerificationMail($email) {
+    public static function sendVerificationMail(string $email): bool {
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         $key = $user['status'];
@@ -79,51 +99,52 @@ class FrontendController extends Controller
         return mail($email, $subject, $message, implode("\r\n", $headers));
     }
 
-    static function login() {
+    public static function login(): void {
         if (isset($_POST['email']) || isset($_POST['pass'])) {
             View::renderFront('login.twig', [
+                'title' => 'Connexion / Enregistrement',
                 'loginFailed' => true
             ]);
         } else {
-            View::renderFront('login.twig');
+            View::renderFront('login.twig', ['title' => 'Connexion / Enregistrement']);
         }
     }
 
-    static function loginCheck() {
+    public static function loginCheck(): bool {
         $userManager = new UserManager();
 
         $user = $userManager->checkUser($_POST['email'], $_POST['pass']);
         if ($user) {
-            $_SESSION['user'] = $user;
+            Session::set('user', $user);
             return true;
         } else {
-            $_SESSION['user'] = null;
+            Session::forget('user');
             return false;
         }
    
     }
 
-    static function logout() {
+    public static function logout(): void {
         $_SESSION['user'] = null;
     }
 
-    static function legal() {
-        View::renderFront('legal.twig');
+    public static function legal(): void {
+        View::renderFront('legal.twig', ['title' => 'Mention légales']);
     }
 
-    static function error404() {
-        View::renderFront('error404.twig');
+    public static function error404(): void {
+        View::renderFront('error404.twig', ['title' => 'Erreur 404']);
     }
 
-    static function sendMail() {
-        // return mail("yoann.leonard@gmail.com", "contact", "message");
-        return true;
+    public static function sendMail(): bool {
+        $message = "Message de ". $_POST["name"] ."\n". $_POST["email"]. "\n". $_POST["message"];
+        return mail("yoann.leonard@gmail.com", "contact", $message);
     }
 
-    static function validation() {
+    public static function validation(): void {
         $feedback = "";
-        $key = $_GET["key"];
-        $email = $_GET["email"];
+        $key = isset($_GET["key"]) ? $_GET["key"] : 0;
+        $email = isset($_GET["email"]) ? $_GET["email"] : 0;
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         if ($user) {
@@ -137,10 +158,10 @@ class FrontendController extends Controller
             $feedback = "user not found";
         }
         
-        View::renderFront('validation.twig', ["feedback" => $feedback]);
+        View::renderFront('validation.twig', ['title' => 'Validation', "feedback" => $feedback]);
     }
 
-    static function profile() {
+    public static function profile(): void {
 
         $feedback = array();
 
@@ -152,14 +173,14 @@ class FrontendController extends Controller
 
                 if (!empty($_POST['name'])) {
                     if ($_POST['name'] != $_SESSION['user']['name']) {
-                        $userManager->setName($_SESSION['user']['id'], $_POST['name']);
+                        $userManager->setName((int)$_SESSION['user']['id'], $_POST['name']);
                         $feedback[] = "name edited";
                     }
                 }
 
                 if (!empty($_POST['first_name'])) {
                     if ($_POST['first_name'] != $_SESSION['user']['first_name']) {
-                        $userManager->setFirstName($_SESSION['user']['id'], $_POST['first_name']);
+                        $userManager->setFirstName((int)$_SESSION['user']['id'], $_POST['first_name']);
                         $feedback[] = "first_name edited";
                     }
                 }
@@ -167,7 +188,7 @@ class FrontendController extends Controller
                 if (!empty($_POST['email'])) {
                     if ($_POST['email'] != $_SESSION['user']['email']) {
                         if ($userManager->emailAvailable($_POST['email'])) {
-                            $userManager->setEmail($_SESSION['user']['id'], $_POST['email']);
+                            $userManager->setEmail((int)$_SESSION['user']['id'], $_POST['email']);
                             $feedback[] = "email edited";
                         } else {
                             $feedback[] = "email already registered";
@@ -179,7 +200,7 @@ class FrontendController extends Controller
                     if ($_POST['pass'] == $_POST['pass2']) {
                         if (strlen($_POST['pass']) > 5) {
                             $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
-                            $userManager->setPassword($_SESSION['user']['id'], $hash);
+                            $userManager->setPassword((int)$_SESSION['user']['id'], $hash);
                             $feedback[] = "password edited";
                         } else {
                             $feedback[] = "password too short";
@@ -192,14 +213,14 @@ class FrontendController extends Controller
         }
 
         if (!empty($feedback)) {
-            $userManager->loadInfo($_SESSION['user']['id']);
+            $userManager->loadInfo((int)$_SESSION['user']['id']);
         }
 
-        View::renderFront('profile.twig', ["session" => $_SESSION, "feedback" => $feedback]);
+        View::renderFront('profile.twig', ["title" => "Profil", "session" => $_SESSION, "feedback" => $feedback]);
 
     }
 
-    static function generateRandomString($length = 10) {
+    private static function generateRandomString(int $length = 10): string {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';

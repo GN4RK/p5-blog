@@ -1,0 +1,39 @@
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container">
+        <form method="post" class="mb-3">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénom</th>
+                        <th class="d-none d-sm-table-cell d-sm-none d-md-table-cell" scope="col">email</th>
+                        <th scope="col">role</th>
+                        <th class="d-none d-sm-table-cell d-sm-none d-md-table-cell" scope="col">status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.first_name }}</td>
+                            <td class="d-none d-sm-table-cell d-sm-none d-md-table-cell">{{ user.email }}</td>
+                            <td>
+                                <select name="role-{{ user.id }}">
+                                    <option value="reader" {% if user.role == 'reader' %} selected {% endif %} >Lecteur</option>
+                                    <option value="admin" {% if user.role == 'admin' %} selected {% endif %} >Admin</option>
+                                </select>
+                            </td>
+                            <td class="d-none d-sm-table-cell d-sm-none d-md-table-cell">{{ user.status }}</td>
+                        </tr>
+                    {% endfor %}
+                
+                </tbody>
+            </table>
+            <button class="btn btn-secondary mb-3"><i class="fas fa-edit me-2"></i>Modifier</button>
+
+        </form>
+    </div>
+</header>

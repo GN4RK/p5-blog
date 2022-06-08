@@ -1,5 +1,3 @@
-{% include 'header.twig' %}
-
 <!-- Masthead-->
 <header class="masthead">
     <div class="container d-flex align-items-center flex-column">
@@ -8,6 +6,9 @@
         <div class="list-group">
             <a href="{{ BASEFOLDER }}admin/new" class="list-group-item list-group-item-action">
                 Ajouter un nouveau billet
+            </a>
+            <a href="{{ BASEFOLDER }}admin/user" class="list-group-item list-group-item-action">
+                Modération des utilisateurs
             </a>
             <a href="{{ BASEFOLDER }}admin/post" class="list-group-item list-group-item-action">
                 Modération des billets
@@ -18,5 +19,3 @@
         </div>
     </div>
 </header>
-
-{% include 'footer.twig' %}

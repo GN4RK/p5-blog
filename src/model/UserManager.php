@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 require_once("src/model/Manager.php");
 
 class UserManager extends Manager {
 
-    public function checkUser($email, $password) {
+    public function checkUser(string $email, string $password) {
         $user = $this->getUserByEmail($email, true);
         if ($user) {
             if (password_verify($password, $user["password"])) {
@@ -14,7 +15,7 @@ class UserManager extends Manager {
        
     }
 
-    public function addUser($name, $firstName, $role, $email, $status, $password) {
+    public function addUser(string $name, string $firstName, string $role, string $email, string $status, string $password): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'INSERT INTO user(name, first_name, role, email, status, password) VALUES(?, ?, ?, ?, ?, ?)'
@@ -24,29 +25,29 @@ class UserManager extends Manager {
         return $affectedLines;
     }
 
-    public function deleteUser($id) {
+    public function deleteUser(string $idUser): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'DELETE FROM user WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($id));
+        $affectedLines = $user->execute(array($idUser));
 
         return $affectedLines;
     }
 
-    public function getUserById($id) {
+    public function getUserById(int $idUser) {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
             FROM user 
             WHERE id = ?'
         );
-        $req->execute(array($id));
+        $req->execute(array($idUser));
         $user = $req->fetch();
         return $user;
     }
 
-    public function getUserByEmail($email, $validated = false) {
+    public function getUserByEmail(string $email, bool $validated = false) {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
@@ -59,11 +60,11 @@ class UserManager extends Manager {
         return $user;
     }
 
-    public function emailAvailable($email) {
+    public function emailAvailable(string $email): bool {
         return !$this->getUserByEmail($email);
     }
 
-    public function accountValidation($email) {
+    public function accountValidation(string $email): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
@@ -75,57 +76,77 @@ class UserManager extends Manager {
         return $affectedLines;
     }
 
-    public function loadInfo($id) {
-        $user = $this->getUserById($id);
+    public function loadInfo(int $idUser): void {
+        $user = $this->getUserById($idUser);
         $_SESSION['user'] = $user;
     }
 
-    public function setName($id, $name) {
+    public function setName(int $idUser, string $name): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
             SET name = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($name, $id));
+        $affectedLines = $user->execute(array($name, $idUser));
 
         return $affectedLines;
     }
 
-    public function setFirstName($id, $firstName) {
+    public function setFirstName(int $idUser, string $firstName): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
             SET first_name = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($firstName, $id));
+        $affectedLines = $user->execute(array($firstName, $idUser));
 
         return $affectedLines;
     }
 
-    public function setEmail($id, $email) {
+    public function setEmail(int $idUser, string $email): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
             SET email = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($email, $id));
+        $affectedLines = $user->execute(array($email, $idUser));
 
         return $affectedLines;
     }
 
-    public function setPassword($id, $hash) {
+    public function setPassword(int $idUser, string $hash): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
             SET password = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($hash, $id));
+        $affectedLines = $user->execute(array($hash, $idUser));
 
         return $affectedLines;
+    }
+
+    public function setRole(int $idUser, string $role): bool {
+        $db = $this->dbConnect();
+        $user = $db->prepare(
+            'UPDATE user
+            SET role = ?
+            WHERE id = ?'
+        );
+        $affectedLines = $user->execute(array($role, $idUser));
+
+        return $affectedLines;
+    }
+
+    public function getUsers(): array {
+        $db = $this->dbConnect();
+        $req = $db->prepare('SELECT * FROM user');
+        $req->execute();
+        $users = $req->fetchAll();
+        return $users;
     }
     
 }
