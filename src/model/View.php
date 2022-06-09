@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Model;
+
 class View {
 
     public static function render(string $env, string $twigFile, array $args = array()): void {

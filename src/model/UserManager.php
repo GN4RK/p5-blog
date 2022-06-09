@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
-require_once("src/model/Manager.php");
+
+namespace App\Model;
+
 
 class UserManager extends Manager {
 

@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
-require_once("src/model/Manager.php");
+
+namespace App\Model;
 
 class PostManager extends Manager
 {
-    public function getPosts(): PDOStatement {
+    public function getPosts(): \PDOStatement {
         $db = $this->dbConnect();
         $req = $db->query(
             'SELECT id, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr,

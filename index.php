@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-require('src/controller/FrontendController.php');
-require('src/controller/BackendController.php');
-require_once('vendor/autoload.php'); // Twig
-require_once('src/controller/Route.php'); // Include router class
-
 // loading config from JSON file 
 $strJsonFileContents = file_get_contents("config.json");
 $config = json_decode($strJsonFileContents, true);
@@ -13,6 +8,20 @@ $config = json_decode($strJsonFileContents, true);
 // constants
 define("BASEFOLDER", "/".$config["baseFolder"]."/");
 define("BASEURL", $config["baseURL"].BASEFOLDER);
+
+// autoload
+spl_autoload_register(function($fqcn) {
+    $path = str_replace(['App', 'Model', '\\'], ['src', 'model', '/'], $fqcn) . '.php';
+    var_dump($path);
+    require "$path";
+});
+
+require_once('vendor/autoload.php'); // Twig
+
+use App\Controller\Route;
+use App\Controller\FrontendController;
+use App\Controller\BackendController;
+use App\Model\Session;
 
 // ***************************
 // * Loading Frontend routes *
