@@ -15,4 +15,8 @@ class Session {
         unset($_SESSION[$key]);
     }
 
+    public static function getRole() : string {
+        return (isset(self::get('user')['role']) ? self::get('user')['role'] : "visitor");
+    }
+
 }
