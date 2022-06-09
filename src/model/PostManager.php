@@ -31,13 +31,12 @@ class PostManager extends Manager
         return $post;
     }
 
-    public function addPost(string $title, string $content, string $status): bool {
-        $header = substr($content, 0, 50);
+    public function addPost(int $idAuthor, string $title, string $header, string $content, string $status): bool {
         $db = $this->dbConnect();
         $post = $db->prepare(
-            'INSERT INTO post(title, header, content, status) VALUES(?, ?, ?, ?)'
+            'INSERT INTO post(id_user, title, header, content, status) VALUES(?, ?, ?, ?, ?)'
         );
-        $affectedLines = $post->execute(array($title, $header, $content, $status));
+        $affectedLines = $post->execute(array($idAuthor, $title, $header, $content, $status));
 
         return $affectedLines;
     }

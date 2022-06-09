@@ -6,6 +6,7 @@ require_once('src/model/PostManager.php');
 require_once('src/model/CommentManager.php');
 require_once('src/model/UserManager.php');
 require_once('src/model/View.php');
+require_once('src/model/Session.php');
 
 class BackendController extends Controller
 {
@@ -19,7 +20,7 @@ class BackendController extends Controller
         if (isset($_POST['title']) && isset($_POST['content']) && isset($_POST['status'])) {
             if (!empty($_POST['title']) && !empty($_POST['content']) && !empty($_POST['status'])) {
                 $postManager = new PostManager();
-                $postManager->addPost($_POST['title'], $_POST['content'], $_POST['status']);
+                $postManager->addPost((int)Session::get("user")["id"], $_POST['title'], $_POST['header'], $_POST['content'], $_POST['status']);
                 $postStatus = "post added";
             }
         }
