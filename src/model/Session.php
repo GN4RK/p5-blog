@@ -13,6 +13,10 @@ class Session {
         return (isset($_SESSION[$key]) ? $_SESSION[$key] : null);
     }
 
+    public static function getAll(): array {
+        return $_SESSION;
+    }
+
     public static function forget($key): void {
         unset($_SESSION[$key]);
     }

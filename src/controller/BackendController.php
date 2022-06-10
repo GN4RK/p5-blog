@@ -33,8 +33,8 @@ class BackendController extends Controller
         $userManager = new UserManager();
         $users = $userManager->getUsers();
 
-        if (!empty($_POST)) {
-            foreach($_POST as $k => $v) {
+        if (!empty(PostSG::getAll())) {
+            foreach(PostSG::getAll() as $k => $v) {
                 $idUser = (int)substr($k, 5);
                 $userManager->setRole($idUser, $v);
             }

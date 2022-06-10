@@ -5,9 +5,11 @@ namespace App\Controller;
 
 use App\Model\PostManager;
 use App\Model\CommentManager;
+use App\Model\GetSG;
 use App\Model\UserManager;
 use App\Model\View;
 use App\Model\Session;
+use App\Model\PostSG;
 
 class FrontendController extends Controller
 {
@@ -45,11 +47,9 @@ class FrontendController extends Controller
 
             $feedback = "";
 
-            if (isset($_POST['comment'])) {
-                if (!empty($_POST['comment'])) {
-                    $commentManager->postComment($id, (int)$_SESSION['user']['id'], $_POST['comment']);
-                    $feedback = "comment added";
-                }
+            if (!empty(PostSG::get('comment'))) {
+                $commentManager->postComment($id, (int)Session::get('user')['id'], PostSG::get('comment'));
+                $feedback = "comment added";
             }
 
             $comments = $commentManager->getComments($id);
@@ -65,24 +65,24 @@ class FrontendController extends Controller
     }
 
     public static function register(string $feedback = null): void {
-        View::renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => $_POST]);
+        View::renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => PostSG::getAll()]);
     }
 
     public static function registerCheck(): string {
 
         $userManager = new UserManager();
 
-        if (!isset($_POST['email']) || !isset($_POST['pass']) || !isset($_POST['pass2'])) {
+        if (empty(PostSG::get('email')) || empty(PostSG::get('pass')) || empty(PostSG::get('pass2'))) {
             return "missing information";
         }
 
-        if (!$userManager->emailAvailable($_POST['email'])) return "email already used";
-        if ($_POST['pass'] != $_POST['pass2']) return "password verification failed";
-        if (strlen($_POST['pass']) < 6) return "password too short";
+        if (!$userManager->emailAvailable(PostSG::get('email'))) return "email already used";
+        if (PostSG::get('pass') != PostSG::get('pass2')) return "password verification failed";
+        if (strlen(PostSG::get('pass')) < 6) return "password too short";
 
-        $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
+        $hash = password_hash(PostSG::get('pass'), PASSWORD_DEFAULT);
         $key = FrontendController::generateRandomString();
-        $userManager->addUser("", "", "", stripslashes($_POST['email']), "pending@$key", $hash);
+        $userManager->addUser("", "", "", stripslashes(PostSG::get('email')), "pending@$key", $hash);
         return "user created";
 
     }
@@ -101,7 +101,7 @@ class FrontendController extends Controller
     }
 
     public static function login(): void {
-        if (isset($_POST['email']) || isset($_POST['pass'])) {
+        if (!empty(PostSG::get('email')) || !empty(PostSG::get('pass'))) {
             View::renderFront('login.twig', [
                 'title' => 'Connexion / Enregistrement',
                 'loginFailed' => true
@@ -114,7 +114,7 @@ class FrontendController extends Controller
     public static function loginCheck(): bool {
         $userManager = new UserManager();
 
-        $user = $userManager->checkUser($_POST['email'], $_POST['pass']);
+        $user = $userManager->checkUser(PostSG::get('email'), PostSG::get('pass'));
         if ($user) {
             Session::set('user', $user);
             return true;
@@ -126,7 +126,7 @@ class FrontendController extends Controller
     }
 
     public static function logout(): void {
-        $_SESSION['user'] = null;
+        Session::set('user', null);
     }
 
     public static function legal(): void {
@@ -138,14 +138,14 @@ class FrontendController extends Controller
     }
 
     public static function sendMail(): bool {
-        $message = "Message de ". $_POST["name"] ."\n". $_POST["email"]. "\n". $_POST["message"];
+        $message = "Message de ". PostSG::get("name") ."\n". PostSG::get("email"). "\n". PostSG::get("message");
         return mail("yoann.leonard@gmail.com", "contact", $message);
     }
 
     public static function validation(): void {
         $feedback = "";
-        $key = isset($_GET["key"]) ? $_GET["key"] : 0;
-        $email = isset($_GET["email"]) ? $_GET["email"] : 0;
+        $key = !empty(GetSG::get("key")) ? GetSG::get("key") : 0;
+        $email = !empty(GetSG::get("email")) ? GetSG::get("email") : 0;
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         if ($user) {
@@ -166,58 +166,55 @@ class FrontendController extends Controller
 
         $feedback = array();
 
-        if (isset($_SESSION['user']) && isset($_POST)) {
+        if (!empty(Session::get('user')) && !empty(PostSG::getAll())) {
 
             $userManager = new UserManager();
 
-            if (isset($_POST['name'])) {
-
-                if (!empty($_POST['name'])) {
-                    if ($_POST['name'] != $_SESSION['user']['name']) {
-                        $userManager->setName((int)$_SESSION['user']['id'], $_POST['name']);
-                        $feedback[] = "name edited";
-                    }
+            if (!empty(PostSG::get('name'))) {
+                if (PostSG::get('name') != Session::get('user')['name']) {
+                    $userManager->setName((int)Session::get('user')['id'], PostSG::get('name'));
+                    $feedback[] = "name edited";
                 }
+            }
 
-                if (!empty($_POST['first_name'])) {
-                    if ($_POST['first_name'] != $_SESSION['user']['first_name']) {
-                        $userManager->setFirstName((int)$_SESSION['user']['id'], $_POST['first_name']);
-                        $feedback[] = "first_name edited";
-                    }
+            if (!empty(PostSG::get('first_name'))) {
+                if (PostSG::get('first_name') != Session::get('user')['first_name']) {
+                    $userManager->setFirstName((int)Session::get('user')['id'], PostSG::get('first_name'));
+                    $feedback[] = "first_name edited";
                 }
+            }
 
-                if (!empty($_POST['email'])) {
-                    if ($_POST['email'] != $_SESSION['user']['email']) {
-                        if ($userManager->emailAvailable($_POST['email'])) {
-                            $userManager->setEmail((int)$_SESSION['user']['id'], $_POST['email']);
-                            $feedback[] = "email edited";
-                        } else {
-                            $feedback[] = "email already registered";
-                        }
-                    }
-                }
-
-                if (!empty($_POST['pass']) && !empty($_POST['pass2'])) {
-                    if ($_POST['pass'] == $_POST['pass2']) {
-                        if (strlen($_POST['pass']) > 5) {
-                            $hash = password_hash($_POST['pass'], PASSWORD_DEFAULT);
-                            $userManager->setPassword((int)$_SESSION['user']['id'], $hash);
-                            $feedback[] = "password edited";
-                        } else {
-                            $feedback[] = "password too short";
-                        }
+            if (!empty(PostSG::get('email'))) {
+                if (PostSG::get('email') != Session::get('user')['email']) {
+                    if ($userManager->emailAvailable(PostSG::get('email'))) {
+                        $userManager->setEmail((int)Session::get('user')['id'], PostSG::get('email'));
+                        $feedback[] = "email edited";
                     } else {
-                        $feedback[] = "pass and pass2 are different";
+                        $feedback[] = "email already registered";
                     }
+                }
+            }
+
+            if (!empty(PostSG::get('pass')) && !empty(PostSG::get('pass2'))) {
+                if (PostSG::get('pass') == PostSG::get('pass2')) {
+                    if (strlen(PostSG::get('pass')) > 5) {
+                        $hash = password_hash(PostSG::get('pass'), PASSWORD_DEFAULT);
+                        $userManager->setPassword((int)Session::get('user')['id'], $hash);
+                        $feedback[] = "password edited";
+                    } else {
+                        $feedback[] = "password too short";
+                    }
+                } else {
+                    $feedback[] = "pass and pass2 are different";
                 }
             }
         }
 
         if (!empty($feedback)) {
-            $userManager->loadInfo((int)$_SESSION['user']['id']);
+            $userManager->loadInfo((int)Session::get('user')['id']);
         }
 
-        View::renderFront('profile.twig', ["title" => "Profil", "session" => $_SESSION, "feedback" => $feedback]);
+        View::renderFront('profile.twig', ["title" => "Profil", "session" => Session::getAll(), "feedback" => $feedback]);
 
     }
 

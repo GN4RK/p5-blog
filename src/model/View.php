@@ -11,9 +11,9 @@ class View {
         $twig = new \Twig\Environment($loader);
 
         $nav = View::getNav();        
-        $name = (isset($_SESSION['user']['first_name'])) ? ($_SESSION['user']['first_name']) : "visiteur";
-        $role = (isset($_SESSION['user']['role'])) ? ($_SESSION['user']['role']) : "visiteur";
-        $idUser = (isset($_SESSION['user']['id'])) ? ((int)$_SESSION['user']['id']) : 0;
+        $name = (isset(Session::get('user')['first_name'])) ? (Session::get('user')['first_name']) : "visiteur";
+        $role = (isset(Session::get('user')['role'])) ? (Session::get('user')['role']) : "visiteur";
+        $idUser = (isset(Session::get('user')['id'])) ? ((int)Session::get('user')['id']) : 0;
 
         $prepare = array(
             'baseFolder' => BASEFOLDER,
@@ -42,7 +42,7 @@ class View {
     }
 
     public static function getNav(): array {
-        if (isset($_SESSION['user'])) {
+        if (!empty(Session::get('user'))) {
             $nav = array(
                 array ('href' => BASEFOLDER, 'caption' => 'accueil'),
                 array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),

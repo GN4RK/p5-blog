@@ -17,4 +17,8 @@ class PostSG {
         unset($_POST[$key]);
     }
 
+    public static function getAll(): array {
+        return $_POST;
+    }
+
 }
