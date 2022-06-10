@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
-require_once("src/model/Manager.php");
+
+namespace App\Model;
 
 class CommentManager extends Manager
 {
-    public function getComments(int $idPost): PDOStatement {
+    public function getComments(int $idPost): \PDOStatement {
         $db = $this->dbConnect();
         $comments = $db->query(
             'SELECT comment.id, comment.id_user, comment.content, DATE_FORMAT(comment.date, \'%d/%m/%Y à %Hh%imin%ss\') AS date_fr, comment.status, user.first_name

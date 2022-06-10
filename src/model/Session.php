@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Model;
+
 class Session {
 
     public static function set($key, $value): void {
@@ -9,6 +11,10 @@ class Session {
 
     public static function get($key) {
         return (isset($_SESSION[$key]) ? $_SESSION[$key] : null);
+    }
+
+    public static function getAll(): array {
+        return $_SESSION;
     }
 
     public static function forget($key): void {

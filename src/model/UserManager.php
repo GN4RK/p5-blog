@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
-require_once("src/model/Manager.php");
+
+namespace App\Model;
+
 
 class UserManager extends Manager {
 
@@ -78,7 +80,7 @@ class UserManager extends Manager {
 
     public function loadInfo(int $idUser): void {
         $user = $this->getUserById($idUser);
-        $_SESSION['user'] = $user;
+        Session::set('user', $user);
     }
 
     public function setName(int $idUser, string $name): bool {

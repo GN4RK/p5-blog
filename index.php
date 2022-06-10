@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-require('src/controller/FrontendController.php');
-require('src/controller/BackendController.php');
-require_once('vendor/autoload.php'); // Twig
-require_once('src/controller/Route.php'); // Include router class
-
 // loading config from JSON file 
 $strJsonFileContents = file_get_contents("config.json");
 $config = json_decode($strJsonFileContents, true);
@@ -13,6 +8,15 @@ $config = json_decode($strJsonFileContents, true);
 // constants
 define("BASEFOLDER", "/".$config["baseFolder"]."/");
 define("BASEURL", $config["baseURL"].BASEFOLDER);
+
+// autoload
+require_once 'vendor/autoload.php';
+
+use App\Controller\Route;
+use App\Controller\FrontendController;
+use App\Controller\BackendController;
+use App\Model\PostSG;
+use App\Model\Session;
 
 // ***************************
 // * Loading Frontend routes *
@@ -24,7 +28,6 @@ Route::add('/', function(){
 }, 'get');
 Route::add('/', function(){
     if (FrontendController::sendMail()) {
-
         FrontendController::home("ok");
     } else {
         FrontendController::home("error");
@@ -51,7 +54,7 @@ Route::add('/enregistrement', function(){
 Route::add('/enregistrement', function(){
     $registerCheck = FrontendController::registerCheck();
     if ($registerCheck == "user created") {
-        FrontendController::sendVerificationMail($_POST['email']);
+        FrontendController::sendVerificationMail(PostSG::get('email'));
     }
     FrontendController::register($registerCheck);
 }, 'post');

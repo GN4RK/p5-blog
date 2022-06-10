@@ -1,14 +1,15 @@
 # Config
 
-## .htacces : 
+## .htacces
 Set your rewrite base
-```
+```apache
 RewriteBase /subfolder/
 ```
 
-## config.json :
-```
+## config.json
+```json
 {
-    "baseFolder": "subFolder"
+    "baseFolder": "subFolder",
+    "baseURL": "http://baseUrl"
 }
 ```
