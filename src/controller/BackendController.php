@@ -8,6 +8,7 @@ use App\Model\PostManager;
 use App\Model\UserManager;
 use App\Model\CommentManager;
 use App\Model\Session;
+use App\Model\PostSG;
 
 class BackendController extends Controller
 {
@@ -18,12 +19,10 @@ class BackendController extends Controller
     static function adminNew(): void {
 
         $postStatus = "";
-        if (isset($_POST['title']) && isset($_POST['content']) && isset($_POST['status'])) {
-            if (!empty($_POST['title']) && !empty($_POST['content']) && !empty($_POST['status'])) {
-                $postManager = new PostManager();
-                $postManager->addPost((int)Session::get("user")["id"], $_POST['title'], $_POST['header'], $_POST['content'], $_POST['status']);
-                $postStatus = "post added";
-            }
+        if (!empty(PostSG::get('title')) && !empty(PostSG::get('header')) && !empty(PostSG::get('content')) && !empty(PostSG::get('status'))) {
+            $postManager = new PostManager();
+            $postManager->addPost((int)Session::get("user")["id"], PostSG::get('title'), PostSG::get('header'), PostSG::get('content'), PostSG::get('status'));
+            $postStatus = "post added";
         }
 
         View::renderBack('new.twig', ["title" => "Administration - Nouveau billet", "postStatus" => $postStatus]);
@@ -74,25 +73,21 @@ class BackendController extends Controller
 
         $postStatus = "";
 
-        $isSet = isset($_POST['title']) && isset($_POST['header']) && isset($_POST['content']) && isset($_POST['status']);
 
         if ($post) {
-            if ($isSet) {
+            $notEmpty = !empty(PostSG::get('title')) && !empty(PostSG::get('header')) && !empty(PostSG::get('content')) && !empty(PostSG::get('status'));
+            if ($notEmpty) {
 
-                $notEmpty = !empty($_POST['title']) && !empty($_POST['header']) && !empty($_POST['content']) && !empty($_POST['status']);
-                if ($notEmpty) {
+                $modified = 
+                    (PostSG::get('title') != $post['title']) || 
+                    (PostSG::get('header') != $post['header']) || 
+                    (PostSG::get('content') != $post['content']) || 
+                    (PostSG::get('status') != $post['status']);
 
-                    $modified = 
-                        ($_POST['title'] != $post['title']) || 
-                        ($_POST['header'] != $post['header']) || 
-                        ($_POST['content'] != $post['content']) || 
-                        ($_POST['status'] != $post['status']);
-
-                    if ($modified) {
-                        $postManager->editPost($id, $_POST['title'], $_POST['header'], $_POST['content'], $_POST['status']);
-                        $postStatus = "post edited";
-                        $post = $postManager->getPost($id);
-                    }
+                if ($modified) {
+                    $postManager->editPost($id, PostSG::get('title'), PostSG::get('header'), PostSG::get('content'), PostSG::get('status'));
+                    $postStatus = "post edited";
+                    $post = $postManager->getPost($id);
                 }
             }
         } else {
