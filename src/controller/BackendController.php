@@ -70,9 +70,7 @@ class BackendController extends Controller
 
         $postManager = new PostManager();
         $post = $postManager->getPost($id);
-
         $postStatus = "";
-
 
         if ($post) {
             $notEmpty = !empty(PostSG::get('title')) && !empty(PostSG::get('header')) && !empty(PostSG::get('content')) && !empty(PostSG::get('status'));
@@ -94,9 +92,7 @@ class BackendController extends Controller
             $postStatus = "post not found";
         }
         
-        
         View::renderBack('edit.twig', ["title" => "Administration - Modification de billet", "post" => $post, "postStatus" => $postStatus]);
-
     }
 
     static function deletePost(int $id): void {
