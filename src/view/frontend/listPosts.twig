@@ -5,8 +5,8 @@
     </div>
 </header>
 
-<section class="page-section row justify-content-center" id="postsList">
-    <div class="col-sm-7 col-md-7 col-lg-6 col-xl-5">
+<section class="page-section justify-content-center" id="postsList">
+    <div class="container col-sm-7 col-md-7 col-lg-6 col-xl-5">
         {% for item in posts %}
             {% if item.status == "public" or role == "admin" %}
                 {% if not loop.first %}

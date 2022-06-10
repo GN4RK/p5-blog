@@ -28,7 +28,7 @@ class FrontendController extends Controller
     public static function listPosts(): void {
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
-        View::renderFront('listPostsView.twig', ['title' => 'Blog', 'posts' => $posts]);
+        View::renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts]);
     }
     
     public static function post(int $id): void {
@@ -54,7 +54,7 @@ class FrontendController extends Controller
 
             $comments = $commentManager->getComments($id);
 
-            View::renderFront('postView.twig', [
+            View::renderFront('post.twig', [
                 'title' => 'Blog - '. $post['title'], 
                 'author' => $author, 
                 'post' => $post, 
