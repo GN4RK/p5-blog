@@ -10,7 +10,7 @@ define("BASEFOLDER", "/".$config["baseFolder"]."/");
 define("BASEURL", $config["baseURL"].BASEFOLDER);
 
 // autoload
-require_once('vendor/autoload.php');
+require_once 'vendor/autoload.php';
 
 use App\Controller\Route;
 use App\Controller\FrontendController;
