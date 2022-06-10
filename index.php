@@ -10,17 +10,12 @@ define("BASEFOLDER", "/".$config["baseFolder"]."/");
 define("BASEURL", $config["baseURL"].BASEFOLDER);
 
 // autoload
-spl_autoload_register(function($fqcn) {
-    $path = str_replace(['App', 'Model', '\\'], ['src', 'model', '/'], $fqcn) . '.php';
-    var_dump($path);
-    require "$path";
-});
-
-require_once('vendor/autoload.php'); // Twig
+require_once('vendor/autoload.php');
 
 use App\Controller\Route;
 use App\Controller\FrontendController;
 use App\Controller\BackendController;
+use App\Model\PostSG;
 use App\Model\Session;
 
 // ***************************
@@ -33,7 +28,6 @@ Route::add('/', function(){
 }, 'get');
 Route::add('/', function(){
     if (FrontendController::sendMail()) {
-
         FrontendController::home("ok");
     } else {
         FrontendController::home("error");
@@ -60,7 +54,7 @@ Route::add('/enregistrement', function(){
 Route::add('/enregistrement', function(){
     $registerCheck = FrontendController::registerCheck();
     if ($registerCheck == "user created") {
-        FrontendController::sendVerificationMail($_POST['email']);
+        FrontendController::sendVerificationMail(PostSG::get('email'));
     }
     FrontendController::register($registerCheck);
 }, 'post');
