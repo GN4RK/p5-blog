@@ -167,55 +167,67 @@ class FrontendController extends Controller
         $feedback = array();
 
         if (!empty(Session::get('user')) && !empty(PostSG::getAll())) {
-
-            $userManager = new UserManager();
-
-            if (!empty(PostSG::get('name'))) {
-                if (PostSG::get('name') != Session::get('user')['name']) {
-                    $userManager->setName((int)Session::get('user')['id'], PostSG::get('name'));
-                    $feedback[] = "name edited";
-                }
-            }
-
-            if (!empty(PostSG::get('first_name'))) {
-                if (PostSG::get('first_name') != Session::get('user')['first_name']) {
-                    $userManager->setFirstName((int)Session::get('user')['id'], PostSG::get('first_name'));
-                    $feedback[] = "first_name edited";
-                }
-            }
-
-            if (!empty(PostSG::get('email'))) {
-                if (PostSG::get('email') != Session::get('user')['email']) {
-                    if ($userManager->emailAvailable(PostSG::get('email'))) {
-                        $userManager->setEmail((int)Session::get('user')['id'], PostSG::get('email'));
-                        $feedback[] = "email edited";
-                    } else {
-                        $feedback[] = "email already registered";
-                    }
-                }
-            }
-
-            if (!empty(PostSG::get('pass')) && !empty(PostSG::get('pass2'))) {
-                if (PostSG::get('pass') == PostSG::get('pass2')) {
-                    if (strlen(PostSG::get('pass')) > 5) {
-                        $hash = password_hash(PostSG::get('pass'), PASSWORD_DEFAULT);
-                        $userManager->setPassword((int)Session::get('user')['id'], $hash);
-                        $feedback[] = "password edited";
-                    } else {
-                        $feedback[] = "password too short";
-                    }
-                } else {
-                    $feedback[] = "pass and pass2 are different";
-                }
-            }
+            FrontendController::editEntry('name', $feedback);
+            FrontendController::editEntry('first_name', $feedback);
+            FrontendController::editEmail($feedback);
+            FrontendController::editPassword($feedback);
         }
 
         if (!empty($feedback)) {
+            $userManager = new UserManager();
             $userManager->loadInfo((int)Session::get('user')['id']);
         }
 
         View::renderFront('profile.twig', ["title" => "Profil", "session" => Session::getAll(), "feedback" => $feedback]);
 
+    }
+
+    private static function editEntry(string $entry, array &$feedback): void {
+
+        if (!empty(PostSG::get($entry))) {
+
+            if ($entry == "name") $entryC = "Name";
+            if ($entry == "first_name") $entryC = "FirstName";
+            $userManager = new UserManager();
+
+            if (PostSG::get($entry) != Session::get('user')[$entry]) {
+                $userManager->{"set". $entryC}((int)Session::get('user')['id'], PostSG::get($entry));
+                $feedback[] = "$entry edited";
+            }
+        }
+    }
+
+    private static function editEmail(array &$feedback): void {
+
+        if (!empty(PostSG::get('email'))) {
+            $userManager = new UserManager();
+            if (PostSG::get('email') != Session::get('user')['email']) {
+                if ($userManager->emailAvailable(PostSG::get('email'))) {
+                    $userManager->setEmail((int)Session::get('user')['id'], PostSG::get('email'));
+                    $feedback[] = "email edited";
+                } else {
+                    $feedback[] = "email already registered";
+                }
+            }
+        }
+    }
+
+    private static function editPassword(array &$feedback): void {
+        
+        if (!empty(PostSG::get('pass')) && !empty(PostSG::get('pass2'))) {
+            $userManager = new UserManager();
+            if (PostSG::get('pass') == PostSG::get('pass2')) {
+                if (strlen(PostSG::get('pass')) > 5) {
+                    $hash = password_hash(PostSG::get('pass'), PASSWORD_DEFAULT);
+                    $userManager->setPassword((int)Session::get('user')['id'], $hash);
+                    $feedback[] = "password edited";
+                } else {
+                    $feedback[] = "password too short";
+                }
+            } else {
+                $feedback[] = "pass and pass2 are different";
+            }
+        }
     }
 
     private static function generateRandomString(int $length = 10): string {
