@@ -79,8 +79,9 @@ class UserManager extends Manager {
     }
 
     public function loadInfo(int $idUser): void {
+        $session = new Session();
         $user = $this->getUserById($idUser);
-        Session::set('user', $user);
+        $session->set('user', $user);
     }
 
     public function setName(int $idUser, string $name): bool {

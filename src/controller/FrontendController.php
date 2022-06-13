@@ -14,7 +14,8 @@ use App\Model\PostSG;
 class FrontendController extends Controller
 {
     public static function home(string $mailStatus = null): void {
-        View::renderFront('home.twig', ['title' => 'Accueil', 'mailStatus' => $mailStatus]);        
+        $view = new View();
+        $view->renderFront('home.twig', ['title' => 'Accueil', 'mailStatus' => $mailStatus]);        
     }
 
     public static function blog(int $id = null): void {
@@ -26,12 +27,16 @@ class FrontendController extends Controller
     }
     
     public static function listPosts(): void {
+        $view = new View();
         $postManager = new PostManager();
         $posts = $postManager->getPosts();
-        View::renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts]);
+        $view->renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts]);
     }
     
     public static function post(int $id): void {
+        $view = new View();
+        $PSG = new PostSG();
+        $session = new Session();
         $postManager = new PostManager();
         $commentManager = new CommentManager();
         $userManager = new UserManager();
@@ -47,14 +52,14 @@ class FrontendController extends Controller
         $author = $userManager->getUserById((int)$post['id_user']);
         $feedback = "";
 
-        if (!empty(PostSG::get('comment'))) {
-            $commentManager->postComment($id, (int)Session::get('user')['id'], PostSG::get('comment'));
+        if (!empty($PSG->get('comment'))) {
+            $commentManager->postComment($id, (int)$session->get('user')['id'], $PSG->get('comment'));
             $feedback = "comment added";
         }
 
         $comments = $commentManager->getComments($id);
 
-        View::renderFront('post.twig', [
+        $view->renderFront('post.twig', [
             'title' => 'Blog - '. $post['title'], 
             'author' => $author, 
             'post' => $post, 
@@ -64,24 +69,27 @@ class FrontendController extends Controller
     }
 
     public static function register(string $feedback = null): void {
-        View::renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => PostSG::getAll()]);
+        $view = new View();
+        $PSG = new PostSG();
+        $view->renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => $PSG->getAll()]);
     }
 
     public static function registerCheck(): string {
 
+        $PSG = new PostSG();
         $userManager = new UserManager();
 
-        if (empty(PostSG::get('email')) || empty(PostSG::get('pass')) || empty(PostSG::get('pass2'))) {
+        if (empty($PSG->get('email')) || empty($PSG->get('pass')) || empty($PSG->get('pass2'))) {
             return "missing information";
         }
 
-        if (!$userManager->emailAvailable(PostSG::get('email'))) return "email already used";
-        if (PostSG::get('pass') != PostSG::get('pass2')) return "password verification failed";
-        if (strlen(PostSG::get('pass')) < 6) return "password too short";
+        if (!$userManager->emailAvailable($PSG->get('email'))) return "email already used";
+        if ($PSG->get('pass') != $PSG->get('pass2')) return "password verification failed";
+        if (strlen($PSG->get('pass')) < 6) return "password too short";
 
-        $hash = password_hash(PostSG::get('pass'), PASSWORD_DEFAULT);
-        $key = FrontendController::generateRandomString();
-        $userManager->addUser("", "", "", PostSG::get('email'), "pending@$key", $hash);
+        $hash = password_hash($PSG->get('pass'), PASSWORD_DEFAULT);
+        $key = self::generateRandomString();
+        $userManager->addUser("", "", "", $PSG->get('email'), "pending@$key", $hash);
         return "user created";
 
     }
@@ -100,51 +108,60 @@ class FrontendController extends Controller
     }
 
     public static function login(): void {
-        if (!empty(PostSG::get('email')) || !empty(PostSG::get('pass'))) {
-            View::renderFront('login.twig', [
+        $view = new View();
+        $PSG = new PostSG();
+        if (!empty($PSG->get('email')) || !empty($PSG->get('pass'))) {
+            $view->renderFront('login.twig', [
                 'title' => 'Connexion / Enregistrement',
                 'loginFailed' => true
             ]);
         } else {
-            View::renderFront('login.twig', ['title' => 'Connexion / Enregistrement']);
+            $view->renderFront('login.twig', ['title' => 'Connexion / Enregistrement']);
         }
     }
 
     public static function loginCheck(): bool {
         $userManager = new UserManager();
-
-        $user = $userManager->checkUser(PostSG::get('email'), PostSG::get('pass'));
+        $PSG = new PostSG();
+        $session = new Session();
+        $user = $userManager->checkUser($PSG->get('email'), $PSG->get('pass'));
         if ($user) {
-            Session::set('user', $user);
+            $session->set('user', $user);
             return true;
         } else {
-            Session::forget('user');
+            $session->forget('user');
             return false;
         }
    
     }
 
     public static function logout(): void {
-        Session::set('user', null);
+        $session = new Session();
+        $session->set('user', null);
     }
 
     public static function legal(): void {
-        View::renderFront('legal.twig', ['title' => 'Mention légales']);
+        $view = new View();
+        $view->renderFront('legal.twig', ['title' => 'Mention légales']);
     }
 
     public static function error404(): void {
-        View::renderFront('error404.twig', ['title' => 'Erreur 404']);
+        $view = new View();
+        $view->renderFront('error404.twig', ['title' => 'Erreur 404']);
     }
 
     public static function sendMail(): bool {
-        $message = "Message de ". PostSG::get("name") ."\n". PostSG::get("email"). "\n". PostSG::get("message");
+        $PSG = new PostSG();
+        $message = "Message de ". $PSG->get("name") ."\n". $PSG->get("email"). "\n". $PSG->get("message");
         return mail("yoann.leonard@gmail.com", "contact", $message);
     }
 
     public static function validation(): void {
+        $view = new View();
+        $GSG = new GetSG();
         $feedback = "";
-        $key = !empty(GetSG::get("key")) ? GetSG::get("key") : 0;
-        $email = !empty(GetSG::get("email")) ? GetSG::get("email") : 0;
+        $key = !empty($GSG->get("key")) ? $GSG->get("key") : 0;
+        $email = !empty($GSG->get("email")) ? $GSG->get("email") : 0;
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         if ($user) {
@@ -158,39 +175,44 @@ class FrontendController extends Controller
             $feedback = "user not found";
         }
         
-        View::renderFront('validation.twig', ['title' => 'Validation', "feedback" => $feedback]);
+        $view->renderFront('validation.twig', ['title' => 'Validation', "feedback" => $feedback]);
     }
 
     public static function profile(): void {
 
+        $view = new View();
+        $PSG = new PostSG();
+        $session = new Session();
         $feedback = array();
 
-        if (!empty(Session::get('user')) && !empty(PostSG::getAll())) {
-            FrontendController::editEntry('name', $feedback);
-            FrontendController::editEntry('first_name', $feedback);
-            FrontendController::editEmail($feedback);
-            FrontendController::editPassword($feedback);
+        if (!empty($session->get('user')) && !empty($PSG->getAll())) {
+            self::editEntry('name', $feedback);
+            self::editEntry('first_name', $feedback);
+            self::editEmail($feedback);
+            self::editPassword($feedback);
         }
 
         if (!empty($feedback)) {
             $userManager = new UserManager();
-            $userManager->loadInfo((int)Session::get('user')['id']);
+            $userManager->loadInfo((int)$session->get('user')['id']);
         }
 
-        View::renderFront('profile.twig', ["title" => "Profil", "session" => Session::getAll(), "feedback" => $feedback]);
+        $view->renderFront('profile.twig', ["title" => "Profil", "session" => $session->getAll(), "feedback" => $feedback]);
 
     }
 
     private static function editEntry(string $entry, array &$feedback): void {
 
-        if (!empty(PostSG::get($entry))) {
+        $PSG = new PostSG();
+        $session = new Session();
+        if (!empty($PSG->get($entry))) {
 
             if ($entry == "name") $entryC = "Name";
             if ($entry == "first_name") $entryC = "FirstName";
             $userManager = new UserManager();
 
-            if (PostSG::get($entry) != Session::get('user')[$entry]) {
-                $userManager->{"set". $entryC}((int)Session::get('user')['id'], PostSG::get($entry));
+            if ($PSG->get($entry) != $session->get('user')[$entry]) {
+                $userManager->{"set". $entryC}((int)$session->get('user')['id'], $PSG->get($entry));
                 $feedback[] = "$entry edited";
             }
         }
@@ -198,11 +220,13 @@ class FrontendController extends Controller
 
     private static function editEmail(array &$feedback): void {
 
-        if (!empty(PostSG::get('email'))) {
+        $PSG = new PostSG();
+        $session = new Session();
+        if (!empty($PSG->get('email'))) {
             $userManager = new UserManager();
-            if (PostSG::get('email') != Session::get('user')['email']) {
-                if ($userManager->emailAvailable(PostSG::get('email'))) {
-                    $userManager->setEmail((int)Session::get('user')['id'], PostSG::get('email'));
+            if ($PSG->get('email') != $session->get('user')['email']) {
+                if ($userManager->emailAvailable($PSG->get('email'))) {
+                    $userManager->setEmail((int)$session->get('user')['id'], $PSG->get('email'));
                     $feedback[] = "email edited";
                 } else {
                     $feedback[] = "email already registered";
@@ -213,12 +237,14 @@ class FrontendController extends Controller
 
     private static function editPassword(array &$feedback): void {
         
-        if (!empty(PostSG::get('pass')) && !empty(PostSG::get('pass2'))) {
+        $PSG = new PostSG();
+        $session = new Session();
+        if (!empty($PSG->get('pass')) && !empty($PSG->get('pass2'))) {
             $userManager = new UserManager();
-            if (PostSG::get('pass') == PostSG::get('pass2')) {
-                if (strlen(PostSG::get('pass')) > 5) {
-                    $hash = password_hash(PostSG::get('pass'), PASSWORD_DEFAULT);
-                    $userManager->setPassword((int)Session::get('user')['id'], $hash);
+            if ($PSG->get('pass') == $PSG->get('pass2')) {
+                if (strlen($PSG->get('pass')) > 5) {
+                    $hash = password_hash($PSG->get('pass'), PASSWORD_DEFAULT);
+                    $userManager->setPassword((int)$session->get('user')['id'], $hash);
                     $feedback[] = "password edited";
                 } else {
                     $feedback[] = "password too short";

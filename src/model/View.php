@@ -10,10 +10,12 @@ class View {
         $loader = new \Twig\Loader\FilesystemLoader("src/view/");
         $twig = new \Twig\Environment($loader);
 
-        $nav = View::getNav();        
-        $name = (isset(Session::get('user')['first_name'])) ? (Session::get('user')['first_name']) : "visiteur";
-        $role = (isset(Session::get('user')['role'])) ? (Session::get('user')['role']) : "visiteur";
-        $idUser = (isset(Session::get('user')['id'])) ? ((int)Session::get('user')['id']) : 0;
+        $view = new View();
+        $session = new Session();
+        $nav = $view->getNav();        
+        $name = (isset($session->get('user')['first_name'])) ? ($session->get('user')['first_name']) : "visiteur";
+        $role = (isset($session->get('user')['role'])) ? ($session->get('user')['role']) : "visiteur";
+        $idUser = (isset($session->get('user')['id'])) ? ((int)$session->get('user')['id']) : 0;
 
         $prepare = array(
             'baseFolder' => BASEFOLDER,
@@ -34,15 +36,18 @@ class View {
     }
 
     public static function renderFront(string $twigFile, array $args = array()): void {
-       View::render("frontend", $twigFile, $args);
+        $view = new View();
+        $view->render("frontend", $twigFile, $args);
     }
 
     public static function renderBack(string $twigFile, array $args = array()): void {
-        View::render("backend", $twigFile, $args);
+        $view = new View();
+        $view->render("backend", $twigFile, $args);
     }
 
     public static function getNav(): array {
-        if (!empty(Session::get('user'))) {
+        $session = new Session();
+        if (!empty($session->get('user'))) {
             $nav = array(
                 array ('href' => BASEFOLDER, 'caption' => 'accueil'),
                 array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
