@@ -48,13 +48,13 @@ class View {
                 array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
                 array ('href' => BASEFOLDER. "profil", 'caption' => "profil"),
             );
-        } else {
-            $nav = array(
-                array ('href' => BASEFOLDER, 'caption' => 'accueil'),
-                array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
-                array ('href' => BASEFOLDER. "login", 'caption' => "se connecter / s'enregistrer"),
-            );
+            return $nav;
         }
+        $nav = array(
+            array ('href' => BASEFOLDER, 'caption' => 'accueil'),
+            array ('href' => BASEFOLDER. "blog", 'caption' => 'blog'),
+            array ('href' => BASEFOLDER. "login", 'caption' => "se connecter / s'enregistrer"),
+        );
         return $nav;
     }
 

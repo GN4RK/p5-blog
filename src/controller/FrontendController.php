@@ -20,9 +20,9 @@ class FrontendController extends Controller
     public static function blog(int $id = null): void {
         if ($id != null) {
             self::post($id);
-        } else {
-            self::listPosts();
+            return;
         }
+        self::listPosts();
     }
     
     public static function listPosts(): void {
