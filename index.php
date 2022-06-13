@@ -18,15 +18,17 @@ use App\Controller\BackendController;
 use App\Model\PostSG;
 use App\Model\Session;
 
+$route = new Route();
+
 // ***************************
 // * Loading Frontend routes *
 // ***************************
 
 // Home Page
-Route::add('/', function(){
+$route->add('/', function(){
     FrontendController::home();
 }, 'get');
-Route::add('/', function(){
+$route->add('/', function(){
     if (FrontendController::sendMail()) {
         FrontendController::home("ok");
     } else {
@@ -35,23 +37,23 @@ Route::add('/', function(){
 }, 'post');
 
 // Blog page
-Route::add('/blog', function(){
+$route->add('/blog', function(){
     FrontendController::blog();
 });
 
 // One particular blog post
-Route::add('/blog/([0-9]*)', function($id){
+$route->add('/blog/([0-9]*)', function($id){
     FrontendController::blog($id);
 }, 'get');
-Route::add('/blog/([0-9]*)', function($id){
+$route->add('/blog/([0-9]*)', function($id){
     FrontendController::blog($id);
 }, 'post');
 
 // Register page
-Route::add('/enregistrement', function(){
+$route->add('/enregistrement', function(){
     FrontendController::register();
 }, 'get');
-Route::add('/enregistrement', function(){
+$route->add('/enregistrement', function(){
     $registerCheck = FrontendController::registerCheck();
     if ($registerCheck == "user created") {
         FrontendController::sendVerificationMail(PostSG::get('email'));
@@ -60,15 +62,15 @@ Route::add('/enregistrement', function(){
 }, 'post');
 
 // Legal page
-Route::add('/mentions-legales', function(){
+$route->add('/mentions-legales', function(){
     FrontendController::legal();
 });
 
 // login page
-Route::add('/login', function(){
+$route->add('/login', function(){
     FrontendController::login();
 }, 'get');
-Route::add('/login', function(){
+$route->add('/login', function(){
     if (FrontendController::loginCheck()) {
         header('Location: '. BASEURL);
     } else {
@@ -77,27 +79,27 @@ Route::add('/login', function(){
 }, 'post');
 
 // logout page
-Route::add('/deconnexion', function(){
+$route->add('/deconnexion', function(){
     FrontendController::logout();
     header('Location: '. BASEURL);
 });
 
 // 404
-Route::pathNotFound(function(){
+$route->pathNotFound(function(){
     FrontendController::error404();
 });
 
 // email validation page
-Route::add('/validation', function(){
+$route->add('/validation', function(){
     FrontendController::validation();
 });
 
 // profile page
-Route::add('/profil', function(){
+$route->add('/profil', function(){
     FrontendController::profile();
 }, 'get');
 // profile page
-Route::add('/profil', function(){
+$route->add('/profil', function(){
     FrontendController::profile();
 }, 'post');
 
@@ -110,60 +112,60 @@ Route::add('/profil', function(){
 if (Session::getRole() == 'admin') {
     
     // admin page
-    Route::add('/admin', function(){
+    $route->add('/admin', function(){
         BackendController::admin();
     });
 
     // new post page
-    Route::add('/admin/new', function(){
+    $route->add('/admin/new', function(){
         BackendController::adminNew();
     }, 'get');
-    Route::add('/admin/new', function(){
+    $route->add('/admin/new', function(){
         BackendController::adminNew();
     }, 'post');
 
     // users moderation page
-    Route::add('/admin/user', function(){
+    $route->add('/admin/user', function(){
         BackendController::adminUser();
     }, 'get');
-    Route::add('/admin/user', function(){
+    $route->add('/admin/user', function(){
         BackendController::adminUser();
     }, 'post');
 
     // blog posts moderation page
-    Route::add('/admin/post', function(){
+    $route->add('/admin/post', function(){
         BackendController::adminPost();
     });
 
     // edit one blog post
-    Route::add('/admin/post/([0-9]*)', function($id){
+    $route->add('/admin/post/([0-9]*)', function($id){
         BackendController::editPost($id);
     }, 'get');
-    Route::add('/admin/post/([0-9]*)', function($id){
+    $route->add('/admin/post/([0-9]*)', function($id){
         BackendController::editPost($id);
     }, 'post');
 
     // delete one blog post
-    Route::add('/admin/post/([0-9]*)/delete', function($id){
+    $route->add('/admin/post/([0-9]*)/delete', function($id){
         BackendController::deletePost($id);
     });
 
     // comment moderation page
-    Route::add('/admin/comment', function(){
+    $route->add('/admin/comment', function(){
         BackendController::adminComment();
     });
 
     // comment validation page
-    Route::add('/admin/comment/validate/([0-9]*)', function($idComment){
+    $route->add('/admin/comment/validate/([0-9]*)', function($idComment){
         $idPost = BackendController::validateComment($idComment);
         header('Location: '. BASEURL ."blog/$idPost");
     });
 
     // comment hiding page
-    Route::add('/admin/comment/hide/([0-9]*)', function($idComment){
+    $route->add('/admin/comment/hide/([0-9]*)', function($idComment){
         $idPost = BackendController::hideComment($idComment);
         header('Location: '. BASEURL ."blog/$idPost");
     });
 }
 
-Route::run(BASEFOLDER);
+$route->run(BASEFOLDER);
