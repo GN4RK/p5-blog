@@ -36,21 +36,21 @@ class Route {
     self::$methodNotAllowed = $function;
   }
 
-  public static function run(string $basepath = '', bool $case_matters = false, bool $trailing_slash_matters = false, bool $multimatch = false): void {
+  public static function run(string $basepath = '', bool $case_matters = false, bool $tsl = false, bool $multimatch = false): void {
 
     // The basepath never needs a trailing slash
     // Because the trailing slash will be added using the route expressions
     $basepath = rtrim($basepath, '/');
 
     // Parse current URL
-    $parsed_url = parse_url($_SERVER['REQUEST_URI']);
+    $parsed_url = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : BASEFOLDER;
 
     $path = '/';
 
     // If there is a path available
     if (isset($parsed_url['path'])) {
       // If the trailing slash matters
-  	  if ($trailing_slash_matters) {
+  	  if ($tsl) {
   		  $path = $parsed_url['path'];
   	  } else {
         // If the path is not equal to the base path (including a trailing slash)
@@ -66,7 +66,7 @@ class Route {
   	$path = urldecode($path);
 
     // Get current request method
-    $method = $_SERVER['REQUEST_METHOD'];
+    $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
     $path_match_found = false;
 
