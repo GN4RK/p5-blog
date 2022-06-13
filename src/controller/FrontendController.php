@@ -37,31 +37,30 @@ class FrontendController extends Controller
         $userManager = new UserManager();
 
         $post = $postManager->getPost($id);
-        $author = $userManager->getUserById((int)$post['id_user']);
 
-    
         // if id not found, display error
         if (!$post) {
             self::error404();
-        } else {
-
-            $feedback = "";
-
-            if (!empty(PostSG::get('comment'))) {
-                $commentManager->postComment($id, (int)Session::get('user')['id'], PostSG::get('comment'));
-                $feedback = "comment added";
-            }
-
-            $comments = $commentManager->getComments($id);
-
-            View::renderFront('post.twig', [
-                'title' => 'Blog - '. $post['title'], 
-                'author' => $author, 
-                'post' => $post, 
-                'comments' => $comments,
-                'feedback' => $feedback
-            ]);
+            return;
         }
+
+        $author = $userManager->getUserById((int)$post['id_user']);
+        $feedback = "";
+
+        if (!empty(PostSG::get('comment'))) {
+            $commentManager->postComment($id, (int)Session::get('user')['id'], PostSG::get('comment'));
+            $feedback = "comment added";
+        }
+
+        $comments = $commentManager->getComments($id);
+
+        View::renderFront('post.twig', [
+            'title' => 'Blog - '. $post['title'], 
+            'author' => $author, 
+            'post' => $post, 
+            'comments' => $comments,
+            'feedback' => $feedback
+        ]);
     }
 
     public static function register(string $feedback = null): void {
@@ -82,7 +81,7 @@ class FrontendController extends Controller
 
         $hash = password_hash(PostSG::get('pass'), PASSWORD_DEFAULT);
         $key = FrontendController::generateRandomString();
-        $userManager->addUser("", "", "", stripslashes(PostSG::get('email')), "pending@$key", $hash);
+        $userManager->addUser("", "", "", PostSG::get('email'), "pending@$key", $hash);
         return "user created";
 
     }
