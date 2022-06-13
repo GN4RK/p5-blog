@@ -167,17 +167,3 @@ if (Session::getRole() == 'admin') {
 }
 
 Route::run(BASEFOLDER);
-
-echo "<pre>";
-echo "********* \n";
-echo "* DEBUG * \n";
-echo "********* \n";
-echo '$_SESSION';
-var_dump($_SESSION);
-echo '$_POST';
-var_dump($_POST);
-echo '$_GET';
-var_dump($_GET);
-echo "</pre>";
-
-
