@@ -10,8 +10,8 @@ use App\Model\CommentManager;
 use App\Model\Session;
 use App\Model\PostSG;
 
-class BackendController extends Controller
-{
+class BackendController {
+
     static function admin(): void {
         $view = new View();
         $view->renderBack('admin.twig', ["title" => "Administration"]);
@@ -74,7 +74,7 @@ class BackendController extends Controller
         return $commentManager->getIdPost($idComment);
     }
 
-    static function editPost(int $id) {
+    static function editPost(int $id): void {
 
         $view = new View();
         $postManager = new PostManager();

@@ -6,7 +6,7 @@ namespace App\Model;
 
 class UserManager extends Manager {
 
-    public function checkUser(string $email, string $password) {
+    public function checkUser(string $email, string $password): array|false {
         $user = $this->getUserByEmail($email, true);
         if ($user) {
             if (password_verify($password, $user["password"])) {
@@ -37,7 +37,7 @@ class UserManager extends Manager {
         return $affectedLines;
     }
 
-    public function getUserById(int $idUser) {
+    public function getUserById(int $idUser): array|false {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
@@ -49,7 +49,7 @@ class UserManager extends Manager {
         return $user;
     }
 
-    public function getUserByEmail(string $email, bool $validated = false) {
+    public function getUserByEmail(string $email, bool $validated = false): array|false {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 

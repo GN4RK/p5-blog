@@ -65,19 +65,4 @@ class CommentManager extends Manager
         return (int)$comment['id_post'];
     }
 
-
-    public function getPost(int $idPost) {
-        $db = $this->dbConnect();
-        $req = $db->prepare(
-            'SELECT id, title, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%imin%ss\') AS publication_date_fr, 
-            DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%imin%ss\') AS last_update_fr, status 
-            FROM post
-            WHERE id = ?'
-        );
-        $req->execute(array($idPost));
-        $post = $req->fetch();
-
-        return $post;
-    }
-
 }

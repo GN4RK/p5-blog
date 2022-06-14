@@ -5,11 +5,11 @@ namespace App\Model;
 
 class Session {
 
-    public static function set($key, $value): void {
+    public static function set(string $key, mixed $value): void {
         $_SESSION[$key] = $value;
     }
 
-    public static function get($key) {
+    public static function get(string $key): mixed {
         return (isset($_SESSION[$key]) ? $_SESSION[$key] : null);
     }
 
@@ -17,7 +17,7 @@ class Session {
         return $_SESSION;
     }
 
-    public static function forget($key): void {
+    public static function forget(string $key): void {
         unset($_SESSION[$key]);
     }
 

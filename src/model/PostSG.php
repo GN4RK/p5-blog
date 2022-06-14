@@ -5,15 +5,15 @@ namespace App\Model;
 
 class PostSG {
 
-    public static function set($key, $value): void {
+    public static function set(string $key, mixed $value): void {
         $_POST[$key] = $value;
     }
 
-    public static function get($key) {
+    public static function get(string $key): mixed {
         return (isset($_POST[$key]) ? $_POST[$key] : null);
     }
 
-    public static function forget($key): void {
+    public static function forget(string $key): void {
         unset($_POST[$key]);
     }
 

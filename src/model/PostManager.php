@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class PostManager extends Manager
-{
+class PostManager extends Manager {
+
     public function getPosts(): \PDOStatement {
         $db = $this->dbConnect();
         $req = $db->query(
@@ -18,7 +18,7 @@ class PostManager extends Manager
         return $req;
     }
 
-    public function getPost(int $idPost) {
+    public function getPost(int $idPost): array|false {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT id, id_user, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr, 
@@ -58,7 +58,7 @@ class PostManager extends Manager
         return $affectedLines;
     }
 
-    public function deletePost(int $idPost) {
+    public function deletePost(int $idPost): bool {
 
         $db = $this->dbConnect();
         $post = $db->prepare(

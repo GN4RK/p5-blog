@@ -11,8 +11,8 @@ use App\Model\View;
 use App\Model\Session;
 use App\Model\PostSG;
 
-class FrontendController extends Controller
-{
+class FrontendController {
+    
     public static function home(string $mailStatus = null): void {
         $view = new View();
         $view->renderFront('home.twig', ['title' => 'Accueil', 'mailStatus' => $mailStatus]);        
