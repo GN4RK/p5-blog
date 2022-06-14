@@ -150,11 +150,6 @@ if (Session::getRole() == 'admin') {
         BackendController::deletePost($id);
     });
 
-    // comment moderation page
-    $route->add('/admin/comment', function(){
-        BackendController::adminComment();
-    });
-
     // comment validation page
     $route->add('/admin/comment/validate/([0-9]*)', function($idComment){
         $idPost = BackendController::validateComment($idComment);
