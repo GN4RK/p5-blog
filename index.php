@@ -132,11 +132,6 @@ if (Session::getRole() == 'admin') {
         BackendController::adminUser();
     }, 'post');
 
-    // blog posts moderation page
-    $route->add('/admin/post', function(){
-        BackendController::adminPost();
-    });
-
     // edit one blog post
     $route->add('/admin/post/([0-9]*)', function($id){
         BackendController::editPost($id);
