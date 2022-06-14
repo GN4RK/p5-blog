@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+/**
+ * Route
+ */
 class Route {
 
     public static $routes = Array();
@@ -16,26 +19,52 @@ class Route {
       * @param string|array $method  Either a string of allowed method or an array with string values
       *
       */
-    public static function add(string $expression, callable $function, $method = 'get'): void {
+    public static function add(string $expression, callable $function, string|array $method = 'get'): void {
         array_push(self::$routes, Array(
             'expression' => $expression,
             'function' => $function,
             'method' => $method
         ));
     }
-
+    
+    /**
+     * Return all routes
+     *
+     * @return array
+     */
     public static function getAll(): array {
         return self::$routes;
     }
-
+    
+    /**
+     * Call the function set in case the path is not found
+     *
+     * @param  mixed $function
+     * @return void
+     */
     public static function pathNotFound(callable $function): void {
         self::$pathNotFound = $function;
     }
-
+    
+    /**
+     * Call the function set in case the function is not allowed
+     *
+     * @param  mixed $function
+     * @return void
+     */
     public static function methodNotAllowed(callable $function): void {
         self::$methodNotAllowed = $function;
     }
-
+    
+    /**
+     * Check all path set with current URI
+     *
+     * @param  string $basepath
+     * @param  bool $case_matters
+     * @param  bool $tsl If the trailing slash matters
+     * @param  bool $multimatch
+     * @return void
+     */
     public static function run(string $basepath = '', bool $case_matters = false, bool $tsl = false, bool $multimatch = false): void {
 
         // The basepath never needs a trailing slash

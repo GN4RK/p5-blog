@@ -3,8 +3,16 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+/**
+ * PostManager class
+ */
 class PostManager extends Manager {
-
+    
+    /**
+     * Return all posts from the database
+     *
+     * @return PDOStatement
+     */
     public function getPosts(): \PDOStatement {
         $db = $this->dbConnect();
         $req = $db->query(
@@ -17,7 +25,13 @@ class PostManager extends Manager {
 
         return $req;
     }
-
+    
+    /**
+     * Return one post from the database
+     *
+     * @param  int $idPost
+     * @return array|false return false if not found
+     */
     public function getPost(int $idPost): array|false {
         $db = $this->dbConnect();
         $req = $db->prepare(
@@ -31,7 +45,17 @@ class PostManager extends Manager {
 
         return $post;
     }
-
+    
+    /**
+     * Add a post in the database
+     *
+     * @param  mixed $idAuthor
+     * @param  mixed $title
+     * @param  mixed $header
+     * @param  mixed $content
+     * @param  mixed $status
+     * @return bool
+     */
     public function addPost(int $idAuthor, string $title, string $header, string $content, string $status): bool {
         $db = $this->dbConnect();
         $post = $db->prepare(
@@ -41,7 +65,17 @@ class PostManager extends Manager {
 
         return $affectedLines;
     }
-
+    
+    /**
+     * Edit a post from the database
+     *
+     * @param  mixed $idPost
+     * @param  mixed $title
+     * @param  mixed $header
+     * @param  mixed $content
+     * @param  mixed $status
+     * @return bool
+     */
     public function editPost(int $idPost, string $title, string $header, string $content, string $status): bool {
         $db = $this->dbConnect();
         $post = $db->prepare(
@@ -57,7 +91,13 @@ class PostManager extends Manager {
 
         return $affectedLines;
     }
-
+    
+    /**
+     * Delete a post from the database
+     *
+     * @param  mixed $idPost
+     * @return bool
+     */
     public function deletePost(int $idPost): bool {
 
         $db = $this->dbConnect();

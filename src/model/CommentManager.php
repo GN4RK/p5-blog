@@ -3,8 +3,17 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class CommentManager extends Manager
-{
+/**
+ * CommentManager
+ */
+class CommentManager extends Manager {
+        
+    /**
+     * Return all the comments posted on a blog post or false from the database
+     *
+     * @param  int $idPost
+     * @return PDOStatement
+     */
     public function getComments(int $idPost): \PDOStatement {
         $db = $this->dbConnect();
         $comments = $db->query(
@@ -17,7 +26,15 @@ class CommentManager extends Manager
 
         return $comments;
     }
-
+    
+    /**
+     * Add a comment into the databse
+     *
+     * @param  int $idPost post id
+     * @param  int $idUser user id
+     * @param  string $comment
+     * @return bool true if no error
+     */
     public function postComment(int $idPost, int $idUser, string $comment): bool {
         $db = $this->dbConnect();
         $comments = $db->prepare(
@@ -27,7 +44,13 @@ class CommentManager extends Manager
 
         return $affectedLines;
     }
-
+    
+    /**
+     * Validate a comment updating its status
+     *
+     * @param  int $idComment
+     * @return bool
+     */
     public function validateComment(int $idComment): bool {
         $db = $this->dbConnect();
         $comments = $db->prepare(
@@ -39,7 +62,13 @@ class CommentManager extends Manager
 
         return $affectedLines;
     }
-
+    
+    /**
+     * Hide a comment updating its status
+     *
+     * @param  int $idComment
+     * @return bool
+     */
     public function unValidateComment(int $idComment): bool {
         $db = $this->dbConnect();
         $comments = $db->prepare(
@@ -51,7 +80,13 @@ class CommentManager extends Manager
 
         return $affectedLines;
     }
-
+    
+    /**
+     * Return the post id from a comment id.
+     *
+     * @param  mixed $idComment
+     * @return int post id
+     */
     public function getIdPost(int $idComment): int {
         $db = $this->dbConnect();
         $req = $db->prepare(

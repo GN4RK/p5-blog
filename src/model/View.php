@@ -3,8 +3,19 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+/**
+ * View class
+ */
 class View {
-
+    
+    /**
+     * Render a view
+     *
+     * @param  string $env Environnement : Backend or Frontend
+     * @param  string $twigFile Twig file to load for the render
+     * @param  array $args optionnal arguments
+     * @return void
+     */
     public static function render(string $env, string $twigFile, array $args = array()): void {
 
         $loader = new \Twig\Loader\FilesystemLoader("src/view/");
@@ -34,17 +45,36 @@ class View {
         echo $template->render($prepare);
 
     }
-
+    
+    /**
+     * Call render function with frontend parameters
+     *
+     * @param  string $twigFile
+     * @param  array $args
+     * @return void
+     */
     public static function renderFront(string $twigFile, array $args = array()): void {
         $view = new View();
         $view->render("frontend", $twigFile, $args);
     }
-
+    
+    /**
+     * Call render function with backend parameters
+     *
+     * @param  string $twigFile
+     * @param  array $args
+     * @return void
+     */
     public static function renderBack(string $twigFile, array $args = array()): void {
         $view = new View();
         $view->render("backend", $twigFile, $args);
     }
-
+    
+    /**
+     * Return navigation parameters to render proper menu item
+     *
+     * @return array
+     */
     public static function getNav(): array {
         $session = new Session();
         if (!empty($session->get('user'))) {
