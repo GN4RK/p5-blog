@@ -38,7 +38,12 @@ $route->add('/', function(){
 
 // Blog page
 $route->add('/blog', function(){
-    FrontendController::blog();
+    FrontendController::listPosts();
+});
+
+// Blog pagination
+$route->add('/blog/page/([0-9]*)', function($page){
+    FrontendController::listPosts($page);
 });
 
 // One particular blog post
@@ -98,7 +103,6 @@ $route->add('/validation', function(){
 $route->add('/profil', function(){
     FrontendController::profile();
 }, 'get');
-// profile page
 $route->add('/profil', function(){
     FrontendController::profile();
 }, 'post');

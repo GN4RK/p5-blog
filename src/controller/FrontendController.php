@@ -46,11 +46,12 @@ class FrontendController {
      *
      * @return void
      */
-    public static function listPosts(): void {
+    public static function listPosts(int $page = 1): void {
         $view = new View();
         $postManager = new PostManager();
-        $posts = $postManager->getPosts();
-        $view->renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts]);
+        $posts = $postManager->getPosts($page);
+        $pageAmount = $postManager->getPageAmount();
+        $view->renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts, 'pageAmount' => $pageAmount, 'currentPage' => $page]);
     }
         
     /**

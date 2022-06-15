@@ -13,17 +13,31 @@ class PostManager extends Manager {
      *
      * @return PDOStatement
      */
-    public function getPosts(): \PDOStatement {
+    public function getPosts(int $page): \PDOStatement {
         $db = $this->dbConnect();
         $req = $db->query(
             'SELECT id, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr,
             DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr, status 
             FROM post 
             ORDER BY publication_date 
-            DESC LIMIT 0, 5'
+            DESC 
+            LIMIT '. $page*5 - 5 .', '. 5 .''
         );
 
         return $req;
+    }
+    
+    /**
+     * Return the number of pages
+     *
+     * @return int
+     */
+    public function getPageAmount(): int {
+        $db = $this->dbConnect();
+        $req = $db->query('SELECT COUNT(*) FROM post;');
+        $req->execute();
+        $nbPost = $req->fetch()[0];
+        return (int)ceil($nbPost/5);
     }
     
     /**
