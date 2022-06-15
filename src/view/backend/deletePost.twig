@@ -1,0 +1,22 @@
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container d-flex align-items-center flex-column">
+        {% if postStatus == "post deleted" %}
+            <div class="alert alert-success" role="alert">
+                Billet supprimé avec succès.
+            </div>
+        {% elseif postStatus == "post not found" %}
+            <div class="alert alert-danger" role="alert">
+                Billet non trouvé.
+            </div>
+        {% endif %}
+        <div class="list-group">
+            <a href="{{ BASEFOLDER }}admin/new" class="list-group-item list-group-item-action">
+                Ajouter un nouveau billet
+            </a>
+            <a href="{{ BASEFOLDER }}admin/user" class="list-group-item list-group-item-action">
+                Modération des utilisateurs
+            </a>
+        </div>
+    </div>
+</header>

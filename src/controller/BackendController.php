@@ -155,7 +155,36 @@ class BackendController {
             $postStatus = "post not found";
         }
         
-        $view->renderBack('delete.twig', ["title" => "Administration - Suppression de billet", "postStatus" => $postStatus]);
+        $view->renderBack('deletePost.twig', ["title" => "Administration - Suppression de billet", "postStatus" => $postStatus]);
+    }
+
+    /**
+     * Display delete user page
+     *
+     * @param  int $id
+     * @return void
+     */
+    static function deleteUser(int $id): void {
+
+        // preventing super admin being deleted
+        if ($id == 1) {
+            return;
+        }
+
+        $view = new View();
+        $userManager = new UserManager();
+        $user = $userManager->getUserById($id);
+
+        $userStatus = "";
+
+        if ($user) {
+            $userManager->deleteUser($id);
+            $userStatus = "user deleted";
+        } else {
+            $userStatus = "user not found";
+        }
+        
+        $view->renderBack('deleteUser.twig', ["title" => "Administration - Suppression d'utilisateur", "userStatus" => $userStatus]);
 
     }
 }

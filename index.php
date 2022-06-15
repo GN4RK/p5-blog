@@ -156,6 +156,11 @@ if (Session::getRole() == 'admin') {
         $idPost = BackendController::hideComment($idComment);
         header('Location: '. BASEURL ."blog/$idPost");
     });
+
+    // delete user
+    $route->add('/admin/user/delete/([0-9]*)', function($idUser){
+        BackendController::deleteUser($idUser);
+    });
 }
 
 $route->run(BASEFOLDER);

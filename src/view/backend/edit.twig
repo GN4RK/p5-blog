@@ -38,7 +38,7 @@
 
             </form>
             <div class="mb-3">
-                <a href="admin/post/{{ post.id }}/delete" type="button" class="btn btn-danger">Supprimer le billet</a>
+                <a href="admin/post/{{ post.id }}/delete" onclick="return confirm('Êtes vous sûr ?')" type="button" class="btn btn-danger">Supprimer le billet</a>
             </div>
             <div class="mb-3">
                 <a href="blog/{{ post.id }}" type="button" class="btn btn-secondary">Voir le post</a>
