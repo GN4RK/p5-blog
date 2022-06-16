@@ -48,7 +48,11 @@ class CommentManager extends Manager
             'INSERT INTO comment(id_post, id_user, content, date, status) 
             VALUES(?, ?, ?, NOW(), "pending")'
         );
-        $affectedLines = $comments->execute(array($idPost, $idUser, $comment));
+        $affectedLines = $comments->execute(array(
+            $idPost, 
+            $idUser, 
+            htmlspecialchars($comment, ENT_QUOTES, 'UTF-8'), 
+        ));
 
         return $affectedLines;
     }

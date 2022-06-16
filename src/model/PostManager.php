@@ -98,10 +98,10 @@ class PostManager extends Manager {
         );
         $affectedLines = $post->execute(array(
             $idAuthor,
-            $title, 
-            $header, 
-            $content, 
-            $status
+            htmlspecialchars($title, ENT_QUOTES, 'UTF-8'), 
+            htmlspecialchars($header, ENT_QUOTES, 'UTF-8'), 
+            htmlspecialchars($content, ENT_QUOTES, 'UTF-8'), 
+            htmlspecialchars($status, ENT_QUOTES, 'UTF-8')
         ));
 
         return $affectedLines;
@@ -134,7 +134,13 @@ class PostManager extends Manager {
                 status = ?
             WHERE id = ?'
         );
-        $affectedLines = $post->execute(array($title, $header, $content, $status, $idPost));
+        $affectedLines = $post->execute(array(
+            htmlspecialchars($title, ENT_QUOTES, 'UTF-8'), 
+            htmlspecialchars($header, ENT_QUOTES, 'UTF-8'), 
+            htmlspecialchars($content, ENT_QUOTES, 'UTF-8'), 
+            htmlspecialchars($status, ENT_QUOTES, 'UTF-8'), 
+            $idPost
+        ));
 
         return $affectedLines;
     }
