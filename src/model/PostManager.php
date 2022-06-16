@@ -3,22 +3,50 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class PostManager extends Manager
-{
-    public function getPosts(): \PDOStatement {
+/**
+ * PostManager class
+ */
+class PostManager extends Manager {
+    
+    /**
+     * Return all posts from the database
+     *
+     * @return PDOStatement
+     */
+    public function getPosts(int $page): \PDOStatement {
         $db = $this->dbConnect();
         $req = $db->query(
             'SELECT id, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr,
             DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr, status 
             FROM post 
             ORDER BY publication_date 
-            DESC LIMIT 0, 5'
+            DESC 
+            LIMIT '. $page*5 - 5 .', '. 5 .''
         );
 
         return $req;
     }
-
-    public function getPost(int $idPost) {
+    
+    /**
+     * Return the number of pages
+     *
+     * @return int
+     */
+    public function getPageAmount(): int {
+        $db = $this->dbConnect();
+        $req = $db->query('SELECT COUNT(*) FROM post;');
+        $req->execute();
+        $nbPost = $req->fetch()[0];
+        return (int)ceil($nbPost/5);
+    }
+    
+    /**
+     * Return one post from the database
+     *
+     * @param  int $idPost
+     * @return array|false return false if not found
+     */
+    public function getPost(int $idPost): array|false {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT id, id_user, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr, 
@@ -31,7 +59,17 @@ class PostManager extends Manager
 
         return $post;
     }
-
+    
+    /**
+     * Add a post in the database
+     *
+     * @param  mixed $idAuthor
+     * @param  mixed $title
+     * @param  mixed $header
+     * @param  mixed $content
+     * @param  mixed $status
+     * @return bool
+     */
     public function addPost(int $idAuthor, string $title, string $header, string $content, string $status): bool {
         $db = $this->dbConnect();
         $post = $db->prepare(
@@ -41,7 +79,17 @@ class PostManager extends Manager
 
         return $affectedLines;
     }
-
+    
+    /**
+     * Edit a post from the database
+     *
+     * @param  mixed $idPost
+     * @param  mixed $title
+     * @param  mixed $header
+     * @param  mixed $content
+     * @param  mixed $status
+     * @return bool
+     */
     public function editPost(int $idPost, string $title, string $header, string $content, string $status): bool {
         $db = $this->dbConnect();
         $post = $db->prepare(
@@ -57,8 +105,14 @@ class PostManager extends Manager
 
         return $affectedLines;
     }
-
-    public function deletePost(int $idPost) {
+    
+    /**
+     * Delete a post from the database
+     *
+     * @param  mixed $idPost
+     * @return bool
+     */
+    public function deletePost(int $idPost): bool {
 
         $db = $this->dbConnect();
         $post = $db->prepare(

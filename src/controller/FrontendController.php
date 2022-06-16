@@ -11,13 +11,28 @@ use App\Model\View;
 use App\Model\Session;
 use App\Model\PostSG;
 
-class FrontendController extends Controller
-{
+/**
+ * FrontendController
+ */
+class FrontendController {
+        
+    /**
+     * Display home page
+     *
+     * @param  string $mailStatus status of the mail sent by the contact form
+     * @return void
+     */
     public static function home(string $mailStatus = null): void {
         $view = new View();
         $view->renderFront('home.twig', ['title' => 'Accueil', 'mailStatus' => $mailStatus]);        
     }
-
+    
+    /**
+     * Display blog page : if $id not null, display only the blog post, else, display all blog posts
+     *
+     * @param  int $id if not null, id of the post to display
+     * @return void
+     */
     public static function blog(int $id = null): void {
         if ($id != null) {
             self::post($id);
@@ -25,14 +40,26 @@ class FrontendController extends Controller
         }
         self::listPosts();
     }
-    
-    public static function listPosts(): void {
+        
+    /**
+     * Display all blog posts page
+     *
+     * @return void
+     */
+    public static function listPosts(int $page = 1): void {
         $view = new View();
         $postManager = new PostManager();
-        $posts = $postManager->getPosts();
-        $view->renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts]);
+        $posts = $postManager->getPosts($page);
+        $pageAmount = $postManager->getPageAmount();
+        $view->renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts, 'pageAmount' => $pageAmount, 'currentPage' => $page]);
     }
-    
+        
+    /**
+     * Display only one blog post page with its comments. If $id not found, display error 404 page
+     *
+     * @param  mixed $id id of the blog post
+     * @return void
+     */
     public static function post(int $id): void {
         $view = new View();
         $PSG = new PostSG();
@@ -67,13 +94,24 @@ class FrontendController extends Controller
             'feedback' => $feedback
         ]);
     }
-
+    
+    /**
+     * Display register page
+     *
+     * @param  string $feedback feedback when the form is fill
+     * @return void
+     */
     public static function register(string $feedback = null): void {
         $view = new View();
         $PSG = new PostSG();
         $view->renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => $PSG->getAll()]);
     }
-
+    
+    /**
+     * Check registration form inputs. If all inputs are good, call addUser function.
+     *
+     * @return string Return status message.
+     */
     public static function registerCheck(): string {
 
         $PSG = new PostSG();
@@ -93,7 +131,13 @@ class FrontendController extends Controller
         return "user created";
 
     }
-
+    
+    /**
+     * Send verification mail to the new user.
+     *
+     * @param  string $email Email of the user.
+     * @return bool True if the mail is sent.
+     */
     public static function sendVerificationMail(string $email): bool {
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
@@ -106,7 +150,12 @@ class FrontendController extends Controller
         $message = "Cliquez sur le lien pour valider l'inscription : <a href=\"$url\">Lien</a>";
         return mail($email, $subject, $message, implode("\r\n", $headers));
     }
-
+    
+    /**
+     * Display login page
+     *
+     * @return void
+     */
     public static function login(): void {
         $view = new View();
         $PSG = new PostSG();
@@ -119,7 +168,12 @@ class FrontendController extends Controller
             $view->renderFront('login.twig', ['title' => 'Connexion / Enregistrement']);
         }
     }
-
+    
+    /**
+     * Check if email matches with password from $_POST superglobal
+     *
+     * @return bool
+     */
     public static function loginCheck(): bool {
         $userManager = new UserManager();
         $PSG = new PostSG();
@@ -134,28 +188,53 @@ class FrontendController extends Controller
         }
    
     }
-
+    
+    /**
+     * logout user
+     *
+     * @return void
+     */
     public static function logout(): void {
         $session = new Session();
         $session->set('user', null);
     }
-
+    
+    /**
+     * Display legal page
+     *
+     * @return void
+     */
     public static function legal(): void {
         $view = new View();
         $view->renderFront('legal.twig', ['title' => 'Mention légales']);
     }
-
+    
+    /**
+     * Display error 404 page
+     *
+     * @return void
+     */
     public static function error404(): void {
         $view = new View();
         $view->renderFront('error404.twig', ['title' => 'Erreur 404']);
     }
-
+    
+    /**
+     * Send mail from the contact form
+     *
+     * @return bool Return true if the mail is sended
+     */
     public static function sendMail(): bool {
         $PSG = new PostSG();
         $message = "Message de ". $PSG->get("name") ."\n". $PSG->get("email"). "\n". $PSG->get("message");
         return mail("yoann.leonard@gmail.com", "contact", $message);
     }
-
+    
+    /**
+     * Display validation page for new users.
+     *
+     * @return void
+     */
     public static function validation(): void {
         $view = new View();
         $GSG = new GetSG();
@@ -177,7 +256,12 @@ class FrontendController extends Controller
         
         $view->renderFront('validation.twig', ['title' => 'Validation', "feedback" => $feedback]);
     }
-
+    
+    /**
+     * Display profile page.
+     *
+     * @return void
+     */
     public static function profile(): void {
 
         $view = new View();
@@ -200,7 +284,14 @@ class FrontendController extends Controller
         $view->renderFront('profile.twig', ["title" => "Profil", "session" => $session->getAll(), "feedback" => $feedback]);
 
     }
-
+    
+    /**
+     * Edit one entry from the profile page
+     *
+     * @param  string $entry
+     * @param  array $feedback
+     * @return void
+     */
     private static function editEntry(string $entry, array &$feedback): void {
 
         $PSG = new PostSG();
@@ -217,7 +308,13 @@ class FrontendController extends Controller
             }
         }
     }
-
+    
+    /**
+     * Edit email from the profile page
+     *
+     * @param  array $feedback
+     * @return void
+     */
     private static function editEmail(array &$feedback): void {
 
         $PSG = new PostSG();
@@ -234,7 +331,13 @@ class FrontendController extends Controller
             }
         }
     }
-
+    
+    /**
+     * Edit password from the profile page
+     *
+     * @param  array $feedback
+     * @return void
+     */
     private static function editPassword(array &$feedback): void {
         
         $PSG = new PostSG();
@@ -254,7 +357,13 @@ class FrontendController extends Controller
             }
         }
     }
-
+    
+    /**
+     * Generate a random string for validation purpose.
+     *
+     * @param  mixed $length
+     * @return string
+     */
     private static function generateRandomString(int $length = 10): string {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);

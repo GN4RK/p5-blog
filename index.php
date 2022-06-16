@@ -38,7 +38,12 @@ $route->add('/', function(){
 
 // Blog page
 $route->add('/blog', function(){
-    FrontendController::blog();
+    FrontendController::listPosts();
+});
+
+// Blog pagination
+$route->add('/blog/page/([0-9]*)', function($page){
+    FrontendController::listPosts($page);
 });
 
 // One particular blog post
@@ -98,7 +103,6 @@ $route->add('/validation', function(){
 $route->add('/profil', function(){
     FrontendController::profile();
 }, 'get');
-// profile page
 $route->add('/profil', function(){
     FrontendController::profile();
 }, 'post');
@@ -132,11 +136,6 @@ if (Session::getRole() == 'admin') {
         BackendController::adminUser();
     }, 'post');
 
-    // blog posts moderation page
-    $route->add('/admin/post', function(){
-        BackendController::adminPost();
-    });
-
     // edit one blog post
     $route->add('/admin/post/([0-9]*)', function($id){
         BackendController::editPost($id);
@@ -150,11 +149,6 @@ if (Session::getRole() == 'admin') {
         BackendController::deletePost($id);
     });
 
-    // comment moderation page
-    $route->add('/admin/comment', function(){
-        BackendController::adminComment();
-    });
-
     // comment validation page
     $route->add('/admin/comment/validate/([0-9]*)', function($idComment){
         $idPost = BackendController::validateComment($idComment);
@@ -165,6 +159,11 @@ if (Session::getRole() == 'admin') {
     $route->add('/admin/comment/hide/([0-9]*)', function($idComment){
         $idPost = BackendController::hideComment($idComment);
         header('Location: '. BASEURL ."blog/$idPost");
+    });
+
+    // delete user
+    $route->add('/admin/user/delete/([0-9]*)', function($idUser){
+        BackendController::deleteUser($idUser);
     });
 }
 

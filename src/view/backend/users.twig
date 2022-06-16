@@ -1,24 +1,27 @@
 <!-- Masthead-->
 <header class="masthead">
     <div class="container">
+        <h1 class="text-uppercase mb-5">Modération des utilisateurs</h1>
+
         <form method="post" class="mb-3">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th class="d-none d-sm-table-cell d-sm-none d-md-table-cell" scope="col">#</th>
                         <th scope="col">Nom</th>
-                        <th scope="col">Prénom</th>
+                        <th class="d-none d-sm-table-cell d-sm-none d-md-table-cell" scope="col">Prénom</th>
                         <th class="d-none d-sm-table-cell d-sm-none d-md-table-cell" scope="col">email</th>
-                        <th scope="col">role</th>
+                        <th scope="col">Rôle</th>
                         <th class="d-none d-sm-table-cell d-sm-none d-md-table-cell" scope="col">status</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
                         <tr>
-                            <td>{{ user.id }}</td>
+                            <td class="d-none d-sm-table-cell d-sm-none d-md-table-cell">{{ user.id }}</td>
                             <td>{{ user.name }}</td>
-                            <td>{{ user.first_name }}</td>
+                            <td class="d-none d-sm-table-cell d-sm-none d-md-table-cell">{{ user.first_name }}</td>
                             <td class="d-none d-sm-table-cell d-sm-none d-md-table-cell">{{ user.email }}</td>
                             <td>
                                 <select name="role-{{ user.id }}" {% if (user.id == 1)  or (user.id == id_user) %} disabled {% endif %}>
@@ -27,6 +30,13 @@
                                 </select>
                             </td>
                             <td class="d-none d-sm-table-cell d-sm-none d-md-table-cell">{{ user.status }}</td>
+                            <td>
+                                {% if (user.id != 1) %}
+                                    <a class="link-danger" onclick="return confirm('Êtes vous sûr ?')" href="{{ baseFolder }}admin/user/delete/{{ user.id }}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 

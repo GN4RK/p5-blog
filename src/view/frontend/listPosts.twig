@@ -6,7 +6,7 @@
 </header>
 
 <section class="page-section justify-content-center" id="postsList">
-    <div class="container col-sm-7 col-md-7 col-lg-6 col-xl-5">
+    <div class="container col-sm-7 col-md-7 col-lg-6 col-xl-5 mb-3">
         {% for item in posts %}
             {% if item.status == "public" or role == "admin" %}
                 {% if not loop.first %}
@@ -30,5 +30,16 @@
                 </div>
             {% endif %}
         {% endfor %}
+    </div>
+    <div class="container col-sm-7 col-md-7 col-lg-6 col-xl-5">
+        Page : <ul class="pagination">
+        {% for i in 1..pageAmount %}
+            <li class="page-item{% if i == currentPage %} active{% endif %}">
+                <a class="page-link {% if i == currentPage %} disabled{% endif %}" {% if i != currentPage %} href="{{ baseFolder }}blog/page/{{ i }}" {% endif %}>
+                    {{ i }}
+                </a>
+            </li>
+        {% endfor %}
+
     </div>
 </section>

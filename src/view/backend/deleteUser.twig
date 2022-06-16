@@ -1,8 +1,15 @@
 <!-- Masthead-->
 <header class="masthead">
     <div class="container d-flex align-items-center flex-column">
-        <h1 class="text-uppercase mb-5">Administration</h1>
-
+        {% if userStatus == "user deleted" %}
+            <div class="alert alert-success" role="alert">
+                Utilisateur supprimé avec succès.
+            </div>
+        {% elseif userStatus == "user not found" %}
+            <div class="alert alert-danger" role="alert">
+                Utilisateur non trouvé.
+            </div>
+        {% endif %}
         <div class="list-group">
             <a href="{{ BASEFOLDER }}admin/new" class="list-group-item list-group-item-action">
                 Ajouter un nouveau billet

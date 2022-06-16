@@ -10,13 +10,26 @@ use App\Model\CommentManager;
 use App\Model\Session;
 use App\Model\PostSG;
 
-class BackendController extends Controller
-{
+/**
+ * BackendController
+ */
+class BackendController {
+    
+    /**
+     * display admin page
+     *
+     * @return void
+     */
     static function admin(): void {
         $view = new View();
         $view->renderBack('admin.twig', ["title" => "Administration"]);
     }
-
+    
+    /**
+     * display adminNew page for posting a new post into the blog
+     *
+     * @return void
+     */
     static function adminNew(): void {
 
         $view = new View();
@@ -32,7 +45,12 @@ class BackendController extends Controller
         $view->renderBack('new.twig', ["title" => "Administration - Nouveau billet", "postStatus" => $postStatus]);
 
     }
-
+    
+    /**
+     * display adminUser page to view the users list of the app
+     *
+     * @return void
+     */
     static function adminUser(): void {
         $view = new View();
         $PSG = new PostSG();
@@ -51,30 +69,38 @@ class BackendController extends Controller
 
         $view->renderBack('users.twig', ["title" => "Administration - Utilisateurs", "users" => $users]);
     }
-
-    static function adminPost(): void {
-        $view = new View();
-        $view->renderBack('post.twig', ["title" => "Administration - Billets"]);
-    }
-
-    static function adminComment(): void {
-        $view = new View();
-        $view->renderBack('comment.twig', ["title" => "Administration - Commentaires"]);
-    }
-
+    
+    /**
+     * Validate a comment
+     *
+     * @param  int $idComment
+     * @return int return the post id to stay on its page
+     */
     static function validateComment(int $idComment): int {
         $commentManager = new CommentManager();
         $commentManager->validateComment($idComment);
         return $commentManager->getIdPost($idComment);
     }
-
+    
+    /**
+     * Hide a comment
+     *
+     * @param  int $idComment
+     * @return int return the post id to stay on its page
+     */
     static function hideComment(int $idComment): int {
         $commentManager = new CommentManager();
         $commentManager->unValidateComment($idComment);
         return $commentManager->getIdPost($idComment);
     }
-
-    static function editPost(int $id) {
+    
+    /**
+     * Display post edit page
+     *
+     * @param  int $id
+     * @return void
+     */
+    static function editPost(int $id): void {
 
         $view = new View();
         $postManager = new PostManager();
@@ -107,7 +133,13 @@ class BackendController extends Controller
         
         $view->renderBack('edit.twig', ["title" => "Administration - Modification de billet", "post" => $post, "postStatus" => $postStatus]);
     }
-
+    
+    /**
+     * Display delete post page
+     *
+     * @param  int $id
+     * @return void
+     */
     static function deletePost(int $id): void {
 
         $view = new View();
@@ -123,7 +155,36 @@ class BackendController extends Controller
             $postStatus = "post not found";
         }
         
-        $view->renderBack('delete.twig', ["title" => "Administration - Suppression de billet", "postStatus" => $postStatus]);
+        $view->renderBack('deletePost.twig', ["title" => "Administration - Suppression de billet", "postStatus" => $postStatus]);
+    }
+
+    /**
+     * Display delete user page
+     *
+     * @param  int $id
+     * @return void
+     */
+    static function deleteUser(int $id): void {
+
+        // preventing super admin being deleted
+        if ($id == 1) {
+            return;
+        }
+
+        $view = new View();
+        $userManager = new UserManager();
+        $user = $userManager->getUserById($id);
+
+        $userStatus = "";
+
+        if ($user) {
+            $userManager->deleteUser($id);
+            $userStatus = "user deleted";
+        } else {
+            $userStatus = "user not found";
+        }
+        
+        $view->renderBack('deleteUser.twig', ["title" => "Administration - Suppression d'utilisateur", "userStatus" => $userStatus]);
 
     }
 }
