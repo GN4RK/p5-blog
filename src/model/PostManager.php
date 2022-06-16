@@ -13,15 +13,21 @@ class PostManager extends Manager {
      *
      * @return PDOStatement
      */
-    public function getPosts(int $page): \PDOStatement {
+    public function getPosts(int $page): \PDOStatement 
+    {
         $db = $this->dbConnect();
         $req = $db->query(
-            'SELECT id, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr,
-            DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr, status 
+            'SELECT id, 
+                    title, 
+                    header, 
+                    content, 
+                    DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr,
+                    DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr, 
+                    status 
             FROM post 
             ORDER BY publication_date 
             DESC 
-            LIMIT '. $page*5 - 5 .', '. 5 .''
+            LIMIT '. $page*5 - 5 .', 5'
         );
 
         return $req;
@@ -32,12 +38,13 @@ class PostManager extends Manager {
      *
      * @return int
      */
-    public function getPageAmount(): int {
+    public function getPageAmount(): int 
+    {
         $db = $this->dbConnect();
         $req = $db->query('SELECT COUNT(*) FROM post;');
         $req->execute();
         $nbPost = $req->fetch()[0];
-        return (int)ceil($nbPost/5);
+        return (int) ceil($nbPost/5);
     }
     
     /**
@@ -46,11 +53,18 @@ class PostManager extends Manager {
      * @param  int $idPost
      * @return array|false return false if not found
      */
-    public function getPost(int $idPost): array|false {
+    public function getPost(int $idPost): array|false 
+    {
         $db = $this->dbConnect();
         $req = $db->prepare(
-            'SELECT id, id_user, title, header, content, DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr, 
-            DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr, status 
+            'SELECT id, 
+                    id_user, 
+                    title, 
+                    header, 
+                    content, 
+                    DATE_FORMAT(publication_date, \'%d/%m/%Y à %Hh%i\') AS publication_date_fr, 
+                    DATE_FORMAT(last_update, \'%d/%m/%Y à %Hh%i\') AS last_update_fr, 
+                    status
             FROM post
             WHERE id = ?'
         );
@@ -63,19 +77,32 @@ class PostManager extends Manager {
     /**
      * Add a post in the database
      *
-     * @param  mixed $idAuthor
-     * @param  mixed $title
-     * @param  mixed $header
-     * @param  mixed $content
-     * @param  mixed $status
+     * @param  int $idAuthor
+     * @param  string $title
+     * @param  string $header
+     * @param  string $content
+     * @param  string $status
      * @return bool
      */
-    public function addPost(int $idAuthor, string $title, string $header, string $content, string $status): bool {
+    public function addPost(
+        int $idAuthor, 
+        string $title, 
+        string $header, 
+        string $content, 
+        string $status
+    ): bool {
         $db = $this->dbConnect();
         $post = $db->prepare(
-            'INSERT INTO post(id_user, title, header, content, status) VALUES(?, ?, ?, ?, ?)'
+            'INSERT INTO post(id_user, title, header, content, status) 
+            VALUES(?, ?, ?, ?, ?)'
         );
-        $affectedLines = $post->execute(array($idAuthor, $title, $header, $content, $status));
+        $affectedLines = $post->execute(array(
+            $idAuthor,
+            $title, 
+            $header, 
+            $content, 
+            $status
+        ));
 
         return $affectedLines;
     }
@@ -83,22 +110,28 @@ class PostManager extends Manager {
     /**
      * Edit a post from the database
      *
-     * @param  mixed $idPost
-     * @param  mixed $title
-     * @param  mixed $header
-     * @param  mixed $content
-     * @param  mixed $status
+     * @param  int $idPost
+     * @param  string $title
+     * @param  string $header
+     * @param  string $content
+     * @param  string $status
      * @return bool
      */
-    public function editPost(int $idPost, string $title, string $header, string $content, string $status): bool {
+    public function editPost(
+        int $idPost, 
+        string $title, 
+        string $header, 
+        string $content, 
+        string $status
+    ): bool {
         $db = $this->dbConnect();
         $post = $db->prepare(
             'UPDATE post 
             SET title = ?,
-            header = ?,
-            content = ?,
-            last_update = CURRENT_TIMESTAMP,
-            status = ?
+                header = ?,
+                content = ?,
+                last_update = CURRENT_TIMESTAMP,
+                status = ?
             WHERE id = ?'
         );
         $affectedLines = $post->execute(array($title, $header, $content, $status, $idPost));
@@ -109,11 +142,11 @@ class PostManager extends Manager {
     /**
      * Delete a post from the database
      *
-     * @param  mixed $idPost
+     * @param  int $idPost
      * @return bool
      */
-    public function deletePost(int $idPost): bool {
-
+    public function deletePost(int $idPost): bool 
+    {
         $db = $this->dbConnect();
         $post = $db->prepare(
             'DELETE FROM post WHERE id = ?'
@@ -121,7 +154,5 @@ class PostManager extends Manager {
         $affectedLines = $post->execute(array($idPost));
 
         return $affectedLines;
-
     }
-
 }

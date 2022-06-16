@@ -6,8 +6,8 @@ namespace App\Model;
 /**
  * Class that can access to $_POST 
  */
-class PostSG {
-    
+class PostSG 
+{    
     /**
      * set value
      *
@@ -15,7 +15,8 @@ class PostSG {
      * @param  mixed $value
      * @return void
      */
-    public static function set(string $key, mixed $value): void {
+    public static function set(string $key, mixed $value): void 
+    {
         $_POST[$key] = $value;
     }
     
@@ -25,7 +26,8 @@ class PostSG {
      * @param  string $key
      * @return mixed
      */
-    public static function get(string $key): mixed {
+    public static function get(string $key): mixed 
+    {
         return (isset($_POST[$key]) ? $_POST[$key] : null);
     }
     
@@ -35,7 +37,8 @@ class PostSG {
      * @param  string $key
      * @return void
      */
-    public static function forget(string $key): void {
+    public static function forget(string $key): void 
+    {
         unset($_POST[$key]);
     }
     
@@ -44,7 +47,8 @@ class PostSG {
      *
      * @return array
      */
-    public static function getAll(): array {
+    public static function getAll(): array 
+    {
         return $_POST;
     }
 

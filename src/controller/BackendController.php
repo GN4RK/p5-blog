@@ -13,14 +13,16 @@ use App\Model\PostSG;
 /**
  * BackendController
  */
-class BackendController {
+class BackendController 
+{
     
     /**
      * display admin page
      *
      * @return void
      */
-    static function admin(): void {
+    public static function admin(): void 
+    {
         $view = new View();
         $view->renderBack('admin.twig', ["title" => "Administration"]);
     }
@@ -30,20 +32,31 @@ class BackendController {
      *
      * @return void
      */
-    static function adminNew(): void {
-
+    public static function adminNew(): void 
+    {
         $view = new View();
         $PSG = new PostSG();
         $session = new Session();
         $postStatus = "";
-        if (!empty($PSG->get('title')) && !empty($PSG->get('header')) && !empty($PSG->get('content')) && !empty($PSG->get('status'))) {
+        if (
+            !empty($PSG->get('title')) 
+            && !empty($PSG->get('header')) 
+            && !empty($PSG->get('content')) 
+            && !empty($PSG->get('status'))
+        ) {
             $postManager = new PostManager();
-            $postManager->addPost((int)$session->get("user")["id"], $PSG->get('title'), $PSG->get('header'), $PSG->get('content'), $PSG->get('status'));
+            $postManager->addPost(
+                (int) $session->get("user")["id"], 
+                $PSG->get('title'), $PSG->get('header'), 
+                $PSG->get('content'), $PSG->get('status')
+            );
             $postStatus = "post added";
         }
 
-        $view->renderBack('new.twig', ["title" => "Administration - Nouveau billet", "postStatus" => $postStatus]);
-
+        $view->renderBack('new.twig', [
+            "title" => "Administration - Nouveau billet", 
+            "postStatus" => $postStatus
+        ]);
     }
     
     /**
@@ -51,7 +64,8 @@ class BackendController {
      *
      * @return void
      */
-    static function adminUser(): void {
+    public static function adminUser(): void 
+    {
         $view = new View();
         $PSG = new PostSG();
         $userManager = new UserManager();
@@ -59,7 +73,7 @@ class BackendController {
 
         if (!empty($PSG->getAll())) {
             foreach($PSG->getAll() as $k => $v) {
-                $idUser = (int)substr($k, 5);
+                $idUser = (int) substr($k, 5);
                 $userManager->setRole($idUser, $v);
             }
 
@@ -67,7 +81,10 @@ class BackendController {
 
         }
 
-        $view->renderBack('users.twig', ["title" => "Administration - Utilisateurs", "users" => $users]);
+        $view->renderBack('users.twig', [
+            "title" => "Administration - Utilisateurs", 
+            "users" => $users
+        ]);
     }
     
     /**
@@ -76,7 +93,8 @@ class BackendController {
      * @param  int $idComment
      * @return int return the post id to stay on its page
      */
-    static function validateComment(int $idComment): int {
+    public static function validateComment(int $idComment): int 
+    {
         $commentManager = new CommentManager();
         $commentManager->validateComment($idComment);
         return $commentManager->getIdPost($idComment);
@@ -88,7 +106,8 @@ class BackendController {
      * @param  int $idComment
      * @return int return the post id to stay on its page
      */
-    static function hideComment(int $idComment): int {
+    public static function hideComment(int $idComment): int 
+    {
         $commentManager = new CommentManager();
         $commentManager->unValidateComment($idComment);
         return $commentManager->getIdPost($idComment);
@@ -100,8 +119,8 @@ class BackendController {
      * @param  int $id
      * @return void
      */
-    static function editPost(int $id): void {
-
+    public static function editPost(int $id): void 
+    {
         $view = new View();
         $postManager = new PostManager();
         $post = $postManager->getPost($id);
@@ -109,15 +128,21 @@ class BackendController {
 
         if (!$post) {
             $postStatus = "post not found";
-            $view->renderBack('edit.twig', ["title" => "Administration - Modification de billet", "post" => $post, "postStatus" => $postStatus]);
+            $view->renderBack('edit.twig', [
+                "title" => "Administration - Modification de billet", 
+                "post" => $post, "postStatus" => $postStatus
+            ]);
             return;
         }
 
         $PSG = new PostSG();
+        $notEmpty = 
+            !empty($PSG->get('title')) 
+            && !empty($PSG->get('header')) 
+            && !empty($PSG->get('content')) 
+            && !empty($PSG->get('status'));
 
-        $notEmpty = !empty($PSG->get('title')) && !empty($PSG->get('header')) && !empty($PSG->get('content')) && !empty($PSG->get('status'));
         if ($notEmpty) {
-
             $modified = 
                 ($PSG->get('title') != $post['title']) || 
                 ($PSG->get('header') != $post['header']) || 
@@ -125,13 +150,23 @@ class BackendController {
                 ($PSG->get('status') != $post['status']);
 
             if ($modified) {
-                $postManager->editPost($id, $PSG->get('title'), $PSG->get('header'), $PSG->get('content'), $PSG->get('status'));
+                $postManager->editPost(
+                    $id, 
+                    $PSG->get('title'), 
+                    $PSG->get('header'), 
+                    $PSG->get('content'), 
+                    $PSG->get('status')
+                );
                 $postStatus = "post edited";
                 $post = $postManager->getPost($id);
             }
         }
         
-        $view->renderBack('edit.twig', ["title" => "Administration - Modification de billet", "post" => $post, "postStatus" => $postStatus]);
+        $view->renderBack('edit.twig', [
+            "title" => "Administration - Modification de billet", 
+            "post" => $post, 
+            "postStatus" => $postStatus
+        ]);
     }
     
     /**
@@ -140,8 +175,8 @@ class BackendController {
      * @param  int $id
      * @return void
      */
-    static function deletePost(int $id): void {
-
+    public static function deletePost(int $id): void 
+    {
         $view = new View();
         $postManager = new PostManager();
         $post = $postManager->getPost($id);
@@ -155,7 +190,10 @@ class BackendController {
             $postStatus = "post not found";
         }
         
-        $view->renderBack('deletePost.twig', ["title" => "Administration - Suppression de billet", "postStatus" => $postStatus]);
+        $view->renderBack('deletePost.twig', [
+            "title" => "Administration - Suppression de billet", 
+            "postStatus" => $postStatus
+        ]);
     }
 
     /**
@@ -164,7 +202,8 @@ class BackendController {
      * @param  int $id
      * @return void
      */
-    static function deleteUser(int $id): void {
+    public static function deleteUser(int $id): void 
+    {
 
         // preventing super admin being deleted
         if ($id == 1) {
@@ -184,7 +223,9 @@ class BackendController {
             $userStatus = "user not found";
         }
         
-        $view->renderBack('deleteUser.twig', ["title" => "Administration - Suppression d'utilisateur", "userStatus" => $userStatus]);
-
+        $view->renderBack('deleteUser.twig', [
+            "title" => "Administration - Suppression d'utilisateur", 
+            "userStatus" => $userStatus
+        ]);
     }
 }

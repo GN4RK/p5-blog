@@ -6,18 +6,24 @@ namespace App\Model;
 /**
  * CommentManager
  */
-class CommentManager extends Manager {
-        
+class CommentManager extends Manager
+{        
     /**
      * Return all the comments posted on a blog post or false from the database
      *
      * @param  int $idPost
      * @return PDOStatement
      */
-    public function getComments(int $idPost): \PDOStatement {
+    public function getComments(int $idPost): \PDOStatement 
+    {
         $db = $this->dbConnect();
         $comments = $db->query(
-            'SELECT comment.id, comment.id_user, comment.content, DATE_FORMAT(comment.date, \'%d/%m/%Y à %Hh%imin%ss\') AS date_fr, comment.status, user.first_name
+            'SELECT comment.id, 
+                    comment.id_user, 
+                    comment.content, 
+                    DATE_FORMAT(comment.date, \'%d/%m/%Y à %Hh%imin%ss\') AS date_fr,
+                    comment.status, 
+                    user.first_name
             FROM comment 
             INNER JOIN user ON comment.id_user = user.id
             WHERE id_post = '. $idPost .'
@@ -35,10 +41,12 @@ class CommentManager extends Manager {
      * @param  string $comment
      * @return bool true if no error
      */
-    public function postComment(int $idPost, int $idUser, string $comment): bool {
+    public function postComment(int $idPost, int $idUser, string $comment): bool
+    {
         $db = $this->dbConnect();
         $comments = $db->prepare(
-            'INSERT INTO comment(id_post, id_user, content, date, status) VALUES(?, ?, ?, NOW(), "pending")'
+            'INSERT INTO comment(id_post, id_user, content, date, status) 
+            VALUES(?, ?, ?, NOW(), "pending")'
         );
         $affectedLines = $comments->execute(array($idPost, $idUser, $comment));
 
@@ -51,7 +59,8 @@ class CommentManager extends Manager {
      * @param  int $idComment
      * @return bool
      */
-    public function validateComment(int $idComment): bool {
+    public function validateComment(int $idComment): bool 
+    {
         $db = $this->dbConnect();
         $comments = $db->prepare(
             'UPDATE comment
@@ -69,7 +78,8 @@ class CommentManager extends Manager {
      * @param  int $idComment
      * @return bool
      */
-    public function unValidateComment(int $idComment): bool {
+    public function unValidateComment(int $idComment): bool
+    {
         $db = $this->dbConnect();
         $comments = $db->prepare(
             'UPDATE comment
@@ -84,10 +94,11 @@ class CommentManager extends Manager {
     /**
      * Return the post id from a comment id.
      *
-     * @param  mixed $idComment
+     * @param  int $idComment
      * @return int post id
      */
-    public function getIdPost(int $idComment): int {
+    public function getIdPost(int $idComment): int 
+    {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT id_post
@@ -97,7 +108,7 @@ class CommentManager extends Manager {
         $req->execute(array($idComment));
         $comment = $req->fetch();
 
-        return (int)$comment['id_post'];
+        return (int) $comment['id_post'];
     }
 
 }

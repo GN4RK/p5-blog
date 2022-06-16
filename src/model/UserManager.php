@@ -6,8 +6,8 @@ namespace App\Model;
 /**
  * UserManager class
  */
-class UserManager extends Manager {
-    
+class UserManager extends Manager 
+{    
     /**
      * Check user connection
      *
@@ -15,7 +15,8 @@ class UserManager extends Manager {
      * @param  string $password
      * @return array|false Return the user's info or false if password not match
      */
-    public function checkUser(string $email, string $password): array|false {
+    public function checkUser(string $email, string $password): array|false 
+    {
         $user = $this->getUserByEmail($email, true);
         if ($user) {
             if (password_verify($password, $user["password"])) {
@@ -23,7 +24,6 @@ class UserManager extends Manager {
             }
         }
         return false;
-       
     }
     
     /**
@@ -37,12 +37,27 @@ class UserManager extends Manager {
      * @param  string $password
      * @return bool
      */
-    public function addUser(string $name, string $firstName, string $role, string $email, string $status, string $password): bool {
+    public function addUser(
+        string $name, 
+        string $firstName, 
+        string $role, 
+        string $email, 
+        string $status, 
+        string $password
+    ): bool {
         $db = $this->dbConnect();
         $user = $db->prepare(
-            'INSERT INTO user(name, first_name, role, email, status, password) VALUES(?, ?, ?, ?, ?, ?)'
+            'INSERT INTO user(name, first_name, role, email, status, password) 
+            VALUES(?, ?, ?, ?, ?, ?)'
         );
-        $affectedLines = $user->execute(array($name, $firstName, $role, $email, $status, $password));
+        $affectedLines = $user->execute(array(
+            $name, 
+            $firstName, 
+            $role, 
+            $email, 
+            $status, 
+            $password
+        ));
 
         return $affectedLines;
     }
@@ -53,7 +68,8 @@ class UserManager extends Manager {
      * @param  int $idUser
      * @return bool
      */
-    public function deleteUser(int $idUser): bool {
+    public function deleteUser(int $idUser): bool 
+    {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'DELETE FROM user WHERE id = ?'
@@ -69,7 +85,8 @@ class UserManager extends Manager {
      * @param  int $idUser
      * @return array|false false if not found
      */
-    public function getUserById(int $idUser): array|false {
+    public function getUserById(int $idUser): array|false 
+    {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
@@ -85,10 +102,11 @@ class UserManager extends Manager {
      * Return user's info if found from user email
      *
      * @param  string $email
-     * @param  bool $validated does the user has to bo validated ?
+     * @param  bool $validated optional does the user has to bo validated ?
      * @return array|false false if not found
      */
-    public function getUserByEmail(string $email, bool $validated = false): array|false {
+    public function getUserByEmail(string $email, bool $validated = false): array|false
+    {
         $db = $this->dbConnect();
         $req = $db->prepare(
             'SELECT * 
@@ -107,7 +125,8 @@ class UserManager extends Manager {
      * @param  string $email
      * @return bool
      */
-    public function emailAvailable(string $email): bool {
+    public function emailAvailable(string $email): bool 
+    {
         return !$this->getUserByEmail($email);
     }
     
@@ -117,7 +136,8 @@ class UserManager extends Manager {
      * @param  string $email
      * @return bool
      */
-    public function accountValidation(string $email): bool {
+    public function accountValidation(string $email): bool 
+    {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
@@ -135,7 +155,8 @@ class UserManager extends Manager {
      * @param  int $idUser
      * @return void
      */
-    public function loadInfo(int $idUser): void {
+    public function loadInfo(int $idUser): void 
+    {
         $session = new Session();
         $user = $this->getUserById($idUser);
         $session->set('user', $user);
@@ -148,7 +169,8 @@ class UserManager extends Manager {
      * @param  string $name
      * @return bool
      */
-    public function setName(int $idUser, string $name): bool {
+    public function setName(int $idUser, string $name): bool 
+    {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
@@ -167,7 +189,8 @@ class UserManager extends Manager {
      * @param  string $firstName
      * @return bool
      */
-    public function setFirstName(int $idUser, string $firstName): bool {
+    public function setFirstName(int $idUser, string $firstName): bool 
+    {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
@@ -186,7 +209,8 @@ class UserManager extends Manager {
      * @param  string $email
      * @return bool
      */
-    public function setEmail(int $idUser, string $email): bool {
+    public function setEmail(int $idUser, string $email): bool 
+    {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
@@ -205,7 +229,8 @@ class UserManager extends Manager {
      * @param  string $hash
      * @return bool
      */
-    public function setPassword(int $idUser, string $hash): bool {
+    public function setPassword(int $idUser, string $hash): bool 
+    {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
@@ -224,7 +249,8 @@ class UserManager extends Manager {
      * @param  string $role
      * @return bool
      */
-    public function setRole(int $idUser, string $role): bool {
+    public function setRole(int $idUser, string $role): bool 
+    {
         $db = $this->dbConnect();
         $user = $db->prepare(
             'UPDATE user
@@ -241,7 +267,8 @@ class UserManager extends Manager {
      *
      * @return array
      */
-    public function getUsers(): array {
+    public function getUsers(): array 
+    {
         $db = $this->dbConnect();
         $req = $db->prepare('SELECT * FROM user');
         $req->execute();

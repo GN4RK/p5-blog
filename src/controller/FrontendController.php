@@ -14,26 +14,32 @@ use App\Model\PostSG;
 /**
  * FrontendController
  */
-class FrontendController {
-        
+class FrontendController
+{        
     /**
      * Display home page
      *
      * @param  string $mailStatus status of the mail sent by the contact form
      * @return void
      */
-    public static function home(string $mailStatus = null): void {
+    public static function home(string $mailStatus = null): void 
+    {
         $view = new View();
-        $view->renderFront('home.twig', ['title' => 'Accueil', 'mailStatus' => $mailStatus]);        
+        $view->renderFront('home.twig', [
+            'title' => 'Accueil', 
+            'mailStatus' => $mailStatus
+        ]);        
     }
     
     /**
-     * Display blog page : if $id not null, display only the blog post, else, display all blog posts
+     * Display blog page : if $id not null, display only the blog post,
+     * else, display all blog posts
      *
      * @param  int $id if not null, id of the post to display
      * @return void
      */
-    public static function blog(int $id = null): void {
+    public static function blog(int $id = null): void 
+    {
         if ($id != null) {
             self::post($id);
             return;
@@ -46,21 +52,29 @@ class FrontendController {
      *
      * @return void
      */
-    public static function listPosts(int $page = 1): void {
+    public static function listPosts(int $page = 1): void 
+    {
         $view = new View();
         $postManager = new PostManager();
         $posts = $postManager->getPosts($page);
         $pageAmount = $postManager->getPageAmount();
-        $view->renderFront('listPosts.twig', ['title' => 'Blog', 'posts' => $posts, 'pageAmount' => $pageAmount, 'currentPage' => $page]);
+        $view->renderFront('listPosts.twig', [
+            'title' => 'Blog', 
+            'posts' => $posts, 
+            'pageAmount' => $pageAmount, 
+            'currentPage' => $page
+        ]);
     }
         
     /**
-     * Display only one blog post page with its comments. If $id not found, display error 404 page
+     * Display only one blog post page with its comments.
+     * If $id not found, display error 404 page
      *
-     * @param  mixed $id id of the blog post
+     * @param  int $id id of the blog post
      * @return void
      */
-    public static function post(int $id): void {
+    public static function post(int $id): void 
+    {
         $view = new View();
         $PSG = new PostSG();
         $session = new Session();
@@ -76,11 +90,15 @@ class FrontendController {
             return;
         }
 
-        $author = $userManager->getUserById((int)$post['id_user']);
+        $author = $userManager->getUserById((int) $post['id_user']);
         $feedback = "";
 
         if (!empty($PSG->get('comment'))) {
-            $commentManager->postComment($id, (int)$session->get('user')['id'], $PSG->get('comment'));
+            $commentManager->postComment(
+                $id, 
+                (int) $session->get('user')['id'], 
+                $PSG->get('comment')
+            );
             $feedback = "comment added";
         }
 
@@ -101,35 +119,57 @@ class FrontendController {
      * @param  string $feedback feedback when the form is fill
      * @return void
      */
-    public static function register(string $feedback = null): void {
+    public static function register(string $feedback = null): void 
+    {
         $view = new View();
         $PSG = new PostSG();
-        $view->renderFront('register.twig', ['title' => 'Enregistrement', "feedback" => $feedback, 'post' => $PSG->getAll()]);
+        $view->renderFront('register.twig', [
+            'title' => 'Enregistrement', 
+            "feedback" => $feedback, 
+            'post' => $PSG->getAll()
+        ]);
     }
     
     /**
-     * Check registration form inputs. If all inputs are good, call addUser function.
+     * Check registration form inputs.
+     * If all inputs are good, call addUser function.
      *
      * @return string Return status message.
      */
-    public static function registerCheck(): string {
-
+    public static function registerCheck(): string 
+    {
         $PSG = new PostSG();
         $userManager = new UserManager();
 
-        if (empty($PSG->get('email')) || empty($PSG->get('pass')) || empty($PSG->get('pass2'))) {
+        if (
+            empty($PSG->get('email')) 
+            || empty($PSG->get('pass')) 
+            || empty($PSG->get('pass2'))
+        ) {
             return "missing information";
         }
 
-        if (!$userManager->emailAvailable($PSG->get('email'))) return "email already used";
-        if ($PSG->get('pass') != $PSG->get('pass2')) return "password verification failed";
-        if (strlen($PSG->get('pass')) < 6) return "password too short";
+        if (!$userManager->emailAvailable($PSG->get('email'))) {
+            return "email already used";
+        }
+        if ($PSG->get('pass') != $PSG->get('pass2')) {
+            return "password verification failed";
+        }
+        if (strlen($PSG->get('pass')) < 6) {
+            return "password too short";
+        }
 
         $hash = password_hash($PSG->get('pass'), PASSWORD_DEFAULT);
         $key = self::generateRandomString();
-        $userManager->addUser("", "", "", $PSG->get('email'), "pending@$key", $hash);
+        $userManager->addUser(
+            "", 
+            "", 
+            "", 
+            $PSG->get('email'), 
+            "pending@$key", 
+            $hash
+        );
         return "user created";
-
     }
     
     /**
@@ -138,7 +178,8 @@ class FrontendController {
      * @param  string $email Email of the user.
      * @return bool True if the mail is sent.
      */
-    public static function sendVerificationMail(string $email): bool {
+    public static function sendVerificationMail(string $email): bool 
+    {
         $userManager = new UserManager();
         $user = $userManager->getUserByEmail($email);
         $key = $user['status'];
@@ -147,7 +188,8 @@ class FrontendController {
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-type: text/html; charset=iso-8859-1';
         $subject = "Validation de l'adresse mail";
-        $message = "Cliquez sur le lien pour valider l'inscription : <a href=\"$url\">Lien</a>";
+        $message = "Cliquez sur le lien pour valider l'inscription ";
+        $message .= ": <a href=\"$url\">Lien</a>";
         return mail($email, $subject, $message, implode("\r\n", $headers));
     }
     
@@ -156,16 +198,22 @@ class FrontendController {
      *
      * @return void
      */
-    public static function login(): void {
+    public static function login(): void 
+    {
         $view = new View();
         $PSG = new PostSG();
-        if (!empty($PSG->get('email')) || !empty($PSG->get('pass'))) {
+        if (
+            !empty($PSG->get('email')) 
+            || !empty($PSG->get('pass'))
+        ) {
             $view->renderFront('login.twig', [
                 'title' => 'Connexion / Enregistrement',
                 'loginFailed' => true
             ]);
         } else {
-            $view->renderFront('login.twig', ['title' => 'Connexion / Enregistrement']);
+            $view->renderFront('login.twig', [
+                'title' => 'Connexion / Enregistrement'
+            ]);
         }
     }
     
@@ -174,7 +222,8 @@ class FrontendController {
      *
      * @return bool
      */
-    public static function loginCheck(): bool {
+    public static function loginCheck(): bool
+    {
         $userManager = new UserManager();
         $PSG = new PostSG();
         $session = new Session();
@@ -186,7 +235,6 @@ class FrontendController {
             $session->forget('user');
             return false;
         }
-   
     }
     
     /**
@@ -194,7 +242,8 @@ class FrontendController {
      *
      * @return void
      */
-    public static function logout(): void {
+    public static function logout(): void
+    {
         $session = new Session();
         $session->set('user', null);
     }
@@ -204,7 +253,8 @@ class FrontendController {
      *
      * @return void
      */
-    public static function legal(): void {
+    public static function legal(): void
+    {
         $view = new View();
         $view->renderFront('legal.twig', ['title' => 'Mention légales']);
     }
@@ -214,7 +264,8 @@ class FrontendController {
      *
      * @return void
      */
-    public static function error404(): void {
+    public static function error404(): void
+    {
         $view = new View();
         $view->renderFront('error404.twig', ['title' => 'Erreur 404']);
     }
@@ -224,9 +275,11 @@ class FrontendController {
      *
      * @return bool Return true if the mail is sended
      */
-    public static function sendMail(): bool {
+    public static function sendMail(): bool
+    {
         $PSG = new PostSG();
-        $message = "Message de ". $PSG->get("name") ."\n". $PSG->get("email"). "\n". $PSG->get("message");
+        $message = "Message de ". $PSG->get("name") ."\n";
+        $message .= $PSG->get("email"). "\n". $PSG->get("message");
         return mail("yoann.leonard@gmail.com", "contact", $message);
     }
     
@@ -235,7 +288,8 @@ class FrontendController {
      *
      * @return void
      */
-    public static function validation(): void {
+    public static function validation(): void 
+    {
         $view = new View();
         $GSG = new GetSG();
         $feedback = "";
@@ -254,7 +308,10 @@ class FrontendController {
             $feedback = "user not found";
         }
         
-        $view->renderFront('validation.twig', ['title' => 'Validation', "feedback" => $feedback]);
+        $view->renderFront('validation.twig', [
+            'title' => 'Validation', 
+            'feedback' => $feedback
+        ]);
     }
     
     /**
@@ -262,14 +319,17 @@ class FrontendController {
      *
      * @return void
      */
-    public static function profile(): void {
-
+    public static function profile(): void 
+    {
         $view = new View();
         $PSG = new PostSG();
         $session = new Session();
         $feedback = array();
 
-        if (!empty($session->get('user')) && !empty($PSG->getAll())) {
+        if (
+            !empty($session->get('user')) 
+            && !empty($PSG->getAll())
+        ) {
             self::editEntry('name', $feedback);
             self::editEntry('first_name', $feedback);
             self::editEmail($feedback);
@@ -278,11 +338,14 @@ class FrontendController {
 
         if (!empty($feedback)) {
             $userManager = new UserManager();
-            $userManager->loadInfo((int)$session->get('user')['id']);
+            $userManager->loadInfo((int) $session->get('user')['id']);
         }
 
-        $view->renderFront('profile.twig', ["title" => "Profil", "session" => $session->getAll(), "feedback" => $feedback]);
-
+        $view->renderFront('profile.twig', [
+            "title" => "Profil", 
+            "session" => $session->getAll(), 
+            "feedback" => $feedback
+        ]);
     }
     
     /**
@@ -292,8 +355,8 @@ class FrontendController {
      * @param  array $feedback
      * @return void
      */
-    private static function editEntry(string $entry, array &$feedback): void {
-
+    private static function editEntry(string $entry, array &$feedback): void
+    {
         $PSG = new PostSG();
         $session = new Session();
         if (!empty($PSG->get($entry))) {
@@ -303,7 +366,10 @@ class FrontendController {
             $userManager = new UserManager();
 
             if ($PSG->get($entry) != $session->get('user')[$entry]) {
-                $userManager->{"set". $entryC}((int)$session->get('user')['id'], $PSG->get($entry));
+                $userManager->{"set". $entryC}(
+                    (int) $session->get('user')['id'],
+                    $PSG->get($entry)
+                );
                 $feedback[] = "$entry edited";
             }
         }
@@ -315,15 +381,18 @@ class FrontendController {
      * @param  array $feedback
      * @return void
      */
-    private static function editEmail(array &$feedback): void {
-
+    private static function editEmail(array &$feedback): void
+    {
         $PSG = new PostSG();
         $session = new Session();
         if (!empty($PSG->get('email'))) {
             $userManager = new UserManager();
             if ($PSG->get('email') != $session->get('user')['email']) {
                 if ($userManager->emailAvailable($PSG->get('email'))) {
-                    $userManager->setEmail((int)$session->get('user')['id'], $PSG->get('email'));
+                    $userManager->setEmail(
+                        (int) $session->get('user')['id'], 
+                        $PSG->get('email')
+                    );
                     $feedback[] = "email edited";
                 } else {
                     $feedback[] = "email already registered";
@@ -338,16 +407,22 @@ class FrontendController {
      * @param  array $feedback
      * @return void
      */
-    private static function editPassword(array &$feedback): void {
-        
+    private static function editPassword(array &$feedback): void
+    {        
         $PSG = new PostSG();
         $session = new Session();
-        if (!empty($PSG->get('pass')) && !empty($PSG->get('pass2'))) {
+        if (
+            !empty($PSG->get('pass')) 
+            && !empty($PSG->get('pass2'))
+        ) {
             $userManager = new UserManager();
             if ($PSG->get('pass') == $PSG->get('pass2')) {
                 if (strlen($PSG->get('pass')) > 5) {
                     $hash = password_hash($PSG->get('pass'), PASSWORD_DEFAULT);
-                    $userManager->setPassword((int)$session->get('user')['id'], $hash);
+                    $userManager->setPassword(
+                        (int) $session->get('user')['id'], 
+                        $hash
+                    );
                     $feedback[] = "password edited";
                 } else {
                     $feedback[] = "password too short";
@@ -361,10 +436,11 @@ class FrontendController {
     /**
      * Generate a random string for validation purpose.
      *
-     * @param  mixed $length
+     * @param  int $length
      * @return string
      */
-    private static function generateRandomString(int $length = 10): string {
+    private static function generateRandomString(int $length = 10): string 
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
