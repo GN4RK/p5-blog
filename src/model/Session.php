@@ -6,8 +6,8 @@ namespace App\Model;
 /**
  * Class that can access to $_SESSION 
  */
-class Session {
-    
+class Session 
+{    
     /**
      * set value
      *
@@ -15,7 +15,8 @@ class Session {
      * @param  mixed $value
      * @return void
      */
-    public static function set(string $key, mixed $value): void {
+    public static function set(string $key, mixed $value): void 
+    {
         $_SESSION[$key] = $value;
     }
     
@@ -25,7 +26,8 @@ class Session {
      * @param  string $key
      * @return mixed
      */
-    public static function get(string $key): mixed {
+    public static function get(string $key): mixed 
+    {
         return (isset($_SESSION[$key]) ? $_SESSION[$key] : null);
     }
     
@@ -34,7 +36,8 @@ class Session {
      *
      * @return array
      */
-    public static function getAll(): array {
+    public static function getAll(): array 
+    {
         return $_SESSION;
     }
     
@@ -44,7 +47,8 @@ class Session {
      * @param  string $key
      * @return void
      */
-    public static function forget(string $key): void {
+    public static function forget(string $key): void 
+    {
         unset($_SESSION[$key]);
     }
     
@@ -53,8 +57,11 @@ class Session {
      *
      * @return string
      */
-    public static function getRole() : string {
-        return (isset(self::get('user')['role']) ? self::get('user')['role'] : "visitor");
+    public static function getRole() : string 
+    {
+        return isset(self::get('user')['role']) 
+            ? self::get('user')['role'] 
+            : "visitor";
     }
 
 }
