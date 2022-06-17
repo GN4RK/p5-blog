@@ -142,6 +142,9 @@ class BackendController
     public static function editPost(int $id): void 
     {
         $view = new View();
+        $userManager = new UserManager();
+        $authors = $userManager->getUsers();
+
         $postManager = new PostManager();
         $post = $postManager->getPost($id);
         $postStatus = "";
@@ -166,6 +169,7 @@ class BackendController
         $PSG = new PostSG();
         $notEmpty = 
             !empty($PSG->get('title')) 
+            && !empty($PSG->get('id_user'))
             && !empty($PSG->get('header')) 
             && !empty($PSG->get('content')) 
             && !empty($PSG->get('status'))
@@ -177,6 +181,7 @@ class BackendController
             }
             $modified = 
                 ($PSG->get('title') != $post['title']) || 
+                ($PSG->get('id_user') != $post['id_user']) || 
                 ($PSG->get('header') != $post['header']) || 
                 ($PSG->get('content') != $post['content']) || 
                 ($PSG->get('status') != $post['status']);
@@ -185,6 +190,7 @@ class BackendController
                 $postManager->editPost(
                     $id, 
                     $PSG->get('title'), 
+                    (int) $PSG->get('id_user'), 
                     $PSG->get('header'), 
                     $PSG->get('content'), 
                     $PSG->get('status')
@@ -202,7 +208,8 @@ class BackendController
             "title" => "Administration - Modification de billet", 
             "post" => $post, 
             "postStatus" => $postStatus,
-            "token" => $token
+            "token" => $token,
+            "authors" => $authors
         ]);
     }
     

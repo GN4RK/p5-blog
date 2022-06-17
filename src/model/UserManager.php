@@ -272,12 +272,16 @@ class UserManager extends Manager
     /**
      * Return all the users of the database
      *
+     * @param  bool $admin if true, will return all admin users
      * @return array
      */
-    public function getUsers(): array 
+    public function getUsers(bool $admin = false): array 
     {
         $db = $this->dbConnect();
-        $req = $db->prepare('SELECT * FROM user');
+        $condition = ($admin) ? 'WHERE role = "admin"' : '';
+        $req = $db->prepare(
+            'SELECT * FROM user '. $condition
+        );
         $req->execute();
         $users = $req->fetchAll();
         return $users;

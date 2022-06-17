@@ -20,6 +20,17 @@
                     <input type="text" class="form-control col-xs-2" id="title" name="title" placeholder="Titre du billet" value="{{ post.title }}">
                 </div>
                 <div class="mb-3">
+                    <label class="input-group-text" for="id_user">Auteur</label>
+                    <select class="form-select" id="id_user" name="id_user">
+                        {% for author in authors %}
+                            <option value="{{ author.id }}" {% if post.id_user == author.id %} selected {% endif %} >
+                                {{ author.first_name }} {{ author.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-3">
                     <label for="header" class="form-label">Chapô</label>
                     <textarea class="form-control" id="header" name="header">{{ post.header }}</textarea>
                 </div>
