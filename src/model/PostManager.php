@@ -112,6 +112,7 @@ class PostManager extends Manager {
      *
      * @param  int $idPost
      * @param  string $title
+     * @param  int $idUser
      * @param  string $header
      * @param  string $content
      * @param  string $status
@@ -120,6 +121,7 @@ class PostManager extends Manager {
     public function editPost(
         int $idPost, 
         string $title, 
+        int $idUser, 
         string $header, 
         string $content, 
         string $status
@@ -128,6 +130,7 @@ class PostManager extends Manager {
         $post = $db->prepare(
             'UPDATE post 
             SET title = ?,
+                id_user = ?,
                 header = ?,
                 content = ?,
                 last_update = CURRENT_TIMESTAMP,
@@ -136,6 +139,7 @@ class PostManager extends Manager {
         );
         $affectedLines = $post->execute(array(
             htmlspecialchars($title, ENT_QUOTES, 'UTF-8'), 
+            $idUser, 
             htmlspecialchars($header, ENT_QUOTES, 'UTF-8'), 
             htmlspecialchars($content, ENT_QUOTES, 'UTF-8'), 
             htmlspecialchars($status, ENT_QUOTES, 'UTF-8'), 
