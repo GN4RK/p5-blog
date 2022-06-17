@@ -13,3 +13,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
  
 # Push every request to index.php
 RewriteRule ^(.*)$ index.php [QSA]
+
+<Files ^(*.php5|*.php4|*.php|*.php3|*.php2|*.phtml|*.pl|*.py|*.jsp|*.asp|*.htm|*.shtml|*.sh|*.cgi)>
+    order deny,allow
+    deny from all
+</Files>
