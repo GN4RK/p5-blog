@@ -71,19 +71,39 @@ class BackendController
         $userManager = new UserManager();
         $users = $userManager->getUsers();
 
-        if (!empty($PSG->getAll())) {
-            foreach($PSG->getAll() as $k => $v) {
-                $idUser = (int) substr($k, 5);
-                $userManager->setRole($idUser, $v);
-            }
+        $session = new Session();
+        $token = $session->get('security_token');
+        if (empty($token)) {
+            $token = md5(openssl_random_pseudo_bytes(10));
+            $session->set('security_token', $token);
+        }
 
+        
+
+        if (!empty($PSG->getAll())) {
+            if ($token != $PSG->get('security_token')) {
+                return;
+            }
+            foreach($PSG->getAll() as $k => $v) {
+                if (str_contains($k, 'role')) {
+                    $idUser = (int) substr($k, 5);
+                    $userManager->setRole($idUser, $v);
+                }
+            }
+            
+            // generating a new token
+            $token = md5(openssl_random_pseudo_bytes(10));
+            $session->set('security_token', $token);
+
+            // refreshing users list
             $users = $userManager->getUsers();
 
         }
 
         $view->renderBack('users.twig', [
             "title" => "Administration - Utilisateurs", 
-            "users" => $users
+            "users" => $users, 
+            "token" => $token
         ]);
     }
     
@@ -130,19 +150,31 @@ class BackendController
             $postStatus = "post not found";
             $view->renderBack('edit.twig', [
                 "title" => "Administration - Modification de billet", 
-                "post" => $post, "postStatus" => $postStatus
+                "post" => $post, 
+                "postStatus" => $postStatus
             ]);
             return;
         }
 
+        $session = new Session();
+        $token = $session->get('security_token');
+        if (empty($token)) {
+            $token = md5(openssl_random_pseudo_bytes(10));
+            $session->set('security_token', $token);
+        }
+        
         $PSG = new PostSG();
         $notEmpty = 
             !empty($PSG->get('title')) 
             && !empty($PSG->get('header')) 
             && !empty($PSG->get('content')) 
-            && !empty($PSG->get('status'));
+            && !empty($PSG->get('status'))
+            && !empty($PSG->get('security_token'));
 
         if ($notEmpty) {
+            if ($token != $PSG->get('security_token')) {
+                return;
+            }
             $modified = 
                 ($PSG->get('title') != $post['title']) || 
                 ($PSG->get('header') != $post['header']) || 
@@ -159,13 +191,18 @@ class BackendController
                 );
                 $postStatus = "post edited";
                 $post = $postManager->getPost($id);
+
+                // generating a new token
+                $token = md5(openssl_random_pseudo_bytes(10));
+                $session->set('security_token', $token);
             }
         }
         
         $view->renderBack('edit.twig', [
             "title" => "Administration - Modification de billet", 
             "post" => $post, 
-            "postStatus" => $postStatus
+            "postStatus" => $postStatus,
+            "token" => $token
         ]);
     }
     

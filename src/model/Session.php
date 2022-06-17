@@ -51,6 +51,16 @@ class Session
     {
         unset($_SESSION[$key]);
     }
+
+    /**
+     * Erase all values
+     *
+     * @return void
+     */
+    public static function forgetAll(): void 
+    {
+        session_unset();
+    }
     
     /**
      * Return the role of the current user

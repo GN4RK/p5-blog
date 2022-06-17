@@ -4,6 +4,7 @@
         <h1 class="text-uppercase mb-5">Modération des utilisateurs</h1>
 
         <form method="post" class="mb-3">
+            <input type="hidden" name="security_token" value="{{ token }}">
             <table class="table table-striped">
                 <thead>
                     <tr>

@@ -177,7 +177,10 @@ class UserManager extends Manager
             SET name = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($name, $idUser));
+        $affectedLines = $user->execute(array(
+            htmlspecialchars($name, ENT_QUOTES, 'UTF-8'), 
+            $idUser
+        ));
 
         return $affectedLines;
     }
@@ -197,7 +200,10 @@ class UserManager extends Manager
             SET first_name = ?
             WHERE id = ?'
         );
-        $affectedLines = $user->execute(array($firstName, $idUser));
+        $affectedLines = $user->execute(array(
+            htmlspecialchars($firstName, ENT_QUOTES, 'UTF-8'), 
+            $idUser
+        ));
 
         return $affectedLines;
     }
@@ -217,6 +223,7 @@ class UserManager extends Manager
             SET email = ?
             WHERE id = ?'
         );
+        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
         $affectedLines = $user->execute(array($email, $idUser));
 
         return $affectedLines;

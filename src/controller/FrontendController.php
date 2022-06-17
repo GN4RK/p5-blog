@@ -245,7 +245,7 @@ class FrontendController
     public static function logout(): void
     {
         $session = new Session();
-        $session->set('user', null);
+        $session->forgetAll();
     }
     
     /**
