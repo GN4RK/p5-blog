@@ -54,26 +54,42 @@ Sur la page permettant de modifier un blog post, l’utilisateur a la possibilit
 
 Dans le footer menu, il doit figurer un lien pour accéder à l’administration du blog.
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a9aab17db62b44b4b05938ec110f652c)](https://app.codacy.com/gh/GN4RK/p5-blog?utm_source=github.com&utm_medium=referral&utm_content=GN4RK/p5-blog&utm_campaign=Badge_Grade_Settings)
-
 ## Installation du projet
 
-- mettre en place la base de données
+- mettre en place la base de données (fichier database/blog.sql) en modifiant la ligne de l'admin (ligne 130 du fichier SQL)
 - cloner le projet
-- configurer le projet (cf ci-après)
+- configurer le projet
 
-## Config
+## Configuration
+
+### Base de données
+
+Modifier la ligne 130 du fichier avant l'import de la base :
+```SQL
+(1, '_NAME_', '_FIRST_NAME_', 'admin', '_EMAIL_', 'validated', '$2y$10$r/G3DjbqcJOgESo7ZIMJz..Kk7.DRVWhqPi3FF64vWJHS.OIviPDq'),
+```
+Le mot de passe par défaut est "testest".
+
+Changer les informations de connexion à la base dans le fichier src/model/Manager.php ligne 18
+```PHP
+$db = new \PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
+```
 
 ### .htacces
-Set your rewrite base
+Changer le RewriteBase en mettant le sous dossier où le projet est installé
 ```apache
 RewriteBase /subfolder/
 ```
 
 ### config.json
+Modifier le sous dossier ainsi que l'url de base du site
 ```json
 {
     "baseFolder": "subFolder",
     "baseURL": "http://baseUrl"
 }
 ```
+
+## Badge Codacy
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a9aab17db62b44b4b05938ec110f652c)](https://app.codacy.com/gh/GN4RK/p5-blog?utm_source=github.com&utm_medium=referral&utm_content=GN4RK/p5-blog&utm_campaign=Badge_Grade_Settings)
